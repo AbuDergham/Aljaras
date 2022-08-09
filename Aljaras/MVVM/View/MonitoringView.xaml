@@ -1,0 +1,186 @@
+﻿<UserControl
+    x:Class="Aljaras.MVVM.View.MonitoringView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Aljaras.MVVM.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="clr-namespace:Aljaras.MVVM.ViewModel"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="White"
+    mc:Ignorable="d">
+    <UserControl.DataContext>
+        <viewmodel:MonitoringViewModel />
+    </UserControl.DataContext>
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <GroupBox
+            Margin="5"
+            Padding="5"
+            FontSize="16"
+            Header="{Binding Global.AppLang.UpcomingAlerts}">
+            <Grid>
+                <ListView
+                    x:Name="UpcomingListView"
+                    d:ItemsSource="{d:SampleData ItemCount=5}"
+                    BorderBrush="LightGray"
+                    BorderThickness="0"
+                    Focusable="False"
+                    IsEnabled="True"
+                    ItemsSource="{Binding Global.AlarmList}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    SelectionMode="Single">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Focusable" Value="false" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Width="{Binding ActualWidth, ElementName=UpcomingListView}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Uid="{Binding AlarmId}"
+                                    FontSize="16"
+                                    Foreground="#252525"
+                                    Text="{Binding AlarmTitle}" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    FontSize="16"
+                                    Foreground="DarkMagenta">
+                                    <Run Text="⏰" />
+                                    <Run FlowDirection="LeftToRight" Text="{Binding FullTime, StringFormat=t}" />
+                                </TextBlock>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <TextBlock
+                    Name="NOAlarms"
+                    Grid.RowSpan="2"
+                    Margin="10"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    Text="{Binding Global.AppLang.MonitoringNOAlarmMessage}"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap"
+                    Visibility="{Binding Global.IsNOAlarmMessageVisible}" />
+            </Grid>
+        </GroupBox>
+
+        <GroupBox
+            x:Name="MonitoringGroupBox"
+            Grid.Column="1"
+            Margin="5"
+            Padding="5"
+            FontSize="16"
+            Header="{Binding Global.AppLang.Monitoring}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="35" />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Path
+                    Width="20"
+                    Data="M0,22.496973L32,22.496973 32,25.868 0,25.868z M9.3140149,18.981964L22.685999,18.981964 22.685999,21.134976 9.3140149,21.134976z M2.222001,1.9290133L2.222001,17.222994 29.778014,17.222994 29.778014,1.9290133z M0.20899963,0L31.790009,0 31.790009,18.832978 0.20899963,18.832978z"
+                    Fill="Green"
+                    Stretch="Uniform" />
+                <TextBlock
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    Foreground="Green"
+                    Text="{Binding Global.AppLang.SystemTime}" />
+                <TextBlock
+                    Grid.Column="2"
+                    VerticalAlignment="Center"
+                    FontSize="16">
+                    <Run FlowDirection="LeftToRight" Text="{Binding Global.MonitoringTime}" />
+                </TextBlock>
+
+
+
+                <Path
+                    Grid.Row="1"
+                    Width="20"
+                    Data="M15.899988,20.5C8.799993,20.5 2.9999971,22 2.9999971,23.9 2.9999971,25.6 7.7999935,27.1 14.099989,27.3L14.099989,24.4C14.099989,23.3 15.099988,22.4 16.299987,22.4 17.499986,22.4 18.499985,23.3 18.499985,24.4L18.499985,27.3C24.299981,27 28.699978,25.6 28.699978,23.9 28.799977,22 22.999982,20.5 15.899988,20.5z M13.19999,0L19.099985,0 19.099985,3.5C23.099982,4.4000001 25.89998,6.8000002 25.89998,9.8 25.89998,9.8000001 25.399981,12.7 25.89998,13.6 27.799978,17.2 31.899976,20.4 31.899976,22.7 31.899976,26.3 26.099979,28.099999 18.599986,28.400001L18.599986,30.000001C18.599986,31.099999 17.599986,32.000001 16.399987,32.000001 15.199988,32.000001 14.199989,31.099999 14.199989,30.000001L14.199989,28.400001C6.199995,28.2 0,26.4 0,22.7 0,20.4 3.9999962,17.2 5.9999952,13.6 6.4999943,12.7 5.9999952,9.8000001 5.9999952,9.8 5.9999952,6.8000002 9.0999928,4.1999998 13.19999,3.4000001z"
+                    Fill="Blue"
+                    Stretch="Uniform" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    Foreground="Blue"
+                    Text="{Binding Global.AppLang.NextAlarm}" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    Text="{Binding Global.CurrentAlarm}" />
+                <Path
+                    Grid.Row="2"
+                    Height="20"
+                    Data="M10.799994,25.6L13.799993,26.800001 16.799991,27.200001 16.799991,28.4 4.7999978,28.4 4.7999978,27.200001 8.0999961,26.800001z M10.799994,16.9L3.9999981,21.1 3.9999981,29 17.499991,29 17.499991,21.3z M5.1999974,6.9000006L16.999991,6.9000006 16.999991,10.2 10.899994,14 5.1999974,10.2z M4.2999983,2.9000001L4.2999983,10.8 10.899994,15.1 17.799991,10.8 17.799991,2.9000001z M0,0L22.199988,0 22.199988,2.9000001 19.19999,2.9000001 19.19999,11.6 12.199994,15.9 18.89999,20.2 18.89999,28.9 22.199988,28.9 22.199988,32 0,32 0,29.1 2.599999,29.1 2.599999,20.400001 9.4999952,16 2.8999987,11.6 2.8999987,2.9000001 0,2.9000001z"
+                    Fill="Red"
+                    Stretch="Uniform" />
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    Foreground="Red"
+                    Text="{Binding Global.AppLang.TimeLeft}" />
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    Text="{Binding Global.ShowTimeLeft}" />
+                <Button
+                    Grid.Row="4"
+                    Grid.ColumnSpan="4"
+                    Width="{Binding Path=ActualWidth, ElementName=MonitoringGroupBox}"
+                    Height="50"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Background="IndianRed"
+                    BorderThickness="0"
+                    Command="{Binding Global.EmergencyCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Path
+                            Width="50"
+                            Margin="0,0,10,0"
+                            Data="M9.8001292,17.400009L11.300151,21.199995 8.5001223,22.299999 6.8000858,17.999984C7.8001001,17.699997,8.9001525,17.499984,9.8001292,17.400009z M2.0000286,13.300007L2.9000662,15.599993 3.8000424,17.900009 1.8000137,18.699997 0,14.099994z M21.000304,5.9999949L22.800316,10.400015 21.200318,10.999991 19.400305,6.6000005z M22.500325,5.2000076L22.700341,5.2000076C23.800331,5.2000076 24.800345,5.9000193 25.300352,6.9999939 25.80036,8.2000052 25.400391,9.499992 24.500353,10.200003 25.100399,9.4000165 25.300352,8.2000052 24.900383,7.1 24.500353,5.9999949 23.50034,5.3000137 22.500325,5.2000076z M24.000345,3.1000034L24.300339,3.1000034C25.900399,3.1000034 27.500397,4.1000024 28.200419,5.8000132 28.90044,7.4999935 28.400435,9.499992 27.000389,10.599997 28.000405,9.4000165 28.300396,7.5999996 27.600436,5.9999949 27.000389,4.4000207 25.500368,3.3000154 24.000345,3.1000034z M16.10027,0.70001146L22.900355,17.699997C22.900355,17.699997,13.800186,14.599993,4.7000802,17.599991L2.8000281,12.999989C2.9000662,12.900014,13.000187,8.0999991,16.10027,0.70001146z M24.900383,0L25.300352,0C27.900427,-1.6738045E-07 30.400463,1.6000046 31.500454,4.2000085 32.600506,6.9999939 31.800446,10.099997 29.600464,11.900015 31.100485,9.9999911 31.600493,7.2000062 30.600477,4.600002 29.600464,1.9999982 27.300381,0.30001789 24.900383,0z"
+                            Fill="White"
+                            Stretch="Uniform" />
+                        <TextBlock
+                            Height="20"
+                            HorizontalAlignment="Center"
+                            FontSize="16"
+                            Foreground="White"
+                            Text="{Binding Global.AppLang.Emergency}" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

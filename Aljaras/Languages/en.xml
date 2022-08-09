@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AppLanguage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<IsActive>false</IsActive>
+	<Apptitle>Aljaras: School Bell System - Version</Apptitle>
+	<FlowDirection>LeftToRight</FlowDirection>
+	<Menu>Menu</Menu>
+	<Monitoring>Monitoring</Monitoring>
+	<Alarm>Alarm</Alarm>
+	<Settings>Settings</Settings>
+	<About>About this App</About>
+	<Help>Help</Help>
+	<UpcomingAlerts>Upcoming Alerts</UpcomingAlerts>
+	<ScheduleList>Schedule List</ScheduleList>
+	<AlarmList>Alarm List</AlarmList>
+	<AlertInformation>Alert Information</AlertInformation>
+	<Title>Title:</Title>
+	<Days>Days</Days>
+	<Fri>Fri</Fri>
+	<Sat>Sat</Sat>
+	<Sun>Sun</Sun>
+	<Mon>Mon</Mon>
+	<Tue>Tue</Tue>
+	<Wed>Wed</Wed>
+	<Thu>Thu</Thu>
+	<New>New</New>
+	<Edit>Edit</Edit>
+	<Save>Save</Save>
+	<Delete>Delete</Delete>
+	<TimeNow>Time Now</TimeNow>
+	<PlayStop>Play/Stop</PlayStop>
+	<Hour>Hour</Hour>
+	<Minute>Minute</Minute>
+	<Daytime>Daytime</Daytime>
+	<Time>Time</Time>
+	<AudioFile>AudioFile</AudioFile>
+	<Language>Language</Language>
+	<Guide>Guide</Guide>
+	<MonitoringNOAlarmMessage>There are no upcoming alarm click the alarm icon ⏰ in the menu to get started.</MonitoringNOAlarmMessage>
+	<NOScheduleMessage>You haven't set up any schedules add new title and click the save button to get started.</NOScheduleMessage>
+	<NOAlarmMessage>You haven't set up any alarm click the save button above to get started.</NOAlarmMessage>
+	<SystemTime>System Time:</SystemTime>
+	<NextAlarm>Next Alarm:</NextAlarm>
+	<TimeLeft>Time Left:</TimeLeft>
+	<Emergency>Emergency</Emergency>
+	<SelectFile>Select File</SelectFile>
+	<RepeatEmergency>Repeat Emergency</RepeatEmergency>
+	<EnableRepeat>Enable Repeat</EnableRepeat>
+</AppLanguage>

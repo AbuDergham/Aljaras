@@ -1,0 +1,513 @@
+﻿<UserControl
+    x:Class="Aljaras.MVVM.View.AlarmView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Aljaras"
+    xmlns:local="clr-namespace:Aljaras.MVVM.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="clr-namespace:Aljaras.MVVM.ViewModel"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="White"
+    mc:Ignorable="d">
+    <UserControl.DataContext>
+        <viewmodel:AlarmViewModel />
+    </UserControl.DataContext>
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <!--#region *** Schedule List ***-->
+        <GroupBox
+            Padding="5,5,5,0"
+            FontSize="15"
+            Header="{Binding Global.AppLang.ScheduleList}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Border>
+                    <Grid Grid.Row="2" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox
+                            Height="20"
+                            Foreground="#252525"
+                            IsChecked="{Binding CurrentSchedule.IsScheduleActive}"
+                            IsEnabled="{Binding EnableCheckBox}"
+                            Style="{DynamicResource SliderCheckBox}" />
+                        <Label
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Content="{Binding Global.AppLang.Title}"
+                            FontFamily="Consolas" />
+                        <TextBox
+                            Uid="{Binding CurrentSchedule.ScheduleId}"
+                            Grid.Column="2"
+                            Height="25"
+                            Padding="5,0,5,0"
+                            Background="Transparent"
+                            BorderBrush="gray"
+                            BorderThickness="0,0,0,1"
+                            FontFamily="Consolas"
+                            IsEnabled="{Binding EnableScheduleTitleTB}"
+                            Text="{Binding CurrentSchedule.ScheduleTitle}" />
+                    </Grid>
+                </Border>
+                <ListView
+                    Grid.Row="2"
+                    d:ItemsSource="{d:SampleData ItemCount=5}"
+                    Background="Azure"
+                    BorderBrush="LightGray"
+                    BorderThickness="1"
+                    ItemsSource="{Binding ScheduleList}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    SelectedItem="{Binding CurrentSchedule}"
+                    SelectionMode="Single">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                <Path
+                                    Width="25"
+                                    Margin="5,2"
+                                    Data="M2.8040161,13.921C4.3520508,13.921 5.6080322,15.176996 5.6080322,16.724999 5.6080322,17.934991 4.842041,18.96499 3.7680054,19.357995L3.7670288,19.359002 3.7839966,19.432C4.1700439,21.072991,5.8690186,25.480002,13.121033,27.212987L13.502991,27.299993 13.502991,26.908986 25.104004,26.908986 25.104004,31.355 13.502991,31.355 13.502991,29.167989 13.455994,29.156987C11.221008,28.60999,3.5380249,26.273002,2.0750122,19.736001L2.0090332,19.413003 1.9710083,19.402001C0.82904053,19.04699 0,17.982995 0,16.724999 0,15.176996 1.2560425,13.921 2.8040161,13.921z M19.335999,8.8939943C17.252991,8.8939943 15.565002,10.581997 15.565002,12.663997 15.565002,14.747004 17.252991,16.434991 19.335999,16.434991 21.41803,16.434991 23.106018,14.747004 23.106018,12.663997 23.106018,10.581997 21.41803,8.8939943 19.335999,8.8939943z M19.433044,1.8000026C16.992004,1.788009 15.276001,2.6099997 15.276001,2.6099997 22.333008,2.8030081 25.427002,6.5729957 25.427002,6.5729957 29.874023,10.827007 29.294006,16.820992 29.294006,16.820992 32,11.214001 27.940002,5.9930091 27.940002,5.9930091 25.040039,2.6580038 21.874023,1.8119959 19.433044,1.8000026z M19.335999,0C26.330017,-1.7516868E-09 32,5.6699963 32,12.663997 32,19.65899 26.330017,25.329001 19.335999,25.329001 12.341003,25.329001 6.6710205,19.65899 6.6710205,12.663997 6.6710205,5.6699963 12.341003,-1.7516868E-09 19.335999,0z"
+                                    Fill="Green"
+                                    Stretch="Uniform" />
+                                <CheckBox
+                                    Uid="{Binding ScheduleId}"
+                                    Height="20"
+                                    Content="{Binding ScheduleTitle}"
+                                    Foreground="#252525"
+                                    IsChecked="{Binding IsScheduleActive}"
+                                    IsEnabled="False"
+                                    Style="{DynamicResource SliderCheckBox}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <TextBlock
+                    Grid.Row="2"
+                    Margin="10"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    Text="{Binding Global.AppLang.NOScheduleMessage}"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap"
+                    Visibility="{Binding IsNOScheduleMessageVisible}" />
+                <Border Grid.Row="1">
+                    <Grid VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            HorizontalAlignment="Center"
+                            extensions:Extensions.Icon="M16,0L19.8,12.200003 32,12.200003 22.1,19.700004 25.9,31.900007 16,24.400005 6.0999994,31.900007 9.9000001,19.700004 0,12.200003 12.2,12.200003z"
+                            Background="Purple"
+                            Command="{Binding EnableAddNewScheduleCommand}"
+                            Content="{Binding Global.AppLang.New}"
+                            Foreground="Purple"
+                            Style="{DynamicResource RoundButtons}" />
+                        <Button
+                            Grid.Column="1"
+                            HorizontalAlignment="Center"
+                            extensions:Extensions.Icon="M6.1000732,24.699997L19.000256,24.699997 19.000256,26.599998 6.1000732,26.599998z M6.1000732,20L14.700195,20 14.700195,21.900002 6.1000732,21.900002z M14.400188,9.5999985L18.300235,13.299999 12.80016,15.200001z M20.500275,2.5L24.70033,6.2999992 19.600255,11.899998 19.400256,11 18.000243,10.5 18.000243,9.5999985 16.600215,9.2000008 16.400214,8.0999985 15.300194,8z M10.100127,2.3999977L18.600241,2.3999977 16.300208,4.8999977 11.000149,4.8999977 11.000149,9.0999985C11.000149,9.0999985,10.900141,12.700001,6.9000872,12.399998L2.5000339,12.399998 2.5000339,28.900002C2.5000339,29.199997,2.8000258,29.5,3.1000329,29.5L20.600268,29.5C20.900275,29.5,21.200282,29.199997,21.200282,28.900002L21.200282,12 23.700316,9.5 23.700316,28.900002C23.700316,30.599998,22.300288,32,20.600268,32L3.1000329,32C1.4000129,32,1.6370996E-07,30.599998,0,28.900002L0,13.099998 2.5000339,10.5 7.7001007,5z M23.300301,0C23.500317,0,23.700316,0.099998474,23.800309,0.20000076L26.700356,2.8999977C27.100356,3.2000008,27.000363,3.8999977,26.60035,4.2999992L26.00035,4.8999977 21.900288,1 22.500304,0.39999771C22.700303,0.099998474,23.00031,0,23.300301,0z"
+                            Background="Teal"
+                            Command="{Binding EditScheduleCommand}"
+                            Content="{Binding Global.AppLang.Edit}"
+                            Foreground="Teal"
+                            Style="{DynamicResource RoundButtons}" />
+                        <Button
+                            Grid.Column="2"
+                            extensions:Extensions.Icon="M29.042969,18.955L23.935974,24.063003 21.518982,21.642006 20.575989,22.583 23.935974,25.942001 29.985962,19.897001z M25.281006,15.865003C28.974976,15.865003 32,18.890005 32,22.583 32,26.277 28.974976,29.302002 25.281006,29.302002 21.588013,29.302002 18.562988,26.277 18.562988,22.583 18.562988,18.890005 21.588013,15.865003 25.281006,15.865003z M16.515991,0L20.190002,0 20.190002,8.1180008 16.515991,8.1180008z M2.5189819,0L6.7879944,0 6.7879944,7.8380025C6.7879944,8.9980028,7.7279968,9.9380014,8.8880005,9.9380014L19.594971,9.9380014C20.755005,9.9380014,21.695007,8.9980028,21.695007,7.8380025L21.695007,0 24.588013,0 28.482971,3.8950015 28.482971,15.188001C27.500977,14.760999 26.419006,14.521002 25.281982,14.521002 20.835999,14.521002 17.219971,18.136999 17.219971,22.583 17.219971,24.768005 18.096008,26.750007 19.513,28.203003L2.5189819,28.203003C1.1279907,28.203003,0,27.076004,0,25.684006L0,2.5190015C0,1.1279986,1.1279907,1.9563436E-07,2.5189819,0z"
+                            Background="#FF597ED8"
+                            Command="{Binding SaveScheduleCommand}"
+                            Content="{Binding Global.AppLang.Save}"
+                            Foreground="#FF597ED8"
+                            Style="{DynamicResource RoundButtons}" />
+                        <Button
+                            Grid.Column="3"
+                            HorizontalAlignment="Center"
+                            extensions:Extensions.Icon="M17.330995,13.858006L17.330995,29.193001 20.696996,29.193001 20.696996,13.858006z M7.7929944,13.858006L7.7929944,29.193001 11.158995,29.193001 11.158995,13.858006z M2.1839937,11.055007L26.118997,11.055007 26.118997,32 2.1839937,32z M8.1370134,0L20.169955,0 20.169955,3.9250412 28.303,3.9250412 28.303,8.1660004 0,8.1660004 0,3.9250412 8.1370134,3.9250412z"
+                            Background="#FFDC3636"
+                            Command="{Binding DeleteScheduleCommand}"
+                            Content="{Binding Global.AppLang.Delete}"
+                            Foreground="#FFDC3636"
+                            Style="{DynamicResource RoundButtons}" />
+                    </Grid>
+                </Border>
+
+
+            </Grid>
+        </GroupBox>
+        <!--#endregion Schedule List-->
+
+
+        <!--#region *** Alerts Form ***-->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <GroupBox
+                Margin="5"
+                Padding="5,5,5,0"
+                FontSize="15"
+                Header="{Binding Global.AppLang.AlertInformation}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+
+
+                    <GroupBox Grid.RowSpan="3" Header="{Binding Global.AppLang.Days}">
+                        <StackPanel Orientation="Vertical">
+                            <CheckBox
+                                Margin="0,3"
+                                Content="{Binding Global.AppLang.Fri}"
+                                IsChecked="{Binding CurrentAlarm.Fri}"
+                                IsEnabled="True"
+                                Style="{DynamicResource SliderCheckBox}" />
+                            <CheckBox
+                                Margin="0,3"
+                                Content="{Binding Global.AppLang.Sat}"
+                                IsChecked="{Binding CurrentAlarm.Sat}"
+                                IsEnabled="True"
+                                Style="{DynamicResource SliderCheckBox}" />
+                            <CheckBox
+                                Margin="0,3"
+                                Content="{Binding Global.AppLang.Sun}"
+                                IsChecked="{Binding CurrentAlarm.Sun}"
+                                IsEnabled="True"
+                                Style="{DynamicResource SliderCheckBox}" />
+                            <CheckBox
+                                Margin="0,3"
+                                Content="{Binding Global.AppLang.Mon}"
+                                IsChecked="{Binding CurrentAlarm.Mon}"
+                                IsEnabled="True"
+                                Style="{DynamicResource SliderCheckBox}" />
+                            <CheckBox
+                                Margin="0,3"
+                                Content="{Binding Global.AppLang.Tue}"
+                                IsChecked="{Binding CurrentAlarm.Tue}"
+                                IsEnabled="True"
+                                Style="{DynamicResource SliderCheckBox}" />
+                            <CheckBox
+                                Margin="0,3"
+                                Content="{Binding Global.AppLang.Wed}"
+                                IsChecked="{Binding CurrentAlarm.Wed}"
+                                IsEnabled="True"
+                                Style="{DynamicResource SliderCheckBox}" />
+                            <CheckBox
+                                Margin="0,3"
+                                Content="{Binding Global.AppLang.Thu}"
+                                IsChecked="{Binding CurrentAlarm.Thu}"
+                                IsEnabled="True"
+                                Style="{DynamicResource SliderCheckBox}" />
+                        </StackPanel>
+                    </GroupBox>
+                    <Grid Grid.Column="1" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox
+                            Width="40"
+                            Height="20"
+                            Margin="10,0,0,0"
+                            Foreground="#252525"
+                            IsChecked="{Binding CurrentAlarm.IsAlarmActive}"
+                            Style="{DynamicResource SliderCheckBox}" />
+                        <Label
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Content="{Binding Global.AppLang.Title}"
+                            FontFamily="Consolas" />
+                        <TextBox
+                            Uid="{Binding CurrentAlarm.ScheduleId}"
+                            Grid.Column="2"
+                            Height="25"
+                            Padding="5,0,5,0"
+                            Background="Transparent"
+                            BorderBrush="gray"
+                            BorderThickness="0,0,0,1"
+                            FontFamily="Consolas"
+                            Text="{Binding CurrentAlarm.AlarmTitle}" />
+                        <StackPanel Grid.Column="3" Orientation="Horizontal">
+                            <Button
+                                HorizontalAlignment="Center"
+                                extensions:Extensions.Icon="M16,0L19.8,12.200003 32,12.200003 22.1,19.700004 25.9,31.900007 16,24.400005 6.0999994,31.900007 9.9000001,19.700004 0,12.200003 12.2,12.200003z"
+                                Background="Purple"
+                                Command="{Binding NewAlarmCommand}"
+                                Content="{Binding Global.AppLang.New}"
+                                Foreground="Purple"
+                                Style="{DynamicResource RoundButtons}" />
+                            <Button
+                                extensions:Extensions.Icon="M29.042969,18.955L23.935974,24.063003 21.518982,21.642006 20.575989,22.583 23.935974,25.942001 29.985962,19.897001z M25.281006,15.865003C28.974976,15.865003 32,18.890005 32,22.583 32,26.277 28.974976,29.302002 25.281006,29.302002 21.588013,29.302002 18.562988,26.277 18.562988,22.583 18.562988,18.890005 21.588013,15.865003 25.281006,15.865003z M16.515991,0L20.190002,0 20.190002,8.1180008 16.515991,8.1180008z M2.5189819,0L6.7879944,0 6.7879944,7.8380025C6.7879944,8.9980028,7.7279968,9.9380014,8.8880005,9.9380014L19.594971,9.9380014C20.755005,9.9380014,21.695007,8.9980028,21.695007,7.8380025L21.695007,0 24.588013,0 28.482971,3.8950015 28.482971,15.188001C27.500977,14.760999 26.419006,14.521002 25.281982,14.521002 20.835999,14.521002 17.219971,18.136999 17.219971,22.583 17.219971,24.768005 18.096008,26.750007 19.513,28.203003L2.5189819,28.203003C1.1279907,28.203003,0,27.076004,0,25.684006L0,2.5190015C0,1.1279986,1.1279907,1.9563436E-07,2.5189819,0z"
+                                Background="#FF597ED8"
+                                Command="{Binding SaveAlarmCommand}"
+                                Content="{Binding Global.AppLang.Save}"
+                                Foreground="#FF597ED8"
+                                Style="{DynamicResource RoundButtons}" />
+
+                        </StackPanel>
+                    </Grid>
+
+
+
+                    <GroupBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="10,0,0,0"
+                        Header="{Binding Global.AppLang.Time}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+                            <Label HorizontalAlignment="Center" Content="{Binding Global.AppLang.Hour}" />
+                            <Label
+                                Grid.Column="1"
+                                HorizontalAlignment="Center"
+                                Content="{Binding Global.AppLang.Minute}" />
+                            <Label
+                                Grid.Column="2"
+                                HorizontalAlignment="Center"
+                                Content="{Binding Global.AppLang.Daytime}" />
+                            <ComboBox
+                                Name="hours"
+                                Grid.Row="1"
+                                HorizontalAlignment="Stretch"
+                                BorderBrush="LightGray"
+                                BorderThickness="0,0,0,1"
+                                ItemsSource="{Binding TimePicker.Hour}"
+                                SelectedIndex="0"
+                                SelectedItem="{Binding CurrentAlarm.Hour}"
+                                Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" />
+                            <ComboBox
+                                Name="minutes"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                BorderBrush="LightGray"
+                                BorderThickness="0,0,0,1"
+                                ItemsSource="{Binding TimePicker.Minute}"
+                                SelectedIndex="0"
+                                SelectedItem="{Binding CurrentAlarm.Minute}"
+                                Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" />
+                            <ComboBox
+                                Name="daytime"
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                HorizontalAlignment="Stretch"
+                                BorderBrush="LightGray"
+                                BorderThickness="0,0,0,1"
+                                ItemsSource="{Binding TimePicker.DayTime}"
+                                SelectedIndex="0"
+                                SelectedItem="{Binding CurrentAlarm.DayTime}"
+                                Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" />
+                            <Button
+                                Grid.RowSpan="2"
+                                Grid.Column="3"
+                                Width="60"
+                                HorizontalAlignment="Center"
+                                extensions:Extensions.Icon="M17.600006,6.7000091L19.600006,6.7000091 19.600006,13.299982 24.900024,13.299982 24.900024,15.299981 19.600006,15.299981 18.600006,15.299981 17.600006,15.299981z M18.600006,0C26,2.0339212E-07 32,5.9999974 32,13.399957 32,20.399954 26.700012,26.099964 19.900024,26.700001L19.900024,23.799976C25.100006,23.200001 29.100006,18.79998 29.100006,13.399957 29.100006,7.599972 24.400024,2.8999927 18.600006,2.899993 12.800018,2.8999927 8.1000061,7.599972 8.1000061,13.299982L13.5,13.299982 6.7000122,20.099966 0,13.299982 5.3000183,13.299982C5.3000183,5.9999974,11.300018,2.0339212E-07,18.600006,0z"
+                                Background="SteelBlue"
+                                Command="{Binding TimeNowCommand}"
+                                Content="{Binding Global.AppLang.TimeNow}"
+                                Foreground="SteelBlue"
+                                Style="{DynamicResource RoundButtons}" />
+
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Margin="10,0,0,0"
+                        Header="{Binding Global.AppLang.AudioFile}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox
+                                Name="AudioFileName"
+                                Height="30"
+                                VerticalContentAlignment="Center"
+                                BorderBrush="CornflowerBlue"
+                                BorderThickness="0,0,0,1"
+                                FontSize="14"
+                                FontWeight="Bold"
+                                Foreground="CornflowerBlue"
+                                IsManipulationEnabled="False"
+                                Text="{Binding CurrentAlarm.AudioFileLocation}"
+                                TextWrapping="Wrap"
+                                VerticalScrollBarVisibility="Auto" />
+                            <Button
+                                Grid.Column="1"
+                                Margin="1,0"
+                                Background="Transparent"
+                                BorderBrush="LightGray"
+                                BorderThickness="0"
+                                Command="{Binding SelectAudioFileCommand}">
+                                <Path
+                                    Height="40"
+                                    Margin="3"
+                                    Data="M20.638,12.716986L12.026001,13.409003 12.026001,16.145027 12.026001,16.685005 12.026001,20.242991C11.39801,19.958018 10.548004,20.037974 9.8200073,20.518015 8.7900085,21.19697 8.3950195,22.417002 8.9400024,23.242993 9.4840088,24.068981 10.761017,24.188 11.791016,23.508007 12.678009,22.924021 13.091003,21.940012 12.843018,21.149973L12.843018,16.602974 19.821014,15.89698 19.821014,19.818003C19.186005,19.492991 18.298004,19.560007 17.541992,20.057017 16.511993,20.737986 16.117004,21.95698 16.661011,22.784006 17.205994,23.609997 18.483002,23.727978 19.513,23.049023 20.292999,22.534983 20.708008,21.711008 20.627014,20.982004 20.634003,20.948008 20.638,20.911997 20.638,20.875986L20.638,15.815009z M0,10.903997L32,10.903997 32,25.536999 0,25.536999z M0,0L12.890991,0 12.890991,3.2959609 32,3.2959609 32,7.2860138 0,7.2860138 0,3.948976 0,3.2959609z"
+                                    Fill="CornflowerBlue"
+                                    Stretch="Uniform" />
+                            </Button>
+                            <Button
+                                Name="PlayPauseButton"
+                                Grid.Column="2"
+                                Background="Transparent"
+                                BorderBrush="LightGray"
+                                BorderThickness="1,0,0,0"
+                                Command="{Binding PlayPauseAudioFileCommand}">
+                                <Grid Height="40" Margin="3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Path
+                                        Data="M19.628928,10.774999C20.626921,10.774999 21.424933,11.573003 21.424933,12.570005 21.424933,13.567998 20.626921,14.366002 19.628928,14.366002 18.631909,14.366002 17.83289,13.567998 17.83289,12.570005 17.83289,11.672002 18.631909,10.774999 19.628928,10.774999z M19.628928,9.1779989C17.733891,9.1779989 16.137869,10.774999 16.137869,12.670003 16.137869,14.565999 17.733891,16.162001 19.628928,16.162001 21.524939,16.162001 23.12093,14.565999 23.12093,12.670003 23.12093,10.675001 21.624916,9.1779989 19.628928,9.1779989z M6.8587975,6.9829987C7.0588116,6.9829987 7.2587952,6.9829987 7.4578017,7.1830033 7.4578017,7.1830033 7.6578159,9.1779989 8.155806,9.6769994 8.155806,9.6769994 8.8548168,10.374997 8.9548239,10.475004 8.9548239,10.475004 11.148843,12.071004 11.547833,14.066999 11.547833,14.066999 12.046861,16.661002 10.051818,19.054999 10.051818,19.054999 9.1538309,19.753004 9.3538145,18.656004 9.3538145,18.656004 10.849829,16.561003 9.9518418,14.266004 9.9518418,14.266004 9.4528145,12.271001 7.4578017,11.772001L7.7568158,20.650999C7.7568158,20.650999 8.056806,22.845999 4.9637922,23.644003 4.9637922,23.644003 0.67374698,24.541998 0.075749886,21.948004 0.075749916,21.948004 -0.72326817,19.553999 2.8687734,18.357001 2.8687731,18.357001 5.2627758,17.758002 5.8617796,18.756003L6.1607937,7.0829972C6.1607937,7.0829972,6.4598073,6.9829987,6.8587975,6.9829987z M19.828909,2.195L19.229906,7.8810014C19.229906,7.8810014 20.327908,7.8810014 20.925934,8.0809988 21.723946,8.2800039 22.521927,8.9790014 22.521927,8.9790014L25.61497,4.0900005C23.320944,2.3940014,21.125918,2.195,20.22793,2.195z M19.728903,0C26.512959,1.3803856E-08 32.000004,5.4870042 32.000004,12.271001 32.000004,19.054999 26.512959,24.541998 19.728903,24.541998 16.137869,24.541998 12.844841,22.946005 10.650822,20.551001L10.550846,20.452002 10.650822,20.352003C10.849829,20.252005,10.949836,20.151999,11.049843,20.053L11.148843,19.953001 11.24885,19.853003C13.742859,16.960005 13.044856,13.668004 13.044856,13.567998 12.545858,11.074003 10.151825,9.2779974 9.8518347,9.0789999 9.7528347,9.0789999 9.4528145,8.7790045 9.253838,8.5799993 9.1538309,8.2800039 8.9548239,7.5819977 8.9548239,6.9829987L8.8548168,6.3849992 8.9548239,6.1850022C11.148843,2.4939998,15.139875,1.3803856E-08,19.728903,0z"
+                                        Fill="MediumVioletRed"
+                                        Stretch="Uniform" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="5,0,0,0"
+                                        VerticalAlignment="Center"
+                                        FontWeight="Bold"
+                                        Foreground="MediumVioletRed"
+                                        Text="{Binding Global.AppLang.PlayStop}" />
+                                </Grid>
+
+                            </Button>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox
+                Grid.Row="1"
+                Margin="5"
+                Header="{Binding Global.AppLang.AlarmList}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ListView
+                        x:Name="AlarmListView"
+                        Grid.ColumnSpan="2"
+                        d:ItemsSource="{d:SampleData ItemCount=5}"
+                        Background="AliceBlue"
+                        BorderBrush="LightGray"
+                        BorderThickness="1"
+                        ItemsSource="{Binding AlarmList}"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        SelectedItem="{Binding CurrentAlarm}"
+                        SelectionMode="Single">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Width="{Binding ActualWidth, ElementName=AlarmListView}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <CheckBox
+                                        Uid="{Binding AlarmId}"
+                                        Height="20"
+                                        Content="{Binding AlarmTitle}"
+                                        Foreground="#252525"
+                                        IsChecked="{Binding IsAlarmActive}"
+                                        IsEnabled="False"
+                                        Style="{DynamicResource SliderCheckBox}" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="20,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="16"
+                                        Foreground="#252525">
+                                        <Run Text="⏰" />
+                                        <Run FlowDirection="LeftToRight" Text="{Binding FullTime, StringFormat=t}" />
+                                    </TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <TextBlock
+                        Grid.RowSpan="2"
+                        Margin="10"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        Text="{Binding Global.AppLang.NOAlarmMessage}"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap"
+                        Visibility="{Binding IsNOAlarmMessageVisible}" />
+                    <StackPanel
+                        Grid.Column="1"
+                        VerticalAlignment="Bottom"
+                        Orientation="Vertical">
+                        <!-- <Button
+                            Grid.Column="1"
+                            Margin="0,0,0,5"
+                            HorizontalAlignment="Center"
+                            extensions:Extensions.Icon="M6.1000732,24.699997L19.000256,24.699997 19.000256,26.599998 6.1000732,26.599998z M6.1000732,20L14.700195,20 14.700195,21.900002 6.1000732,21.900002z M14.400188,9.5999985L18.300235,13.299999 12.80016,15.200001z M20.500275,2.5L24.70033,6.2999992 19.600255,11.899998 19.400256,11 18.000243,10.5 18.000243,9.5999985 16.600215,9.2000008 16.400214,8.0999985 15.300194,8z M10.100127,2.3999977L18.600241,2.3999977 16.300208,4.8999977 11.000149,4.8999977 11.000149,9.0999985C11.000149,9.0999985,10.900141,12.700001,6.9000872,12.399998L2.5000339,12.399998 2.5000339,28.900002C2.5000339,29.199997,2.8000258,29.5,3.1000329,29.5L20.600268,29.5C20.900275,29.5,21.200282,29.199997,21.200282,28.900002L21.200282,12 23.700316,9.5 23.700316,28.900002C23.700316,30.599998,22.300288,32,20.600268,32L3.1000329,32C1.4000129,32,1.6370996E-07,30.599998,0,28.900002L0,13.099998 2.5000339,10.5 7.7001007,5z M23.300301,0C23.500317,0,23.700316,0.099998474,23.800309,0.20000076L26.700356,2.8999977C27.100356,3.2000008,27.000363,3.8999977,26.60035,4.2999992L26.00035,4.8999977 21.900288,1 22.500304,0.39999771C22.700303,0.099998474,23.00031,0,23.300301,0z"
+                            Background="Teal"
+                            Command="{Binding EditSchedule}"
+                            Content="Edit"
+                            Foreground="Teal"
+                            Style="{DynamicResource RoundButtons}" />-->
+                        <Button
+                            Grid.Column="3"
+                            Margin="0,0,0,5"
+                            HorizontalAlignment="Center"
+                            extensions:Extensions.Icon="M17.330995,13.858006L17.330995,29.193001 20.696996,29.193001 20.696996,13.858006z M7.7929944,13.858006L7.7929944,29.193001 11.158995,29.193001 11.158995,13.858006z M2.1839937,11.055007L26.118997,11.055007 26.118997,32 2.1839937,32z M8.1370134,0L20.169955,0 20.169955,3.9250412 28.303,3.9250412 28.303,8.1660004 0,8.1660004 0,3.9250412 8.1370134,3.9250412z"
+                            Background="#FFDC3636"
+                            Command="{Binding DeleteAlarmCommand}"
+                            Content="{Binding Global.AppLang.Delete}"
+                            Foreground="#FFDC3636"
+                            Style="{DynamicResource RoundButtons}" />
+                    </StackPanel>
+
+
+                </Grid>
+
+            </GroupBox>
+        </Grid>
+
+
+
+        <!--#endregion *** Alerts Form ***-->
+
+
+
+    </Grid>
+</UserControl>

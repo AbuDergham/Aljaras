@@ -1,0 +1,54 @@
+﻿<UserControl
+    x:Class="Aljaras.MVVM.View.AboutView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+   
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Aljaras.MVVM.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="clr-namespace:Aljaras.MVVM.ViewModel"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="White"
+    mc:Ignorable="d">
+    <UserControl.DataContext>
+        <viewmodel:AboutViewModel />
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Button Command="{Binding RunAboutFileCommand}" Style="{DynamicResource AboutButtons}">
+            <StackPanel>
+                <Path
+                    Height="100"
+                    Data="M22.800018,10.899996L26.700012,10.899996 26.700012,14.799998 22.800018,14.799998z M16.899994,10.899996L20.800018,10.899996 20.800018,14.799998 16.899994,14.799998z M10.899994,10.899996L14.800018,10.899996 14.800018,14.799998 10.899994,14.799998z M5,10.899996L8.8999939,10.899996 8.8999939,14.799998 5,14.799998z M22.800018,5.1000016L26.700012,5.1000016 26.700012,9.0000021 22.800018,9.0000021z M16.899994,5.1000016L20.800018,5.1000016 20.800018,9.0000021 16.899994,9.0000021z M10.899994,5.1000016L14.800018,5.1000016 14.800018,9.0000021 10.899994,9.0000021z M5,5.1000016L8.8999939,5.1000016 8.8999939,9.0000021 5,9.0000021z M2,2.1000018L2,17.899995 29.899994,17.899995 29.899994,2.1000018z M0,0L32,0 32,20.000001 18,20.000001 18,23.500001 18.200012,23.500001C27.100006,23.699998 25.399994,27.000001 25.399994,27.000001 24.200012,26.799997 19.800018,26.699998 19.800018,26.699998L19.800018,26.000001 12.200012,26.000001 12,27.000001 6.5,27.000001C4.5,24.399995,11.200012,23.699998,13.899994,23.6L14,23.6 14,20.000001 0,20.000001z"
+                    Fill="IndianRed"
+                    Stretch="Uniform" />
+                <TextBlock
+                    FontSize="35"
+                    Foreground="IndianRed"
+                    Text="{Binding Global.AppLang.About}"
+                    TextAlignment="Center" />
+            </StackPanel>
+        </Button>
+        <Button
+            Grid.Column="1"
+            Command="{Binding RunTutorialFileCommand}"
+            Style="{DynamicResource AboutButtons}">
+            <StackPanel>
+                <Path
+                    Height="100"
+                    Data="M0,2.4680732L1.2969971,2.4680732 1.2969971,22.602019C3.4710083,22.732022 10.593994,23.55102 16.182983,28.579009 20.546021,23.964022 28.437012,22.854024 30.703003,22.630019L30.703003,2.4680732 32,2.4680732 32,23.834017 31.392029,23.872019C31.29303,23.879016,21.811035,24.566018,17.130981,29.481007L16.203979,30.388001C9.9730225,24.003016,0.73699951,23.874018,0.64501953,23.874018L0,23.87002z M28.973022,7.7122028E-05C29.328979,0.0010767093,29.689026,0.012078269,30.054016,0.035080785L30.054016,21.846024C30.054016,21.846024,22.893005,21.279023,16.541016,26.630007L16.541016,4.2520657C16.541016,4.2520657,21.744995,-0.020918781,28.973022,7.7122028E-05z M3.3510132,7.7122028E-05C10.578979,-0.020918781,15.78302,4.2520657,15.78302,4.2520657L15.78302,26.630007C9.4310303,21.279023,2.2700195,21.846024,2.2700195,21.846024L2.2700195,0.035080785C2.6350098,0.012078269,2.9960327,0.0010767093,3.3510132,7.7122028E-05z"
+                    Fill="IndianRed"
+                    Stretch="Uniform" />
+                <TextBlock
+                    FontSize="35"
+                    Foreground="IndianRed"
+                    Text="{Binding Global.AppLang.Guide}"
+                    TextAlignment="Center" />
+            </StackPanel>
+        </Button>
+    </Grid>
+</UserControl>
