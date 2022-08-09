@@ -1,11 +1,6 @@
 ﻿using Aljaras.MVVM.ViewModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using NAudio.Wave;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -27,15 +22,15 @@ namespace Aljaras.Core
         [ObservableProperty]
         private bool repeat = false;
 
+        [ObservableProperty]
+        private string tmpAudio = "";
+
+
         public async Task PlayPauseAudioFile(string fileLocation, bool emergency)
         {
-            if (emergency)
-            {
-                if (Output != null && Output.PlaybackState != PlaybackState.Stopped)
-                    Output.Stop();
-                Output = null;
-            }
-            
+            if (TmpAudio != fileLocation || emergency) 
+                DisposeWave();
+                    TmpAudio = fileLocation;
             if (Output != null)
             {
                 if (Output.PlaybackState == PlaybackState.Playing) Output.Pause();
@@ -73,6 +68,20 @@ namespace Aljaras.Core
             Output = new DirectSoundOut();
             Output.Init(stream);
             Output.Play();
+        }
+        public void DisposeWave()
+        {
+            if (output != null)
+            {
+                if (output.PlaybackState == NAudio.Wave.PlaybackState.Playing) output.Stop();
+                output.Dispose();
+                output = null;
+            }
+            if (stream != null)
+            {
+                stream.Dispose();
+                stream = null;
+            }
         }
     }
 }

@@ -19,9 +19,6 @@ namespace Aljaras.MVVM.ViewModel
         public GlobalViewModel Global { get; } = GlobalViewModel.Instance;
 
         #region Variables
-        System.Windows.Forms.OpenFileDialog _filePath;
-        private NAudio.Wave.BlockAlignReductionStream? stream = null;
-        private NAudio.Wave.DirectSoundOut? output = null;
         #endregion
 
         #region Observable Properties
@@ -36,9 +33,6 @@ namespace Aljaras.MVVM.ViewModel
 
         [ObservableProperty]
         private TimePicker timePicker = new();
-
-        [ObservableProperty]
-        private string audioFileName;
 
         [ObservableProperty]
         private string isNOScheduleMessageVisible;
@@ -95,31 +89,27 @@ namespace Aljaras.MVVM.ViewModel
             {
                 if (CurrentAlarm != null && !string.IsNullOrEmpty(CurrentAlarm.AlarmTitle) && !string.IsNullOrWhiteSpace(CurrentAlarm.AlarmTitle))
                 { 
-                    string _audioFileLocation;
-                    if (CurrentAlarm.AudioFileLocation != null && File.Exists(CurrentAlarm.AudioFileLocation))
-                    _audioFileLocation = CurrentAlarm.AudioFileLocation;
-                    else if (_filePath == null) _audioFileLocation = AppDomain.CurrentDomain.BaseDirectory + "Audio\\School.mp3";
-                    else _audioFileLocation = _filePath.FileName;
-                
+
+                    var fileLocation = new string[] { CurrentAlarm.AudioFileLocation, AppDomain.CurrentDomain.BaseDirectory + "Audio\\School.mp3" }.FirstOrDefault(s => !string.IsNullOrEmpty(s) && File.Exists(s)) ?? "";
+                    if (string.IsNullOrEmpty(fileLocation))
+                    {
+                        MessageBox.Show("Not a correct audio file type or location.");
+                        return;
+                    }
                     // Open database (or create if doesn't exist)
                     using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
                     {
-                        Alarm tmpAlarm = CurrentAlarm;
-                        //tmpAlarm.FullTime = DateTime.Now;
-                        tmpAlarm.FullTime = DateTime.Parse(CurrentAlarm.Hour + ":" + CurrentAlarm.Minute + " " + CurrentAlarm.DayTime);
-
-
-                            ;
-                        tmpAlarm.AudioFileLocation = _audioFileLocation;
+                        CurrentAlarm.FullTime = DateTime.Parse(CurrentAlarm.Hour + ":" + CurrentAlarm.Minute + " " + CurrentAlarm.DayTime);
+                        CurrentAlarm.AudioFileLocation = fileLocation;
                     
                         var col = db.GetCollection<Alarm>("Alarms");
                         if (CurrentAlarm.AlarmId > 0)
-                            col.Update(tmpAlarm);
+                            col.Update(CurrentAlarm);
                         else
                         {
-                            tmpAlarm.AlarmId = DateTime.Now.Ticks;
-                            tmpAlarm.ScheduleId = CurrentSchedule.ScheduleId;
-                            col.Insert(tmpAlarm);
+                            CurrentAlarm.AlarmId = DateTime.Now.Ticks;
+                            CurrentAlarm.ScheduleId = CurrentSchedule.ScheduleId;
+                            col.Insert(CurrentAlarm);
                         }
                     }
                     MessageBox.Show("Done");
@@ -144,42 +134,23 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         private void SelectAudioFile()
         {
+            
             System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
             string path = AppDomain.CurrentDomain.BaseDirectory + "Audio"; // this is the path that you are checking.
             if (Directory.Exists(path))
-            {
                 openFileDialog.InitialDirectory = path;
-            }
             openFileDialog.Filter = "Audio File (*.mp3;*.wav)|*.mp3;*.wav;";
             if (openFileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
-
-            DisposeWave();
-            _filePath = openFileDialog;
-            StartAudio();
+            if(!Global.AudioPlayer.IsEmergency)
+            Global.AudioPlayer.PlayPauseAudioFile(openFileDialog.FileName, false);
+            CurrentAlarm.AudioFileLocation = openFileDialog.FileName;
         }
 
         [RelayCommand]
         void PlayPauseAudioFile()
         {
-            if (output != null && PlayPauseAlarmButton == CurrentAlarm.AlarmId)
-            {
-                if (output.PlaybackState == NAudio.Wave.PlaybackState.Playing) output.Pause();
-                else if (output.PlaybackState == NAudio.Wave.PlaybackState.Paused) output.Play();
-                else if (output.PlaybackState == NAudio.Wave.PlaybackState.Stopped)
-                {
-                    StartAudio();
-                }
-            }else
-            {
-                if (CurrentAlarm != null && !string.IsNullOrEmpty(CurrentAlarm.AudioFileLocation))
-                {
-                    if (output != null && output.PlaybackState == NAudio.Wave.PlaybackState.Playing) output.Stop();
-                    PlayPauseAlarmButton = CurrentAlarm.AlarmId;
-                    _filePath = new();
-                    _filePath.FileName = CurrentAlarm.AudioFileLocation;
-                    StartAudio();
-                } 
-            }
+            if (!Global.AudioPlayer.IsEmergency)
+                Global.AudioPlayer.PlayPauseAudioFile(CurrentAlarm.AudioFileLocation, false);
         }
 
         [RelayCommand]
@@ -216,8 +187,12 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         private void EditSchedule()
         {
-            EnableScheduleTitleTB = true;
-            EnableCheckBox = true;
+            if (CurrentSchedule != null && CurrentSchedule.ScheduleId > 0)
+            {
+                EnableScheduleTitleTB = true;
+                EnableCheckBox = true;
+            }
+            else MessageBox.Show("Select Schedule To Edit");
         }
 
         [RelayCommand]
@@ -291,40 +266,8 @@ namespace Aljaras.MVVM.ViewModel
                 LoadAlarmCollectionData(CurrentSchedule.ScheduleId);
         }
 
-        private void DisposeWave()
-        {
-            if (output != null)
-            {
-                if (output.PlaybackState == NAudio.Wave.PlaybackState.Playing) output.Stop();
-                output.Dispose();
-                output = null;
-            }
-            if (stream != null)
-            {
-                stream.Dispose();
-                stream = null;
-            }
-        }
+        
 
-        void StartAudio()
-        {
-            if (_filePath.FileName.ToLower().EndsWith(".mp3"))
-            {
-                NAudio.Wave.WaveStream pcm = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.Mp3FileReader(_filePath.FileName));
-                stream = new NAudio.Wave.BlockAlignReductionStream(pcm);
-            }
-            else if (_filePath.FileName.ToLower().EndsWith(".wav"))
-            {
-                NAudio.Wave.WaveStream pcm = new NAudio.Wave.WaveChannel32(new NAudio.Wave.WaveFileReader(_filePath.FileName));
-                stream = new NAudio.Wave.BlockAlignReductionStream(pcm);
-            }
-            else MessageBox.Show("Not a correct audio file type.");
-            AudioFileName = _filePath.SafeFileName;
-            CurrentAlarm.AudioFileLocation = _filePath.FileName;
-            output = new NAudio.Wave.DirectSoundOut();
-            output.Init(stream);
-            output.Play();
-        }
 
         private void LoadScheduleCollectionData()
         {

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Aljaras
+namespace Aljaras.Core
 {
     public static class Extensions
     {
