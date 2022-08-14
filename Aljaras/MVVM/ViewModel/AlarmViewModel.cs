@@ -66,6 +66,7 @@ namespace Aljaras.MVVM.ViewModel
             }
             LoadScheduleCollectionData();
             CallGlobal();
+            Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "SeaGreen", Text = Global.AppLang.Done };
         }
 
         [RelayCommand]
@@ -97,7 +98,7 @@ namespace Aljaras.MVVM.ViewModel
                     var fileLocation = new string[] { CurrentAlarm.AudioFileLocation, AppDomain.CurrentDomain.BaseDirectory + "Audio\\School.mp3" }.FirstOrDefault(s => !string.IsNullOrEmpty(s) && File.Exists(s)) ?? "";
                     if (string.IsNullOrEmpty(fileLocation))
                     {
-                        MessageBox.Show("Not a correct audio file type or location.");
+                        Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "IndianRed", Text = Global.AppLang.NotCorrectAudio };
                         return;
                     }
                     using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
@@ -116,11 +117,11 @@ namespace Aljaras.MVVM.ViewModel
                         }
                     }
                     LoadAlarmCollectionData(CurrentSchedule.ScheduleId);
-                }else MessageBox.Show("invalid title value.");
+                }else Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "IndianRed", Text = Global.AppLang.InvalidTitle };
             }
             else
             {
-                MessageBox.Show("Select a Schedule First.");
+                Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "IndianRed", Text = Global.AppLang.SelectSchedule };
                 return;
             }
             CurrentAlarm = new();
@@ -165,11 +166,9 @@ namespace Aljaras.MVVM.ViewModel
                     }
                     else col.Update(_sch);
                 }
+                Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "SeaGreen", Text = Global.AppLang.Done };
             }
-            else
-            {
-                MessageBox.Show("Please Enter a valid value");
-            }
+            else Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "IndianRed", Text = Global.AppLang.InvalidTitle };
             LoadScheduleCollectionData();
             EnableScheduleTitleTB = false;
             CurrentSchedule = new();
@@ -180,7 +179,7 @@ namespace Aljaras.MVVM.ViewModel
         private void EditSchedule(Schedule obj)
         {
             CurrentSchedule = obj;
-                EnableScheduleTitleTB = true;
+            EnableScheduleTitleTB = true;
         }
   
         [RelayCommand]
@@ -190,6 +189,7 @@ namespace Aljaras.MVVM.ViewModel
             {
                 var col = db.GetCollection<Alarm>("Alarms");
                 col.Delete(obj.AlarmId);
+                Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "IndianRed", Text = Global.AppLang.Done };
             }
             LoadAlarmCollectionData(CurrentSchedule.ScheduleId);
             CurrentAlarm = new();
@@ -215,7 +215,8 @@ namespace Aljaras.MVVM.ViewModel
                     if (_sResults != null)
                         scheduleCol.Delete(_sResults.ScheduleId);
                 }
-                LoadScheduleCollectionData();
+            Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "IndianRed", Text = Global.AppLang.Done };
+            LoadScheduleCollectionData();
                 AlarmList = new();
                 IsNOAlarmMessageVisible = "Visible";
             CurrentSchedule = new();
@@ -233,6 +234,7 @@ namespace Aljaras.MVVM.ViewModel
                 if (_sResults != null)
                     scheduleCol.Update(_sResults);
             }
+            Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "SeaGreen", Text = Global.AppLang.Done };
             CallGlobal();
         }
 
@@ -247,6 +249,7 @@ namespace Aljaras.MVVM.ViewModel
                 if (_aResults != null)
                     alarmCol.Update(_aResults);
             }
+            Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "SeaGreen", Text = Global.AppLang.Done };
             CallGlobal();
         }
         #endregion

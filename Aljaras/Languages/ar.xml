@@ -13,7 +13,7 @@
 	<ScheduleList>قائمة الاجندة</ScheduleList>
 	<AlarmList>قائمة التنبيهات</AlarmList>
 	<AlertInformation>معلومات المنبه</AlertInformation>
-	<Title>العنوان:</Title>
+	<Title>العنوان</Title>
 	<Days>الايام</Days>
 	<Fri>الجمعة</Fri>
 	<Sat>السبت</Sat>
@@ -51,4 +51,9 @@
 	<DatabaseOperations>عمليات على قاعدة البيانات</DatabaseOperations>
 	<Import>استيراد</Import>
 	<Export>تصدير</Export>
+	<Done>انتهت المهمة</Done>
+	<NoDataBase>لا يوجد قاعدة بيانات</NoDataBase>
+	<NotCorrectAudio>ملف الصوت غير صحيح</NotCorrectAudio>
+	<InvalidTitle>قيمة العنوان خاطيء</InvalidTitle>
+	<SelectSchedule>قم باختيار الجدولة اولا</SelectSchedule>
 </AppLanguage>

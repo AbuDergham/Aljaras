@@ -100,7 +100,7 @@
                 </Grid.RowDefinitions>
                 <Path
                     Width="20"
-                    Data="{StaticResource SystemTime}"
+                    Data="{StaticResource SystemTimePathData}"
                     Fill="Black"
                     Stretch="Uniform" />
                 <TextBlock
@@ -112,7 +112,7 @@
                     Grid.Column="2"
                     VerticalAlignment="Center"
                     FontSize="16"
-                    Foreground="Green">
+                    Foreground="Blue">
                     <Run FlowDirection="LeftToRight" Text="{Binding Global.SystemTime}" />
                 </TextBlock>
 
@@ -121,7 +121,7 @@
                 <Path
                     Grid.Row="1"
                     Width="20"
-                    Data="{StaticResource AlarmBell}"
+                    Data="{StaticResource AlarmBellPathData}"
                     Fill="Black"
                     Stretch="Uniform" />
                 <TextBlock
@@ -135,13 +135,13 @@
                     Grid.Column="2"
                     VerticalAlignment="Center"
                     FontSize="16"
-                    Foreground="Blue">
+                    Foreground="SeaGreen">
                     <Run FlowDirection="LeftToRight" Text="{Binding Global.CurrentAlarm}" />
                 </TextBlock>
                 <Path
                     Grid.Row="2"
                     Height="20"
-                    Data="{StaticResource TimeLeft}"
+                    Data="{StaticResource TimeLeftPathData}"
                     Fill="Black"
                     Stretch="Uniform" />
                 <TextBlock
@@ -158,31 +158,6 @@
                     Foreground="OrangeRed">
                     <Run FlowDirection="LeftToRight" Text="{Binding Global.ShowTimeLeft}" />
                 </TextBlock>
-                <Button
-                    Grid.Row="4"
-                    Grid.ColumnSpan="4"
-                    Width="{Binding Path=ActualWidth, ElementName=MonitoringGroupBox}"
-                    Height="50"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Bottom"
-                    Background="IndianRed"
-                    BorderThickness="0"
-                    Command="{Binding Global.EmergencyCommand}">
-                    <StackPanel Orientation="Horizontal">
-                        <Path
-                            Width="50"
-                            Margin="0,0,10,0"
-                            Data="M9.8001292,17.400009L11.300151,21.199995 8.5001223,22.299999 6.8000858,17.999984C7.8001001,17.699997,8.9001525,17.499984,9.8001292,17.400009z M2.0000286,13.300007L2.9000662,15.599993 3.8000424,17.900009 1.8000137,18.699997 0,14.099994z M21.000304,5.9999949L22.800316,10.400015 21.200318,10.999991 19.400305,6.6000005z M22.500325,5.2000076L22.700341,5.2000076C23.800331,5.2000076 24.800345,5.9000193 25.300352,6.9999939 25.80036,8.2000052 25.400391,9.499992 24.500353,10.200003 25.100399,9.4000165 25.300352,8.2000052 24.900383,7.1 24.500353,5.9999949 23.50034,5.3000137 22.500325,5.2000076z M24.000345,3.1000034L24.300339,3.1000034C25.900399,3.1000034 27.500397,4.1000024 28.200419,5.8000132 28.90044,7.4999935 28.400435,9.499992 27.000389,10.599997 28.000405,9.4000165 28.300396,7.5999996 27.600436,5.9999949 27.000389,4.4000207 25.500368,3.3000154 24.000345,3.1000034z M16.10027,0.70001146L22.900355,17.699997C22.900355,17.699997,13.800186,14.599993,4.7000802,17.599991L2.8000281,12.999989C2.9000662,12.900014,13.000187,8.0999991,16.10027,0.70001146z M24.900383,0L25.300352,0C27.900427,-1.6738045E-07 30.400463,1.6000046 31.500454,4.2000085 32.600506,6.9999939 31.800446,10.099997 29.600464,11.900015 31.100485,9.9999911 31.600493,7.2000062 30.600477,4.600002 29.600464,1.9999982 27.300381,0.30001789 24.900383,0z"
-                            Fill="White"
-                            Stretch="Uniform" />
-                        <TextBlock
-                            Height="20"
-                            HorizontalAlignment="Center"
-                            FontSize="16"
-                            Foreground="White"
-                            Text="{Binding Global.AppLang.Emergency}" />
-                    </StackPanel>
-                </Button>
             </Grid>
         </GroupBox>
     </Grid>

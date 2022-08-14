@@ -84,6 +84,7 @@
                         Background="White"
                         FontWeight="Bold"
                         IsManipulationEnabled="False"
+                        IsReadOnly="True"
                         Text="{Binding UserSet.EmergencyAudioFileLocation}"
                         TextWrapping="Wrap"
                         VerticalScrollBarVisibility="Auto" />
@@ -132,7 +133,7 @@
             <StackPanel Grid.Row="2" VerticalAlignment="Center">
                 <Path
                     Width="50"
-                    Data="{StaticResource DataBase}"
+                    Data="{StaticResource DataBasePathData}"
                     Fill="Black"
                     Stretch="Uniform" />
                 <TextBlock
@@ -143,7 +144,7 @@
                     Text="{Binding Global.AppLang.DatabaseOperations}" />
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <Button
-                        extensions:Extensions.Icon="{StaticResource ImportDataBase}"
+                        extensions:Extensions.Icon="{StaticResource ImportDataBasePathData}"
                         Background="DodgerBlue"
                         Command="{Binding ImportDataBaseCommand}"
                         Content="{Binding Global.AppLang.Import}"
@@ -155,7 +156,7 @@
                         Margin="20,0"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        extensions:Extensions.Icon="{StaticResource ExportDataBase}"
+                        extensions:Extensions.Icon="{StaticResource ExportDataBasePathData}"
                         Background="ForestGreen"
                         Command="{Binding ExportDataBaseCommand}"
                         Content="{Binding Global.AppLang.Export}"
@@ -166,7 +167,7 @@
                         Grid.ColumnSpan="10"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        extensions:Extensions.Icon="{StaticResource DeleteDataBase}"
+                        extensions:Extensions.Icon="{StaticResource DeleteDataBasePathData}"
                         Background="OrangeRed"
                         Command="{Binding DeleteDataBaseCommand}"
                         Content="{Binding Global.AppLang.Delete}"

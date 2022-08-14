@@ -38,6 +38,9 @@ namespace Aljaras.MVVM.ViewModel
         private AppLanguage appLang = new();
 
         [ObservableProperty]
+        private UserNotificationMessage uNMessage = new();
+
+        [ObservableProperty]
         private string systemTime = "";
 
         [ObservableProperty]
@@ -102,11 +105,21 @@ namespace Aljaras.MVVM.ViewModel
             CurrentAlarm = AppLang.NoMoreAlarms;
         }
 
+        partial void OnUNMessageChanged(UserNotificationMessage value)
+        {
+            Task.Run(async () =>
+            {
+                await Task.Delay(3000);
+                UNMessage.ActivateMessage = false;
+            });
+        }
+
         public GlobalViewModel()
         {
             SetAppLang();
             LoadMonitoringAlarmCollectionData();
             NextAlarm();
+            UNMessage = new();
             Task.Run(async () =>
             {
                 while (true)

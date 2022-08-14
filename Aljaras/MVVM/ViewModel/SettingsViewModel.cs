@@ -40,8 +40,9 @@ namespace Aljaras.MVVM.ViewModel
                 if (File.Exists(fileExists))
                     File.Delete(fileExists);
                 File.Copy(openFileDialog.FileName, Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Aljaras.jrsdb"));
+                Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "SeaGreen", Text = Global.AppLang.Done };
             }
-            Global.LoadMonitoringAlarmCollectionData();
+            Global.LoadMonitoringAlarmCollectionData();            
         }
 
         [RelayCommand]
@@ -55,8 +56,9 @@ namespace Aljaras.MVVM.ViewModel
                 {
                     string _desFile = Path.Combine(fbd.SelectedPath, Path.GetFileNameWithoutExtension(fileToCopy) + ".jrsbck");
                     File.Copy(fileToCopy, MakeUnique(_desFile).ToString());
+                    Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "SeaGreen", Text = Global.AppLang.Done };
                 }
-                else MessageBox.Show("There is no DataBase To Clone");
+                else Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "IndianRed", Text = Global.AppLang.NoDataBase };
             }
         }
 
@@ -70,6 +72,7 @@ namespace Aljaras.MVVM.ViewModel
             if (File.Exists(fileExists))
                 File.Delete(fileExists);
             Global.LoadMonitoringAlarmCollectionData();
+            Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "IndianRed", Text = Global.AppLang.Done };
         }
 
         [RelayCommand]
@@ -87,6 +90,7 @@ namespace Aljaras.MVVM.ViewModel
             Global.SetAppLang();
             Global.LoadMonitoringAlarmCollectionData();
             Global.NextAlarm();
+            Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "SeaGreen", Text = Global.AppLang.Done };
         }
 
         [RelayCommand]

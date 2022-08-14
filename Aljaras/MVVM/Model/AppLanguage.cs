@@ -47,7 +47,7 @@ namespace Aljaras.MVVM.Model
         private string _alertInformation = "Alert Information";
 
         [ObservableProperty]
-        private string _title = "Title:";
+        private string _title = "Title";
 
         [ObservableProperty]
         private string _days = "Days";
@@ -159,5 +159,20 @@ namespace Aljaras.MVVM.Model
 
         [ObservableProperty]
         private string _export = "Export";
+
+        [ObservableProperty]
+        private string _done = "Done";
+
+        [ObservableProperty]
+        private string _noDataBase = "There is no DataBase";
+
+        [ObservableProperty]
+        private string _notCorrectAudio = "Not a correct audio file type";
+
+        [ObservableProperty]
+        private string _invalidTitle = "invalid title value";
+
+        [ObservableProperty]
+        private string _selectSchedule = "Select a Schedule First";
     }
 }

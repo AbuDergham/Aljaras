@@ -20,32 +20,56 @@
         </Grid.ColumnDefinitions>
         <!--#region *** Schedule List ***-->
         <GroupBox FontSize="15" Header="{Binding Global.AppLang.ScheduleList}">
-            <Grid>
+            <Grid Margin="0,10,0,0">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="20" />
                     <RowDefinition Height="40" />
+                    <RowDefinition Height="20" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Grid VerticalAlignment="Center">
+
+                <Grid>
+                    <Border BorderBrush="#202020" BorderThickness="0,0,0,0.3" />
+                    <TextBlock Margin="10,0,0,0" VerticalAlignment="Center">
+                        <Run Text="{Binding Global.AppLang.Title}" />
+                        <Run Text=":" />
+                    </TextBlock>
+                    <StackPanel
+                        Grid.Column="2"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Foreground="Purple"
+                            Text="{Binding Global.AppLang.New}" />
+                        <Border
+                            Margin="5"
+                            BorderBrush="LightGray"
+                            BorderThickness="1,0,0,0" />
+                        <TextBlock
+                            Margin="0,0,10,0"
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Foreground="Blue"
+                            Text="{Binding Global.AppLang.Save}" />
+
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="1" VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Label
-                        VerticalAlignment="Center"
-                        Content="{Binding Global.AppLang.Title}"
-                        FontFamily="Consolas" />
                     <TextBox
-                        Grid.Column="1"
                         Height="25"
                         VerticalContentAlignment="Center"
-                        Background="Transparent"
-                        BorderBrush="gray"
-                        BorderThickness="0,0,0,1"
-                        FontFamily="Consolas"
+                        Background="Azure"
+                        BorderBrush="LightBlue"
                         IsEnabled="{Binding EnableScheduleTitleTB}"
                         Text="{Binding CurrentSchedule.ScheduleTitle}" />
-                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
                         <Button
                             HorizontalAlignment="Center"
                             extensions:Extensions.Icon="{StaticResource NewPathData}"
@@ -66,9 +90,43 @@
                             ToolTip="{Binding Global.AppLang.Save}" />
                     </StackPanel>
                 </Grid>
+                <Grid Grid.Row="2">
+                    <Border BorderBrush="#F1F1F1" BorderThickness="0,1" />
+                    <StackPanel
+                        Grid.Column="2"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Foreground="SeaGreen"
+                            Text="Edit" />
+                        <Border
+                            Margin="5"
+                            BorderBrush="LightGray"
+                            BorderThickness="1,0,0,0" />
+
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Foreground="Purple"
+                            Text="Clone" />
+                        <Border
+                            Margin="5"
+                            BorderBrush="LightGray"
+                            BorderThickness="1,0,0,0" />
+                        <TextBlock
+                            Margin="0,0,10,0"
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Foreground="Red"
+                            Text="Delete" />
+
+                    </StackPanel>
+                </Grid>
                 <ListView
                     x:Name="ScheduleListView"
-                    Grid.Row="1"
+                    Grid.Row="3"
                     d:ItemsSource="{d:SampleData ItemCount=5}"
                     Background="Transparent"
                     BorderThickness="0"
@@ -139,7 +197,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
                 <TextBlock
-                    Grid.Row="2"
+                    Grid.Row="3"
                     Margin="10"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
@@ -357,6 +415,7 @@
                                 BorderBrush="CornflowerBlue"
                                 FontWeight="Bold"
                                 IsManipulationEnabled="False"
+                                IsReadOnly="True"
                                 Text="{Binding CurrentAlarm.AudioFileLocation}"
                                 TextWrapping="Wrap"
                                 VerticalScrollBarVisibility="Auto" />

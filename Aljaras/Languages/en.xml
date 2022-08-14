@@ -13,7 +13,7 @@
 	<ScheduleList>Schedule List</ScheduleList>
 	<AlarmList>Alarm List</AlarmList>
 	<AlertInformation>Alert Information</AlertInformation>
-	<Title>Title:</Title>
+	<Title>Title</Title>
 	<Days>Days</Days>
 	<Fri>Fri</Fri>
 	<Sat>Sat</Sat>
@@ -51,4 +51,9 @@
 	<DatabaseOperations>Database Operations</DatabaseOperations>
 	<Import>Import</Import>
 	<Export>Export</Export>
+	<Done>Done</Done>
+	<NoDataBase>There is no DataBase</NoDataBase>
+	<NotCorrectAudio>Not a correct audio file type</NotCorrectAudio>
+	<InvalidTitle>invalid title value</InvalidTitle>
+	<SelectSchedule>Select a Schedule First</SelectSchedule>
 </AppLanguage>

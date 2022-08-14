@@ -27,7 +27,7 @@ namespace Aljaras.Core
         #endregion
 
         #region Functions
-        public GlobalViewModel Global { get; } = GlobalViewModel.Instance;
+        public GlobalViewModel Global { get; set; } = GlobalViewModel.Instance;
 
         public async Task PlayPauseAudioFile(string fileLocation, bool emergency)
         {
@@ -62,11 +62,7 @@ namespace Aljaras.Core
                 pcm = WaveFormatConversionStream.CreatePcmStream(new Mp3FileReader(fileLocation));
             else if (fileLocation.ToLower().EndsWith(".wav"))
                 pcm = new WaveChannel32(new WaveFileReader(fileLocation));
-            else
-            {
-                MessageBox.Show("Not a correct audio file type.");
-                return;
-            }
+            else return;
             stream = new BlockAlignReductionStream(pcm);
             Output = new DirectSoundOut();
             Output.Init(stream);
