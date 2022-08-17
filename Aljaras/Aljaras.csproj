@@ -18,15 +18,22 @@
 
 	<Target Name="RemoveDuplicateAnalyzers" BeforeTargets="CoreCompile">
 		<!-- Work around https://github.com/dotnet/wpf/issues/6792 -->
-
 		<ItemGroup>
 			<FilteredAnalyzer Include="@(Analyzer-&gt;Distinct())" />
 			<Analyzer Remove="@(Analyzer)" />
 			<Analyzer Include="@(FilteredAnalyzer)" />
 		</ItemGroup>
 	</Target>
+
+	<ItemGroup>
+	  <None Remove="mustafa.jpg" />
+	  <None Remove="MVVM\View\mustafa.jpg" />
+	</ItemGroup>
 	
   <ItemGroup>
+    <Content Include="mustafa.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SchoolBell.ico" />
   </ItemGroup>
 
@@ -43,7 +50,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="MVVM\View\mustafa.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Aljaras.jrsdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="aljaras.rtf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Audio\Attention.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Audio\Emerg.mp3">
@@ -151,6 +168,12 @@
     <None Update="Audio\الحصص نغمة المطار\10.MP3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Audio\الحصص نغمة المطار\1بداية الفسحة  وشكر للمشرفين.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Audio\الحصص نغمة المطار\1نهاية الفسحة وشكر للمشرفين.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Audio\الحصص نغمة المطار\2.MP3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -199,6 +222,9 @@
     <None Update="Audio\الحصص نغمة المطار\انتهت حصة النشاط.MP3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Audio\الحصص نغمة المطار\باقي على الحصة خمس دقائق.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Audio\الحصص نغمة المطار\بداية الفسحة الاولى.MP3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -212,6 +238,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Audio\الحصص نغمة المطار\بداية حصة النشاط.MP3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Audio\الحصص نغمة المطار\تنتهي الفسحة بعد خمس دقائق.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Audio\الحصص نغمة المطار\حالة طارئة 1.MP3">
@@ -299,6 +328,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Audio\الحصص\انتهت الحصة  9.MP3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Audio\الحصص\باقي على الحصة خمس دقائق.MP3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Audio\الحصص\باقي على الخصة خمس دقائق.MP3">

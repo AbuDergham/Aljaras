@@ -1,4 +1,5 @@
 ﻿using Aljaras.MVVM.Model;
+using Aljaras.MVVM.View;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiteDB;
@@ -20,7 +21,13 @@ namespace Aljaras.MVVM.ViewModel
         public MonitoringViewModel monitoringVM = new();
 
         [ObservableProperty]
+        public AboutMeViewModel aboutMeVM = new();
+
+        [ObservableProperty]
         public AlarmViewModel alarmVM = new();
+
+        [ObservableProperty]
+        public HolidaysViewModel holidaysVM = new();
 
         [ObservableProperty]
         public SettingsViewModel settingsVM = new();
@@ -33,6 +40,12 @@ namespace Aljaras.MVVM.ViewModel
         #endregion
 
         #region RelayCommands
+        [RelayCommand]
+        void ShowHolidaysView() { CurrentView = HolidaysVM; }
+
+        [RelayCommand]
+        void ShowAboutMeView() { CurrentView = AboutMeVM; }
+
         [RelayCommand]
         static void MoveWindow(){Application.Current.MainWindow.DragMove();}
 

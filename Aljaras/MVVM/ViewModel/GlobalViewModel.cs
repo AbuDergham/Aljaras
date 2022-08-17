@@ -8,6 +8,7 @@ using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -27,7 +28,13 @@ namespace Aljaras.MVVM.ViewModel
         public event TimerEvent? TimerEvt;
         #endregion
 
-        #region Observable Properties
+        #region Observable 
+        [ObservableProperty]
+        ObservableCollection<UserNotificationMessage> notificationList  = new ObservableCollection<UserNotificationMessage>();
+
+        [ObservableProperty]
+        UserNotificationMessage notificationMessage = new();
+
         [ObservableProperty]
         AudioFilePlayer audioPlayer = new();
 
@@ -36,9 +43,6 @@ namespace Aljaras.MVVM.ViewModel
 
         [ObservableProperty]
         private AppLanguage appLang = new();
-
-        [ObservableProperty]
-        private UserNotificationMessage uNMessage = new();
 
         [ObservableProperty]
         private string systemTime = "";
@@ -81,13 +85,117 @@ namespace Aljaras.MVVM.ViewModel
 
         [ObservableProperty]
         private TimeSpan timeLeft = new();
+
+        [ObservableProperty]
+        private bool recordButtonEnabled = true;
+
+        [ObservableProperty]
+        private bool stopButtonEnabled = false;
+
+        [ObservableProperty]
+        private List<WaveInCapabilities> micDevicesList = new();
+
+        [ObservableProperty]
+        private WaveInCapabilities selectedMicDevice = new();
+
+        [ObservableProperty]
+        private List<WaveOutCapabilities> speakerDevicesList = new();
+
+        [ObservableProperty]
+        private WaveOutCapabilities selectedSpeakerDevice = new();
+
+        [ObservableProperty]
+        private string recordingActionVisibility = "Hidden";
+
+        [ObservableProperty]
+        private string emergencyActionVisibility = "Hidden";
         #endregion
 
         #region RelayCommands
+
+        WaveIn wave;
+        WaveOut waveOut;
+        BufferedWaveProvider provider;
+
+        [RelayCommand]
+        private void StopRecording()
+        {
+            RecordingActionVisibility = "Hidden";
+            RecordButtonEnabled = true;
+            StopButtonEnabled = false;
+            wave.StopRecording();
+            wave.Dispose();
+            waveOut.Dispose();
+        }
+
+        [RelayCommand]
+        private void StartRecording()
+        {
+            if (AudioPlayer.IsEmergency) return;
+            RecordingActionVisibility = "Visible";
+            AudioPlayer.PlayPauseAudioFile(AppDomain.CurrentDomain.BaseDirectory + "Audio\\Attention.mp3", false);
+            RecordButtonEnabled = false;
+            StopButtonEnabled = true;
+
+            wave = new WaveIn();
+            wave.DeviceNumber = MicDevicesList.IndexOf(SelectedMicDevice); 
+
+            waveOut = new WaveOut();
+            waveOut.DeviceNumber = SpeakerDevicesList.IndexOf(SelectedSpeakerDevice);
+            waveOut.DesiredLatency = 100;
+
+            provider = new BufferedWaveProvider(wave.WaveFormat);
+            waveOut.Init(provider);
+            waveOut.Play();
+
+            wave.DataAvailable += Wave_DataAvailable;
+            wave.StartRecording();
+        }
+
+        private void Wave_DataAvailable(object sender, WaveInEventArgs e)
+        {
+            provider.AddSamples(e.Buffer, 0, e.BytesRecorded);
+        }
+
+        [RelayCommand]
+        private void PushToast()
+        {
+            Random random = new Random();
+            NotificationMessage = new()
+            {
+                ActiveMessage = ((MessageVisibility)2).ToString(),
+                BackgroundColor = ((MessageBackground)random.Next(16)).ToString(),
+                Text = new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 10)
+                .Select(s => s[random.Next(s.Length)]).ToArray())
+            };
+            NotificationList.Add(NotificationMessage);
+        }
+       
+
+        [RelayCommand]
+        private void DeleteNotification(UserNotificationMessage obj)
+        {
+            if(NotificationList.Contains(obj))
+                NotificationList.Remove(obj);
+        }
+
+        partial void OnNotificationMessageChanged(UserNotificationMessage value)
+        {
+            /*_ = Task.Run(async () =>
+            {
+                await Task.Delay(5000);
+                if (NotificationList != null && NotificationList.Count > 0)
+                    NotificationList.Remove(value);
+            });*/
+        }
+
         [RelayCommand]
         private void Emergency()
         {
             AudioPlayer.IsEmergency = !AudioPlayer.IsEmergency;
+            if (AudioPlayer.IsEmergency)
+                EmergencyActionVisibility = "Visible";
+            else EmergencyActionVisibility = "Hidden";
             _ = AudioPlayer.PlayPauseAudioFile(GetUserSettings.EmergencyAudioFileLocation, AudioPlayer.IsEmergency);
         }
         #endregion
@@ -105,13 +213,20 @@ namespace Aljaras.MVVM.ViewModel
             CurrentAlarm = AppLang.NoMoreAlarms;
         }
 
-        partial void OnUNMessageChanged(UserNotificationMessage value)
+        private void LoadDevices()
         {
-            Task.Run(async () =>
+            for (int deviceId = 0; deviceId < WaveIn.DeviceCount; deviceId++)
             {
-                await Task.Delay(3000);
-                UNMessage.ActivateMessage = false;
-            });
+                var deviceInfo = WaveIn.GetCapabilities(deviceId);
+              
+                MicDevicesList.Add(deviceInfo);
+            }
+
+            for (int deviceId = 0; deviceId < WaveOut.DeviceCount; deviceId++)
+            {
+                var deviceInfo = WaveOut.GetCapabilities(deviceId);
+                SpeakerDevicesList.Add(deviceInfo);
+            }
         }
 
         public GlobalViewModel()
@@ -119,7 +234,8 @@ namespace Aljaras.MVVM.ViewModel
             SetAppLang();
             LoadMonitoringAlarmCollectionData();
             NextAlarm();
-            UNMessage = new();
+            LoadDevices();
+            NotificationList = new();
             Task.Run(async () =>
             {
                 while (true)

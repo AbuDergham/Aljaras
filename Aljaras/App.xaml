@@ -14,6 +14,7 @@
                 <ResourceDictionary Source="/Themes/Path.xaml" />
                 <ResourceDictionary Source="/Themes/ToolTip.xaml" />
                 <ResourceDictionary Source="/Themes/GroupBox.xaml" />
+                <ResourceDictionary Source="/Themes/ListBox.xaml" />
                 <!--#endregion-->
             </ResourceDictionary.MergedDictionaries>
             <!--#region Views-->
@@ -23,11 +24,17 @@
             <DataTemplate DataType="{x:Type viewModel:AlarmViewModel}">
                 <view:AlarmView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:HolidaysViewModel}">
+                <view:HolidaysView />
+            </DataTemplate>
             <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
                 <view:SettingsView />
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewModel:AboutViewModel}">
                 <view:AboutView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:AboutMeViewModel}">
+                <view:AboutMeView />
             </DataTemplate>
             <!--#endregion-->
         </ResourceDictionary>

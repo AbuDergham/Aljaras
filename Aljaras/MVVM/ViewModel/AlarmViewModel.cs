@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace Aljaras.MVVM.ViewModel
 {
@@ -66,7 +67,35 @@ namespace Aljaras.MVVM.ViewModel
             }
             LoadScheduleCollectionData();
             CallGlobal();
-            Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "SeaGreen", Text = Global.AppLang.Done };
+            Global.NotificationMessage = new()
+            {
+                ActiveMessage = ((MessageVisibility)2).ToString(),
+                BackgroundColor = ((MessageBackground)7).ToString(),
+                Text = Global.AppLang.Done
+            };
+            GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+        }
+
+        [RelayCommand]
+        private void CloneAlarm(Alarm obj)
+        {
+            using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
+            {
+                var aLarmCol = db.GetCollection<Alarm>("Alarms");
+                Alarm tmp = obj;
+                tmp.AlarmId = DateTime.Now.Ticks;
+                tmp.AlarmTitle = obj.AlarmTitle + "Clone";
+                aLarmCol.Insert(tmp);
+            }
+            LoadAlarmCollectionData(CurrentSchedule.ScheduleId);
+            CallGlobal();
+            Global.NotificationMessage = new()
+            {
+                ActiveMessage = ((MessageVisibility)2).ToString(),
+                BackgroundColor = ((MessageBackground)7).ToString(),
+                Text = Global.AppLang.Done
+            };
+            GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
         }
 
         [RelayCommand]
@@ -94,18 +123,24 @@ namespace Aljaras.MVVM.ViewModel
             if (CurrentSchedule != null && CurrentSchedule.ScheduleId > 0)
             {
                 if (CurrentAlarm != null && !string.IsNullOrEmpty(CurrentAlarm.AlarmTitle) && !string.IsNullOrWhiteSpace(CurrentAlarm.AlarmTitle))
-                { 
+                {
                     var fileLocation = new string[] { CurrentAlarm.AudioFileLocation, AppDomain.CurrentDomain.BaseDirectory + "Audio\\School.mp3" }.FirstOrDefault(s => !string.IsNullOrEmpty(s) && File.Exists(s)) ?? "";
                     if (string.IsNullOrEmpty(fileLocation))
                     {
-                        Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "IndianRed", Text = Global.AppLang.NotCorrectAudio };
+                        Global.NotificationMessage = new()
+                        {
+                            ActiveMessage = ((MessageVisibility)2).ToString(),
+                            BackgroundColor = ((MessageBackground)2).ToString(),
+                            Text = Global.AppLang.NotCorrectAudio
+                        };
+                        GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
                         return;
                     }
                     using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
                     {
                         CurrentAlarm.FullTime = DateTime.Parse(CurrentAlarm.Hour + ":" + CurrentAlarm.Minute + " " + CurrentAlarm.DayTime);
                         CurrentAlarm.AudioFileLocation = fileLocation;
-                    
+
                         var col = db.GetCollection<Alarm>("Alarms");
                         if (CurrentAlarm.AlarmId > 0)
                             col.Update(CurrentAlarm);
@@ -117,11 +152,27 @@ namespace Aljaras.MVVM.ViewModel
                         }
                     }
                     LoadAlarmCollectionData(CurrentSchedule.ScheduleId);
-                }else Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "IndianRed", Text = Global.AppLang.InvalidTitle };
+                }
+                else 
+                {
+                Global.NotificationMessage = new()
+                    {
+                        ActiveMessage = ((MessageVisibility)2).ToString(),
+                        BackgroundColor = ((MessageBackground)2).ToString(),
+                        Text = Global.AppLang.InvalidTitle
+                    };
+                    GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+                }
             }
             else
             {
-                Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "IndianRed", Text = Global.AppLang.SelectSchedule };
+                Global.NotificationMessage = new()
+                {
+                    ActiveMessage = ((MessageVisibility)2).ToString(),
+                    BackgroundColor = ((MessageBackground)2).ToString(),
+                    Text = Global.AppLang.SelectSchedule
+                };
+                GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
                 return;
             }
             CurrentAlarm = new();
@@ -166,9 +217,24 @@ namespace Aljaras.MVVM.ViewModel
                     }
                     else col.Update(_sch);
                 }
-                Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "SeaGreen", Text = Global.AppLang.Done };
+                Global.NotificationMessage = new()
+                {
+                    ActiveMessage = ((MessageVisibility)2).ToString(),
+                    BackgroundColor = ((MessageBackground)7).ToString(),
+                    Text = Global.AppLang.Done
+                };
+                GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
             }
-            else Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "IndianRed", Text = Global.AppLang.InvalidTitle };
+            else 
+            {
+                Global.NotificationMessage = new()
+                {
+                    ActiveMessage = ((MessageVisibility)2).ToString(),
+                    BackgroundColor = ((MessageBackground)2).ToString(),
+                    Text = Global.AppLang.InvalidTitle
+                };
+                GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+            }
             LoadScheduleCollectionData();
             EnableScheduleTitleTB = false;
             CurrentSchedule = new();
@@ -189,7 +255,13 @@ namespace Aljaras.MVVM.ViewModel
             {
                 var col = db.GetCollection<Alarm>("Alarms");
                 col.Delete(obj.AlarmId);
-                Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "IndianRed", Text = Global.AppLang.Done };
+                Global.NotificationMessage = new()
+                {
+                    ActiveMessage = ((MessageVisibility)2).ToString(),
+                    BackgroundColor = ((MessageBackground)2).ToString(),
+                    Text = Global.AppLang.Done
+                };
+                GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
             }
             LoadAlarmCollectionData(CurrentSchedule.ScheduleId);
             CurrentAlarm = new();
@@ -215,7 +287,13 @@ namespace Aljaras.MVVM.ViewModel
                     if (_sResults != null)
                         scheduleCol.Delete(_sResults.ScheduleId);
                 }
-            Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "IndianRed", Text = Global.AppLang.Done };
+            Global.NotificationMessage = new()
+            {
+                ActiveMessage = ((MessageVisibility)2).ToString(),
+                BackgroundColor = ((MessageBackground)2).ToString(),
+                Text = Global.AppLang.Done
+            };
+            GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
             LoadScheduleCollectionData();
                 AlarmList = new();
                 IsNOAlarmMessageVisible = "Visible";
@@ -234,7 +312,13 @@ namespace Aljaras.MVVM.ViewModel
                 if (_sResults != null)
                     scheduleCol.Update(_sResults);
             }
-            Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "SeaGreen", Text = Global.AppLang.Done };
+            Global.NotificationMessage = new()
+            {
+                ActiveMessage = ((MessageVisibility)2).ToString(),
+                BackgroundColor = ((MessageBackground)2).ToString(),
+                Text = Global.AppLang.Done
+            };
+            GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
             CallGlobal();
         }
 
@@ -249,7 +333,13 @@ namespace Aljaras.MVVM.ViewModel
                 if (_aResults != null)
                     alarmCol.Update(_aResults);
             }
-            Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "SeaGreen", Text = Global.AppLang.Done };
+            Global.NotificationMessage = new()
+            {
+                ActiveMessage = ((MessageVisibility)2).ToString(),
+                BackgroundColor = ((MessageBackground)2).ToString(),
+                Text = Global.AppLang.Done
+            };
+            GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
             CallGlobal();
         }
         #endregion

@@ -40,7 +40,13 @@ namespace Aljaras.MVVM.ViewModel
                 if (File.Exists(fileExists))
                     File.Delete(fileExists);
                 File.Copy(openFileDialog.FileName, Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Aljaras.jrsdb"));
-                Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "SeaGreen", Text = Global.AppLang.Done };
+                Global.NotificationMessage = new()
+                {
+                    ActiveMessage = ((Visibility)2).ToString(),
+                    BackgroundColor = ((MessageBackground)2).ToString(),
+                    Text = Global.AppLang.Done
+                };
+                GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
             }
             Global.LoadMonitoringAlarmCollectionData();            
         }
@@ -56,9 +62,24 @@ namespace Aljaras.MVVM.ViewModel
                 {
                     string _desFile = Path.Combine(fbd.SelectedPath, Path.GetFileNameWithoutExtension(fileToCopy) + ".jrsbck");
                     File.Copy(fileToCopy, MakeUnique(_desFile).ToString());
-                    Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "SeaGreen", Text = Global.AppLang.Done };
+                    Global.NotificationMessage = new()
+                    {
+                        ActiveMessage = ((MessageVisibility)2).ToString(),
+                        BackgroundColor = ((MessageBackground)2).ToString(),
+                        Text = Global.AppLang.Done
+                    };
+                    GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
                 }
-                else Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "IndianRed", Text = Global.AppLang.NoDataBase };
+                else 
+                {
+                    Global.NotificationMessage = new()
+                    {
+                        ActiveMessage = ((MessageVisibility)2).ToString(),
+                        BackgroundColor = ((MessageBackground)2).ToString(),
+                        Text = Global.AppLang.NoDataBase
+                    };
+                    GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+                }
             }
         }
 
@@ -72,7 +93,13 @@ namespace Aljaras.MVVM.ViewModel
             if (File.Exists(fileExists))
                 File.Delete(fileExists);
             Global.LoadMonitoringAlarmCollectionData();
-            Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "IndianRed", Text = Global.AppLang.Done };
+            Global.NotificationMessage = new()
+            {
+                ActiveMessage = ((MessageVisibility)2).ToString(),
+                BackgroundColor = ((MessageBackground)2).ToString(),
+                Text = Global.AppLang.Done
+            };
+            GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
         }
 
         [RelayCommand]
@@ -90,7 +117,13 @@ namespace Aljaras.MVVM.ViewModel
             Global.SetAppLang();
             Global.LoadMonitoringAlarmCollectionData();
             Global.NextAlarm();
-            Global.UNMessage = new() { ActivateMessage = true, BackgroundColor = "SeaGreen", Text = Global.AppLang.Done };
+            Global.NotificationMessage = new()
+            {
+                ActiveMessage = ((MessageVisibility)2).ToString(),
+                BackgroundColor = ((MessageBackground)7).ToString(),
+                Text = Global.AppLang.Done
+            };
+            GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
         }
 
         [RelayCommand]

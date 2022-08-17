@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:Aljaras.Core"
     xmlns:local="clr-namespace:Aljaras.MVVM.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodel="clr-namespace:Aljaras.MVVM.ViewModel"
@@ -18,7 +19,12 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
         <GroupBox
+            Grid.RowSpan="2"
             Margin="5"
             Padding="5"
             FontSize="16"
@@ -95,8 +101,6 @@
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
                     <RowDefinition Height="30" />
-                    <RowDefinition />
-                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Path
                     Width="20"
@@ -158,6 +162,145 @@
                     Foreground="OrangeRed">
                     <Run FlowDirection="LeftToRight" Text="{Binding Global.ShowTimeLeft}" />
                 </TextBlock>
+
+
+            </Grid>
+        </GroupBox>
+
+        <GroupBox
+            x:Name="DevicesGroup"
+            Grid.Row="1"
+            Grid.Column="1"
+            Header="intercom">
+            <Grid Width="{Binding ActualWidth, ElementName=DevicesGroup}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock VerticalAlignment="Center">
+                    <Run Text="Recording Device" />
+                    <Run Text=":" />
+                </TextBlock>
+                <ComboBox
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    ItemsSource="{Binding Global.MicDevicesList}"
+                    SelectedIndex="0"
+                    SelectedItem="{Binding Global.SelectedMicDevice}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Foreground="#252525"
+                                Text="{Binding ProductName}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <TextBlock Grid.Row="1" VerticalAlignment="Center">
+                    <Run Text="Playback Device" />
+                    <Run Text=":" />
+                </TextBlock>
+                <ComboBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    ItemsSource="{Binding Global.SpeakerDevicesList}"
+                    SelectedIndex="0"
+                    SelectedItem="{Binding Global.SelectedSpeakerDevice}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Foreground="#252525"
+                                Text="{Binding ProductName}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <StackPanel
+                    Grid.Row="2"
+                    Grid.ColumnSpan="3"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Path
+                        Height="10"
+                        Margin="0,0,-6,0"
+                        VerticalAlignment="Top"
+                        Data="M16.062402,9.2779838C12.570367,9.2779838 9.7773439,12.071989 9.7773439,15.563994 9.7773439,19.055997 12.570367,21.848996 16.062402,21.848996 19.554435,21.848996 22.347459,18.955991 22.347459,15.563994 22.347459,12.071989 19.554435,9.2779838 16.062402,9.2779838z M11.473342,0C12.37136,2.2949828 14.266365,4.4899899 17.35941,3.8909909 19.055408,3.5919796 20.053434,2.0950011 20.452422,0.29898095 23.345452,0.79800415 24.742469,1.4969786 26.937495,3.6919855 23.644467,6.8840018 26.138477,13.468992 31.526523,11.673003 32.12452,14.066984 32.224527,17.160001 31.426517,19.453977 27.535491,18.955991 24.542455,20.551999 25.240459,24.641996 25.340465,25.44 26.737481,26.936978 26.737481,26.936978 26.737481,26.936978 24.243472,30.128995 20.551423,30.828 19.953426,26.038999 12.171346,26.038999 11.573349,30.828 8.1813213,30.229001 6.9833132,29.430997 4.8882944,27.23599 8.3803283,24.342984 5.4872981,17.658994 0.2992656,19.553983 -0.099755201,17.160001 -0.099755201,13.966978 0.2992656,11.572997 5.088308,12.769987 7.9813382,8.4799796 5.9862954,5.0879818L4.9883009,4.0910031C4.9883009,4.0910031,6.8843137,1.4969786,11.473342,0z"
+                        Fill="SeaGreen"
+                        Stretch="Uniform"
+                        Style="{StaticResource Spinner}"
+                        Visibility="{Binding Global.RecordingActionVisibility}" />
+                    <Button
+                        Grid.Column="2"
+                        VerticalAlignment="Center"
+                        extensions:Extensions.Icon="M0,15.1L2.7000022,15.1 2.7000022,16C2.7000022,20.400001 6.2000053,23.900001 10.600009,23.900001 15.000013,23.900001 18.500016,20.400001 18.500016,16L18.500016,15.2 21.200018,15.2 21.200018,16C21.200018,21.400001,17.100015,25.900001,11.80001,26.500001L11.80001,30.500001 13.600012,30.500001 13.600012,32.000001 7.7000069,32.000001 7.7000069,30.500001 9.2000079,30.500001 9.2000079,26.400001C4.0000033,25.8,0,21.400001,0,16z M10.600009,0C13.000011,0,14.900013,1.9000001,14.900013,4.3000004L14.900013,16.6C14.900013,19 13.000011,20.900001 10.600009,20.900001 8.2000071,20.900001 6.3000054,19 6.3000052,16.6L6.3000052,4.3000004C6.3000054,1.9000001,8.2000071,0,10.600009,0z"
+                        Background="SeaGreen"
+                        Command="{Binding Global.StartRecordingCommand}"
+                        Content="Start"
+                        Foreground="SeaGreen"
+                        IsEnabled="{Binding Global.RecordButtonEnabled}"
+                        Style="{DynamicResource ListRoundButtons}" />
+                    <Button
+                        Grid.Column="2"
+                        Margin="30,0"
+                        VerticalAlignment="Center"
+                        extensions:Extensions.Icon="M28.500003,0L31.999999,3.5 20.199962,15.300018 20.199962,16.5C20.199962,18.600006 18.500013,20.400024 16.300002,20.400024 15.899979,20.400024 15.599991,20.400024 15.300003,20.300018L13.199968,22.400024 13.300005,22.5C14.199968,22.900024 15.300003,23.200012 16.399978,23.200012 20.299998,23.200012 23.500009,20 23.500009,16.100006L23.500009,15.300018 25.899968,15.300018 25.899968,16C25.899968,20.900024,22.19996,25,17.399978,25.5L17.399978,29.100006 19.000013,29.100006 19.000013,30.400024 13.699968,30.400024 13.699968,29.100006 15.099992,29.100006 15.099992,25.400024C13.800005,25.200012,12.500018,24.800018,11.500019,24.100006L11.399983,24.100006 3.5000271,32 0,28.5 7.8999864,20.600006 7.8000108,20.5C7.0999991,19.200012,6.6999752,17.700012,6.6999752,16.100006L6.6999752,15.300018 9.0999977,15.300018 9.0999977,16C9.0999977,16.900024,9.3000089,17.800018,9.5999967,18.600006L9.5999967,18.700012 12.300006,16 12.300006,5.5C12.300006,3.4000244 14.000017,1.6000061 16.199966,1.6000061 18.3,1.6000061 20.099986,3.3000183 20.099986,5.5L20.099986,8.3000183z"
+                        Background="SteelBlue"
+                        Command="{Binding Global.StopRecordingCommand}"
+                        Content="Stop"
+                        Foreground="SteelBlue"
+                        IsEnabled="{Binding Global.StopButtonEnabled}"
+                        Style="{DynamicResource ListRoundButtons}" />
+
+
+                </StackPanel>
+                <StackPanel
+                    Grid.Row="3"
+                    Grid.RowSpan="2"
+                    Grid.ColumnSpan="3"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Orientation="Horizontal">
+                    <Path
+                        Height="10"
+                        Margin="0,0,-25,0"
+                        VerticalAlignment="Top"
+                        Data="M16.062402,9.2779838C12.570367,9.2779838 9.7773439,12.071989 9.7773439,15.563994 9.7773439,19.055997 12.570367,21.848996 16.062402,21.848996 19.554435,21.848996 22.347459,18.955991 22.347459,15.563994 22.347459,12.071989 19.554435,9.2779838 16.062402,9.2779838z M11.473342,0C12.37136,2.2949828 14.266365,4.4899899 17.35941,3.8909909 19.055408,3.5919796 20.053434,2.0950011 20.452422,0.29898095 23.345452,0.79800415 24.742469,1.4969786 26.937495,3.6919855 23.644467,6.8840018 26.138477,13.468992 31.526523,11.673003 32.12452,14.066984 32.224527,17.160001 31.426517,19.453977 27.535491,18.955991 24.542455,20.551999 25.240459,24.641996 25.340465,25.44 26.737481,26.936978 26.737481,26.936978 26.737481,26.936978 24.243472,30.128995 20.551423,30.828 19.953426,26.038999 12.171346,26.038999 11.573349,30.828 8.1813213,30.229001 6.9833132,29.430997 4.8882944,27.23599 8.3803283,24.342984 5.4872981,17.658994 0.2992656,19.553983 -0.099755201,17.160001 -0.099755201,13.966978 0.2992656,11.572997 5.088308,12.769987 7.9813382,8.4799796 5.9862954,5.0879818L4.9883009,4.0910031C4.9883009,4.0910031,6.8843137,1.4969786,11.473342,0z"
+                        Fill="IndianRed"
+                        Stretch="Uniform"
+                        Style="{StaticResource Spinner}"
+                        Visibility="{Binding Global.EmergencyActionVisibility}" />
+                    <Button
+                        extensions:Extensions.Icon="{StaticResource SpeakerPathData}"
+                        Background="IndianRed"
+                        Command="{Binding Global.EmergencyCommand}"
+                        Content="{Binding Global.AppLang.Emergency}"
+                        Foreground="IndianRed"
+                        Style="{DynamicResource ListRoundButtons}" />
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Row="5"
+                    Grid.ColumnSpan="5"
+                    Orientation="Horizontal">
+                    <Button
+                        Width="100"
+                        Height="100"
+                        Background="red"
+                        Command="{Binding Global.PushToastCommand}"
+                        Content="test"
+                        Style="{x:Null}" />
+                </StackPanel>
             </Grid>
         </GroupBox>
     </Grid>
