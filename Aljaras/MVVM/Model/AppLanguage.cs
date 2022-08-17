@@ -174,5 +174,53 @@ namespace Aljaras.MVVM.Model
 
         [ObservableProperty]
         private string _selectSchedule = "Select a Schedule First";
+
+        [ObservableProperty]
+        private string _holidays = "Holidays";
+
+        [ObservableProperty]
+        private string _holidayInformation = "Holiday Information";
+
+        [ObservableProperty]
+        private string _holidayDate = "Holiday Date";
+
+        [ObservableProperty]
+        private string _enableReminder = "Enable Reminder";
+
+        [ObservableProperty]
+        private string _reminderDate = "Reminder Date";
+
+        [ObservableProperty]
+        private string _list = "List";
+
+        [ObservableProperty]
+        private string _clone = "Clone";
+
+        [ObservableProperty]
+        private string _nOHolidayMessage = "You haven't set up any 🌴 Holiday.";
+
+        [ObservableProperty]
+        private string _intercom = "Intercom";
+
+        [ObservableProperty]
+        private string _recordingDevices = "Recording Devices";
+
+        [ObservableProperty]
+        private string _playbackDevices = "Playback Devices";
+
+        [ObservableProperty]
+        private string _start = "Start";
+
+        [ObservableProperty]
+        private string _stop = "Stop";
+
+
+
+
+
+
+
+
+
     }
 }

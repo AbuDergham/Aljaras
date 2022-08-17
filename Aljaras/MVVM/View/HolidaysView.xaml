@@ -14,22 +14,239 @@
     <UserControl.DataContext>
         <viewmodel:HolidaysViewModel />
     </UserControl.DataContext>
-    <Grid Margin="20">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
         <GroupBox
-            Margin="0,0,10,0"
-            FontSize="15"
-            Header="Holidays">
+            Padding="5,0,5,0"
+            FontSize="14"
+            Header="{Binding Global.AppLang.HolidayInformation}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Margin="10,0,0,0" VerticalAlignment="Center">
+                        <Run Text="{Binding Global.AppLang.Title}" />
+                        <Run Text=":" />
+                    </TextBlock>
+                    <TextBox
+                        Grid.Column="1"
+                        Height="25"
+                        Padding="5,0,5,0"
+                        VerticalContentAlignment="Center"
+                        Background="Transparent"
+                        BorderBrush="gray"
+                        BorderThickness="0,0,0,1"
+                        FontFamily="Consolas"
+                        Text="{Binding CurrentHoliday.HolidayTitle}" />
+                    <TextBlock
+                        Grid.Column="2"
+                        Width="Auto"
+                        VerticalAlignment="Center">
+                        <Run Text="{Binding Global.AppLang.HolidayDate}" />
+                        <Run Text=":" />
+                    </TextBlock>
+                    <DatePicker
+                        Grid.Column="3"
+                        Height="25"
+                        Margin="15,0,0,0"
+                        BorderBrush="gray"
+                        BorderThickness="0,0,0,0.5"
+                        SelectedDate="{Binding CurrentHoliday.HolidayDate}" />
+                    <CheckBox
+                        Grid.Column="4"
+                        Height="20"
+                        Margin="10,0,0,0"
+                        Content="{Binding Global.AppLang.EnableReminder}"
+                        Foreground="#252525"
+                        IsChecked="{Binding CurrentHoliday.IsReminderActive}"
+                        Style="{DynamicResource SliderCheckBox}" />
+                </Grid>
+
+                <Grid Grid.Row="1" IsEnabled="{Binding CurrentHoliday.IsReminderActive}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Border
+                        Grid.ColumnSpan="5"
+                        Height="25"
+                        Background="WhiteSmoke"
+                        BorderBrush="LightGray"
+                        BorderThickness="0,0.5" />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding Global.AppLang.ReminderDate}" />
+                    <DatePicker
+                        Grid.Row="1"
+                        Height="25"
+                        Margin="15,0,0,0"
+                        BorderBrush="gray"
+                        BorderThickness="0,0,0,0.5"
+                        SelectedDate="{Binding CurrentHoliday.ReminderDate}" />
+                    <Label
+                        Grid.Column="1"
+                        HorizontalAlignment="Center"
+                        Content="{Binding Global.AppLang.Hour}" />
+                    <Label
+                        Grid.Column="2"
+                        HorizontalAlignment="Center"
+                        Content="{Binding Global.AppLang.Minute}" />
+                    <Label
+                        Grid.Column="3"
+                        HorizontalAlignment="Center"
+                        Content="{Binding Global.AppLang.Daytime}" />
+                    <ComboBox
+                        Name="hours"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        HorizontalAlignment="Stretch"
+                        BorderBrush="LightGray"
+                        BorderThickness="0,0,0,1"
+                        ItemsSource="{Binding TimePicker.Hour}"
+                        SelectedIndex="0"
+                        SelectedItem="{Binding CurrentHoliday.ReminderHour}"
+                        Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" />
+                    <ComboBox
+                        Name="minutes"
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        HorizontalAlignment="Stretch"
+                        BorderBrush="LightGray"
+                        BorderThickness="0,0,0,1"
+                        ItemsSource="{Binding TimePicker.Minute}"
+                        SelectedIndex="0"
+                        SelectedItem="{Binding CurrentHoliday.ReminderMinute}"
+                        Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" />
+                    <ComboBox
+                        Name="daytime"
+                        Grid.Row="1"
+                        Grid.Column="3"
+                        HorizontalAlignment="Stretch"
+                        BorderBrush="LightGray"
+                        BorderThickness="0,0,0,1"
+                        ItemsSource="{Binding TimePicker.DayTime}"
+                        SelectedIndex="0"
+                        SelectedItem="{Binding CurrentHoliday.ReminderDayTime}"
+                        Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" />
+                    <Button
+                        Grid.RowSpan="2"
+                        Grid.Column="4"
+                        HorizontalAlignment="Center"
+                        extensions:Extensions.Icon="{StaticResource TimeNowPathData}"
+                        Background="SteelBlue"
+                        Command="{Binding TimeNowCommand}"
+                        Foreground="SteelBlue"
+                        Style="{DynamicResource RoundButtons}"
+                        ToolTip="{Binding Global.AppLang.TimeNow}" />
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button
+                        HorizontalAlignment="Center"
+                        Panel.ZIndex="10"
+                        extensions:Extensions.Icon="{StaticResource AudiFilePathData}"
+                        Background="CornflowerBlue"
+                        Command="{Binding SelectAudioFileCommand}"
+                        IsEnabled="{Binding CurrentHoliday.IsReminderActive}"
+                        Style="{DynamicResource RoundButtons}" />
+                    <TextBox
+                        Grid.ColumnSpan="3"
+                        Height="30"
+                        Margin="15,0,105,0"
+                        Padding="20,0,0,0"
+                        VerticalContentAlignment="Center"
+                        Background="White"
+                        BorderBrush="CornflowerBlue"
+                        FontWeight="Bold"
+                        IsEnabled="{Binding CurrentHoliday.IsReminderActive}"
+                        IsManipulationEnabled="False"
+                        IsReadOnly="True"
+                        Text="{Binding CurrentHoliday.ReminderAudioFileLocation}"
+                        TextWrapping="Wrap"
+                        VerticalScrollBarVisibility="Auto" />
+                    <Button
+                        Grid.Column="2"
+                        MinWidth="120"
+                        HorizontalAlignment="Center"
+                        extensions:Extensions.Icon="{StaticResource PlayStopPathData}"
+                        Background="MediumVioletRed"
+                        Command="{Binding PlayPauseAudioFileCommand}"
+                        Content="{Binding Global.AppLang.PlayStop}"
+                        FontWeight="Bold"
+                        Foreground="MediumVioletRed"
+                        IsEnabled="{Binding CurrentHoliday.IsReminderActive}"
+                        Style="{DynamicResource RoundButtons}" />
+                    <StackPanel
+                        Grid.Column="4"
+                        Margin="30,0,20,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Button
+                            Margin="0,0,20,0"
+                            HorizontalAlignment="Center"
+                            extensions:Extensions.Icon="{StaticResource NewPathData}"
+                            Background="Purple"
+                            Command="{Binding NewHolidayCommand}"
+                            Content="{Binding Global.AppLang.New}"
+                            FontSize="12"
+                            Foreground="Purple"
+                            Style="{DynamicResource ListRoundButtons}"
+                            ToolTip="{Binding Global.AppLang.New}" />
+                        <Button
+                            extensions:Extensions.Icon="{StaticResource SavePathData}"
+                            Background="#FF597ED8"
+                            Command="{Binding SaveHolidayCommand}"
+                            Content="{Binding Global.AppLang.Save}"
+                            FontSize="12"
+                            Foreground="#FF597ED8"
+                            Style="{DynamicResource ListRoundButtons}"
+                            ToolTip="{Binding Global.AppLang.Save}" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </GroupBox>
+        <GroupBox
+            Grid.Row="1"
+            FontSize="14"
+            Header="{Binding Global.AppLang.Holidays}">
             <Grid Margin="0,5,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <Grid>
+                <Grid Height="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
                     <Border
+                        Grid.ColumnSpan="4"
                         Background="WhiteSmoke"
                         BorderBrush="LightGray"
                         BorderThickness="0,0.5" />
@@ -42,65 +259,125 @@
                             Data="M8.6620483,17.699996L32,17.699996 32,21.116015 8.6620483,21.116015z M2.6040039,16.805007C4.0390015,16.805007 5.2059937,17.97502 5.2059937,19.410996 5.2059937,20.851001 4.0390015,22.006 2.6040039,22.006 1.1640015,22.006 0,20.851001 0,19.410996 0,17.97502 1.1640015,16.805007 2.6040039,16.805007z M8.6620483,8.984993L32,8.984993 32,12.401011 8.6620483,12.401011z M2.6040039,8.0849981C4.0390015,8.0849981 5.2059937,9.2500076 5.2059937,10.690011 5.2059937,12.130015 4.0390015,13.290997 2.6040039,13.290997 1.1640015,13.290997 0,12.130015 0,10.690011 0,9.2500076 1.1640015,8.0849981 2.6040039,8.0849981z M8.6620483,0.82498215L32,0.82498215 32,4.2410006 8.6620483,4.2410006z M2.6040039,0C4.0390015,1.6889317E-08 5.2059937,1.1600046 5.2059937,2.6049824 5.2059937,4.0409884 4.0390015,5.2059979 2.6040039,5.2059979 1.1640015,5.2059979 0,4.0409884 0,2.6049824 0,1.1600046 1.1640015,1.6889317E-08 2.6040039,0z"
                             Fill="#252525"
                             Stretch="Uniform" />
-                        <Run Text="List" />
+                        <Run Text="{Binding Global.AppLang.List}" />
                     </TextBlock>
                     <TextBlock
-                        Margin="0,0,10,0"
+                        Grid.Column="1"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="12">
+                        <Run Text="📅" />
+                        <Run Text="{Binding Global.AppLang.HolidayDate}" />
+                    </TextBlock>
+                    <TextBlock
+                        Grid.Column="2"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="12">
+                        <Run Text="⏰" />
+                        <Run Text="{Binding Global.AppLang.ReminderDate}" />
+                    </TextBlock>
+                    <StackPanel
+                        Grid.Column="3"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        FontSize="12"
-                        Foreground="#FFDC3636">
-                        <Path
-                            Height="10"
-                            Data="{StaticResource DeletePathData}"
-                            Fill="#FFDC3636"
-                            Stretch="Uniform" />
-                        <Run Text="Delete" />
-                    </TextBlock>
+                        Orientation="Horizontal">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Foreground="Purple">
+                            <Path
+                                Height="12"
+                                Margin="0,0,0,-1"
+                                Data="{StaticResource ClonePathData}"
+                                Fill="Purple"
+                                Stretch="Uniform" />
+                            <Run Text="{Binding Global.AppLang.Clone}" />
+                        </TextBlock>
+                        <Border
+                            Margin="5"
+                            BorderBrush="LightGray"
+                            BorderThickness="1,0,0,0" />
+                        <TextBlock
+                            Margin="0,0,10,0"
+                            FontSize="12"
+                            Foreground="#FFDC3636">
+                            <Path
+                                Height="10"
+                                Data="{StaticResource DeletePathData}"
+                                Fill="#FFDC3636"
+                                Stretch="Uniform" />
+                            <Run Text="{Binding Global.AppLang.Delete}" />
+                        </TextBlock>
+                    </StackPanel>
+
                 </Grid>
                 <ListView
-                    x:Name="ScheduleListView"
+                    x:Name="HolidayListView"
                     Grid.Row="2"
                     d:ItemsSource="{d:SampleData ItemCount=5}"
                     Background="Transparent"
                     BorderThickness="0"
-                    ItemsSource="{Binding ScheduleList}"
+                    ItemsSource="{Binding HolidayList}"
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                    SelectedItem="{Binding CurrentSchedule}"
+                    SelectedItem="{Binding CurrentHoliday}"
                     SelectionMode="Single">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid Width="{Binding ActualWidth, ElementName=ScheduleListView}" Height="30">
+                            <Grid Width="{Binding ActualWidth, ElementName=HolidayListView}" Height="30">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <CheckBox
                                     Height="20"
-                                    Command="{Binding ElementName=ScheduleListView, Path=DataContext.De_ActivateScheduleCommand}"
+                                    Command="{Binding ElementName=HolidayListView, Path=DataContext.De_ActivateHolidayCommand}"
                                     CommandParameter="{Binding}"
                                     Foreground="#252525"
-                                    IsChecked="{Binding IsScheduleActive}"
+                                    IsChecked="{Binding IsHolidayActive}"
                                     Style="{DynamicResource SliderCheckBox}" />
                                 <TextBlock
                                     Grid.Column="1"
                                     VerticalAlignment="Center"
-                                    Text="{Binding ScheduleTitle}" />
-                                <StackPanel
+                                    Text="{Binding HolidayTitle}" />
+                                <TextBlock
                                     Grid.Column="2"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding HolidayDate, StringFormat=d}" />
+                                <TextBlock
+                                    Grid.Column="3"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding ReminderDate, StringFormat=d}" />
+                                <StackPanel
+                                    Grid.Column="4"
                                     Margin="0,0,30,0"
                                     Orientation="Horizontal">
+                                    <Button
+                                        HorizontalAlignment="Center"
+                                        extensions:Extensions.Icon="{StaticResource ClonePathData}"
+                                        Background="Purple"
+                                        Command="{Binding ElementName=HolidayListView, Path=DataContext.CloneHolidayCommand}"
+                                        CommandParameter="{Binding}"
+                                        Style="{DynamicResource ListRoundButtons}"
+                                        ToolTip="{Binding Global.AppLang.Edit}" />
+                                    <Border
+                                        Margin="3"
+                                        BorderBrush="LightGray"
+                                        BorderThickness="1,0,0,0" />
                                     <Button
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         extensions:Extensions.Icon="{StaticResource DeletePathData}"
                                         Background="#FFDC3636"
-                                        Command="{Binding ElementName=ScheduleListView, Path=DataContext.DeleteScheduleCommand}"
+                                        Command="{Binding ElementName=HolidayListView, Path=DataContext.DeleteHolidayCommand}"
                                         CommandParameter="{Binding}"
                                         Style="{DynamicResource ListRoundButtons}"
                                         ToolTip="{Binding Global.AppLang.Delete}" />
-
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>
@@ -112,225 +389,10 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     FontSize="16"
-                    Text="{Binding Global.AppLang.NOScheduleMessage}"
+                    Text="{Binding Global.AppLang.NOHolidayMessage}"
                     TextAlignment="Center"
                     TextWrapping="Wrap"
-                    Visibility="{Binding IsNOScheduleMessageVisible}" />
-            </Grid>
-        </GroupBox>
-
-        <GroupBox
-            Grid.Column="1"
-            Padding="5,5,5,0"
-            FontSize="15"
-            Header="{Binding Global.AppLang.AlertInformation}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid VerticalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Margin="10,0,0,0" VerticalAlignment="Center">
-                        <Run Text="{Binding Global.AppLang.Title}" />
-                        <Run Text=":" />
-                    </TextBlock>
-                    <TextBox
-                        Uid="{Binding CurrentAlarm.ScheduleId}"
-                        Grid.Column="1"
-                        Height="25"
-                        Padding="5,0,5,0"
-                        Background="Transparent"
-                        BorderBrush="gray"
-                        BorderThickness="0,0,0,1"
-                        FontFamily="Consolas"
-                        Text="{Binding CurrentAlarm.AlarmTitle}" />
-
-                </Grid>
-                <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <TextBlock VerticalAlignment="Center">
-                        <Run Text="HDate:" />
-                    </TextBlock>
-                    <DatePicker
-                        Height="25"
-                        Margin="15,0,0,0"
-                        BorderBrush="gray"
-                        BorderThickness="0,0,0,0.5" />
-                </StackPanel>
-                <StackPanel Grid.Row="2" Orientation="Horizontal">
-                    <CheckBox
-                        Height="20"
-                        Command="{Binding ElementName=ScheduleListView, Path=DataContext.De_ActivateScheduleCommand}"
-                        CommandParameter="{Binding}"
-                        Content="Enable Reminder"
-                        Foreground="#252525"
-                        IsChecked="{Binding IsScheduleActive}"
-                        Style="{DynamicResource SliderCheckBox}" />
-                    <TextBlock VerticalAlignment="Center">
-                        <Run Text="RDate:" />
-                    </TextBlock>
-                    <DatePicker
-                        Height="25"
-                        Margin="15,0,0,0"
-                        BorderBrush="gray"
-                        BorderThickness="0,0,0,0.5" />
-                </StackPanel>
-
-                <GroupBox
-                    Grid.Row="3"
-                    Grid.Column="1"
-                    Margin="10,-10,0,0"
-                    Header="RTime">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                        </Grid.RowDefinitions>
-
-                        <Border
-                            Grid.ColumnSpan="4"
-                            Height="25"
-                            Background="WhiteSmoke"
-                            BorderBrush="LightGray"
-                            BorderThickness="0,0.5" />
-                        <Label HorizontalAlignment="Center" Content="{Binding Global.AppLang.Hour}" />
-                        <Label
-                            Grid.Column="1"
-                            HorizontalAlignment="Center"
-                            Content="{Binding Global.AppLang.Minute}" />
-                        <Label
-                            Grid.Column="2"
-                            HorizontalAlignment="Center"
-                            Content="{Binding Global.AppLang.Daytime}" />
-                        <ComboBox
-                            Name="hours"
-                            Grid.Row="1"
-                            HorizontalAlignment="Stretch"
-                            BorderBrush="LightGray"
-                            BorderThickness="0,0,0,1"
-                            ItemsSource="{Binding TimePicker.Hour}"
-                            SelectedIndex="0"
-                            SelectedItem="{Binding CurrentAlarm.Hour}"
-                            Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" />
-                        <ComboBox
-                            Name="minutes"
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            HorizontalAlignment="Stretch"
-                            BorderBrush="LightGray"
-                            BorderThickness="0,0,0,1"
-                            ItemsSource="{Binding TimePicker.Minute}"
-                            SelectedIndex="0"
-                            SelectedItem="{Binding CurrentAlarm.Minute}"
-                            Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" />
-                        <ComboBox
-                            Name="daytime"
-                            Grid.Row="1"
-                            Grid.Column="2"
-                            HorizontalAlignment="Stretch"
-                            BorderBrush="LightGray"
-                            BorderThickness="0,0,0,1"
-                            ItemsSource="{Binding TimePicker.DayTime}"
-                            SelectedIndex="0"
-                            SelectedItem="{Binding CurrentAlarm.DayTime}"
-                            Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" />
-                        <Button
-                            Grid.RowSpan="2"
-                            Grid.Column="3"
-                            HorizontalAlignment="Center"
-                            extensions:Extensions.Icon="{StaticResource TimeNowPathData}"
-                            Background="SteelBlue"
-                            Command="{Binding TimeNowCommand}"
-                            Foreground="SteelBlue"
-                            Style="{DynamicResource RoundButtons}"
-                            ToolTip="{Binding Global.AppLang.TimeNow}" />
-
-                    </Grid>
-                </GroupBox>
-                <GroupBox
-                    Grid.Row="4"
-                    Margin="10,0,0,0"
-                    Header="RAudioFile">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
-                        <Button
-                            HorizontalAlignment="Center"
-                            Panel.ZIndex="10"
-                            extensions:Extensions.Icon="{StaticResource AudiFilePathData}"
-                            Background="CornflowerBlue"
-                            Command="{Binding SelectAudioFileCommand}"
-                            Style="{DynamicResource RoundButtons}" />
-                        <TextBox
-                            Grid.ColumnSpan="3"
-                            Height="30"
-                            Margin="15,0,85,0"
-                            Padding="20,0,0,0"
-                            VerticalContentAlignment="Center"
-                            Background="White"
-                            BorderBrush="CornflowerBlue"
-                            FontWeight="Bold"
-                            IsManipulationEnabled="False"
-                            IsReadOnly="True"
-                            Text="{Binding CurrentAlarm.AudioFileLocation}"
-                            TextWrapping="Wrap"
-                            VerticalScrollBarVisibility="Auto" />
-                        <Button
-                            Grid.Column="2"
-                            HorizontalAlignment="Center"
-                            extensions:Extensions.Icon="{StaticResource PlayStopPathData}"
-                            Background="MediumVioletRed"
-                            Command="{Binding PlayPauseAudioFileCommand}"
-                            Content="{Binding Global.AppLang.PlayStop}"
-                            FontWeight="Bold"
-                            Foreground="MediumVioletRed"
-                            Style="{DynamicResource RoundButtons}" />
-                    </Grid>
-                </GroupBox>
-
-                <StackPanel
-                    Grid.Row="5"
-                    HorizontalAlignment="Center"
-                    Orientation="Horizontal">
-                    <Button
-                        Margin="0,0,20,0"
-                        HorizontalAlignment="Center"
-                        extensions:Extensions.Icon="{StaticResource NewPathData}"
-                        Background="Purple"
-                        Command="{Binding NewAlarmCommand}"
-                        Content="{Binding Global.AppLang.New}"
-                        FontSize="12"
-                        Foreground="Purple"
-                        Style="{DynamicResource ListRoundButtons}"
-                        ToolTip="{Binding Global.AppLang.New}" />
-
-                    <Button
-                        extensions:Extensions.Icon="{StaticResource SavePathData}"
-                        Background="#FF597ED8"
-                        Command="{Binding SaveAlarmCommand}"
-                        Content="{Binding Global.AppLang.Save}"
-                        FontSize="12"
-                        Foreground="#FF597ED8"
-                        Style="{DynamicResource ListRoundButtons}"
-                        ToolTip="{Binding Global.AppLang.Save}" />
-                </StackPanel>
+                    Visibility="{Binding IsNOHolidayMessageVisible}" />
             </Grid>
         </GroupBox>
     </Grid>

@@ -55,7 +55,7 @@
 
   <ItemGroup>
     <None Update="Aljaras.jrsdb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="aljaras.rtf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -27,7 +27,7 @@
 	<Save>حفظ</Save>
 	<Delete>حذف</Delete>
 	<TimeNow>الوقت الان</TimeNow>
-	<PlayStop>تشغيل / ايقاف</PlayStop>
+	<PlayStop>تشغيل/ايقاف</PlayStop>
 	<Hour>الساعة</Hour>
 	<Minute>الدقائق</Minute>
 	<Daytime>نهار/ ليل</Daytime>
@@ -36,7 +36,7 @@
 	<Language>اللغة</Language>
 	<Guide>دليل المستخدم</Guide>
 	<MonitoringNOAlarmMessage>لا يوجد منبه قادم ، انقر فوق رمز المنبه ⏰ في القائمة للبدء.</MonitoringNOAlarmMessage>
-	<NOScheduleMessage>لم تقم بإعداد أي اجندة أضف عنوانًا جديدًا وانقر فوق زر حفظ للبدء.</NOScheduleMessage>
+	<NOScheduleMessage>لم تقم بإعداد أي اجندة أضف عنوانًا جديدًا وانقر  زر الحفظ للبدء.</NOScheduleMessage>
 	<NOAlarmMessage>لم تقم بإعداد أي منبه ، انقر فوق زر الحفظ أعلاه للبدء.</NOAlarmMessage>
 	<SystemTime>وقت النظام:</SystemTime>
 	<NextAlarm>الإنذار التالي:</NextAlarm>
@@ -54,6 +54,21 @@
 	<Done>انتهت المهمة</Done>
 	<NoDataBase>لا يوجد قاعدة بيانات</NoDataBase>
 	<NotCorrectAudio>ملف الصوت غير صحيح</NotCorrectAudio>
-	<InvalidTitle>قيمة العنوان خاطيء</InvalidTitle>
+	<InvalidTitle>قيمة العنوان خاطئة</InvalidTitle>
 	<SelectSchedule>قم باختيار الجدولة اولا</SelectSchedule>
+	<Holidays>الاجازات</Holidays>
+	<HolidayInformation>معلومات الاجازة</HolidayInformation>
+	<HolidayDate>تاريخ الاجازة</HolidayDate>
+	<EnableReminder>تفعيل التذكير</EnableReminder>
+	<ReminderDate>تاريخ التذكير</ReminderDate>
+	<List>القائمة</List>
+	<Clone>نسخة</Clone>
+	<NOHolidayMessage>لم تقم بإعداد أي 🌴 اجازة.</NOHolidayMessage>
+	<Intercom>نظام الصوت الداخلي</Intercom>
+	<RecordingDevices>اجهزة التسجيل</RecordingDevices>
+	<PlaybackDevices>اجهزة الصوت</PlaybackDevices>
+	<Start>ابدأ</Start>
+	<Stop>ايقاف</Stop>
+
+
 </AppLanguage>

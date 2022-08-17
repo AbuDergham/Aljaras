@@ -78,7 +78,11 @@
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Row="1">
-                    <Border
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.ColumnSpan="2"
                         Background="WhiteSmoke"
                         BorderBrush="LightGray"
                         BorderThickness="0,0.5" />
@@ -100,8 +104,14 @@
                         <TextBlock
                             VerticalAlignment="Center"
                             FontSize="12"
-                            Foreground="SeaGreen"
-                            Text="Edit" />
+                            Foreground="SeaGreen">
+                            <Path
+                                Height="10"
+                                Data="{StaticResource EditPathData}"
+                                Fill="SeaGreen"
+                                Stretch="Uniform" />
+                            <Run Text="{Binding Global.AppLang.Edit}" />
+                        </TextBlock>
                         <Border
                             Margin="5"
                             BorderBrush="LightGray"
@@ -110,8 +120,14 @@
                         <TextBlock
                             VerticalAlignment="Center"
                             FontSize="12"
-                            Foreground="Purple"
-                            Text="Clone" />
+                            Foreground="Purple">
+                            <Path
+                                Height="10"
+                                Data="{StaticResource ClonePathData}"
+                                Fill="Purple"
+                                Stretch="Uniform" />
+                            <Run Text="{Binding Global.AppLang.Clone}" />
+                        </TextBlock>
                         <Border
                             Margin="5"
                             BorderBrush="LightGray"
@@ -120,8 +136,14 @@
                             Margin="0,0,10,0"
                             VerticalAlignment="Center"
                             FontSize="12"
-                            Foreground="Red"
-                            Text="Delete" />
+                            Foreground="#FFDC3636">
+                            <Path
+                                Height="10"
+                                Data="{StaticResource DeletePathData}"
+                                Fill="#FFDC3636"
+                                Stretch="Uniform" />
+                            <Run Text="{Binding Global.AppLang.Delete}" />
+                        </TextBlock>
 
                     </StackPanel>
                 </Grid>
@@ -417,7 +439,7 @@
                             <TextBox
                                 Grid.ColumnSpan="3"
                                 Height="30"
-                                Margin="15,0,85,0"
+                                Margin="15,0,105,0"
                                 Padding="20,0,0,0"
                                 VerticalContentAlignment="Center"
                                 Background="White"
@@ -431,6 +453,7 @@
                             <Button
                                 Grid.Column="2"
                                 Height="50"
+                                MinWidth="120"
                                 HorizontalAlignment="Center"
                                 extensions:Extensions.Icon="{StaticResource PlayStopPathData}"
                                 Background="MediumVioletRed"

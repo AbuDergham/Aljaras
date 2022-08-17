@@ -56,4 +56,18 @@
 	<NotCorrectAudio>Not a correct audio file type</NotCorrectAudio>
 	<InvalidTitle>invalid title value</InvalidTitle>
 	<SelectSchedule>Select a Schedule First</SelectSchedule>
+	<Holidays>Holidays</Holidays>
+	<HolidayInformation>Holiday Information</HolidayInformation>
+	<HolidayDate>Holiday Date</HolidayDate>
+	<EnableReminder>Enable Reminder</EnableReminder>
+	<ReminderDate>Reminder Date</ReminderDate>
+	<List>List</List>
+	<Clone>Clone</Clone>
+	<NOHolidayMessage>You haven't set up any 🌴 Holiday.</NOHolidayMessage>
+	<Intercom>Intercom</Intercom>
+	<RecordingDevices>Recording Device</RecordingDevices>
+	<PlaybackDevices>Playback Devices</PlaybackDevices>
+	<Start>Start</Start>
+	<Stop>Stop</Stop>
+
 </AppLanguage>

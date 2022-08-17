@@ -36,6 +36,9 @@ namespace Aljaras.MVVM.ViewModel
         UserNotificationMessage notificationMessage = new();
 
         [ObservableProperty]
+        private List<Holiday> holidayList = new();
+
+        [ObservableProperty]
         AudioFilePlayer audioPlayer = new();
 
         [ObservableProperty]
@@ -73,6 +76,9 @@ namespace Aljaras.MVVM.ViewModel
 
         [ObservableProperty]
         private string isNOAlarmMessageVisible = "";
+
+        [ObservableProperty]
+        private string isNOHolidayMessageVisible = "";
 
         [ObservableProperty]
         private string showTimeLeft = "";
@@ -133,6 +139,7 @@ namespace Aljaras.MVVM.ViewModel
         {
             if (AudioPlayer.IsEmergency) return;
             RecordingActionVisibility = "Visible";
+            if(File.Exists(AppDomain.CurrentDomain.BaseDirectory + "Audio\\Attention.mp3"))
             AudioPlayer.PlayPauseAudioFile(AppDomain.CurrentDomain.BaseDirectory + "Audio\\Attention.mp3", false);
             RecordButtonEnabled = false;
             StopButtonEnabled = true;
@@ -334,8 +341,14 @@ namespace Aljaras.MVVM.ViewModel
         {
             ScheduleList = new();
             AlarmList = new();
+            HolidayList = new();
             using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
             {
+                var holidayCollection = db.GetCollection<Holiday>("Holidays");
+                HolidayList = holidayCollection.Find(h => h.HolidayDate > DateTime.Now).ToList();
+                if (HolidayList != null && HolidayList.Count > 0)
+                    IsNOHolidayMessageVisible = "Hidden";
+
                 var scheduleCollection = db.GetCollection<Schedule>("Schedules");
                 ScheduleList = scheduleCollection.Find(x => x.IsScheduleActive == true).ToList();
                 if (ScheduleList != null && ScheduleList.Count > 0)
@@ -356,14 +369,17 @@ namespace Aljaras.MVVM.ViewModel
                             
                         } 
                     }
+                    
                     if (AlarmList != null && AlarmList.Count > 0)
                     {
                         IsNOAlarmMessageVisible = "Hidden";
                         return;
                     }
+                    
                 }
             }
             IsNOAlarmMessageVisible = "Visible";
+            IsNOHolidayMessageVisible = "Visible";
         }
 
         private void dispatcherTimer_Tick(object? sender, EventArgs e)
