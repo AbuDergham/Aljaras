@@ -9,7 +9,7 @@
 	<Settings>الاعدادات</Settings>
 	<About>نبذة عن البرنامج</About>
 	<Help>مساعدة</Help>
-	<UpcomingAlerts>التنبيهات الاتية</UpcomingAlerts>
+	<UpcomingAlerts>التنبيهات القادمة</UpcomingAlerts>
 	<ScheduleList>قائمة الاجندة</ScheduleList>
 	<AlarmList>قائمة التنبيهات</AlarmList>
 	<AlertInformation>معلومات المنبه</AlertInformation>
@@ -69,6 +69,5 @@
 	<PlaybackDevices>اجهزة الصوت</PlaybackDevices>
 	<Start>ابدأ</Start>
 	<Stop>ايقاف</Stop>
-
-
+	<ItemsCount>عدد العناصر</ItemsCount>
 </AppLanguage>

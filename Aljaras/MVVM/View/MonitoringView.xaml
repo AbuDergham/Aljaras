@@ -24,11 +24,17 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
+        <!--
+            extensions:Extensions.Carrier="{Binding ElementName=UpcomingListView, Path=Items.Count, Mode=OneWay}"
+        -->
         <GroupBox
             Grid.RowSpan="3"
             Padding="5"
+            extensions:Extensions.Carrier="{Binding Global.AppLang.ItemsCount}"
+            extensions:Extensions.Carrier2="{Binding ElementName=UpcomingListView, Path=Items.Count, Mode=OneWay}"
             FontSize="14"
-            Header="{Binding Global.AppLang.UpcomingAlerts}">
+            Header="{Binding Global.AppLang.UpcomingAlerts}"
+            Style="{StaticResource GroupBoxListView}">
             <Grid>
                 <ListView
                     x:Name="UpcomingListView"
@@ -41,14 +47,9 @@
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     SelectionMode="Single">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Focusable" Value="false" />
-                        </Style>
-                    </ListView.ItemContainerStyle>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid Width="{Binding ActualWidth, ElementName=UpcomingListView}">
+                            <Grid Width="{Binding ActualWidth, ElementName=UpcomingListView}" Height="20">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
                                     <ColumnDefinition />
@@ -83,7 +84,10 @@
                     Visibility="{Binding Global.IsNOAlarmMessageVisible}" />
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Column="1" Header="{Binding Global.AppLang.Intercom}">
+        <GroupBox
+            Grid.Column="1"
+            Margin="5,0,0,0"
+            Header="{Binding Global.AppLang.Intercom}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -152,7 +156,7 @@
                     <Button
                         Grid.Column="2"
                         VerticalAlignment="Center"
-                        extensions:Extensions.Icon="M0,15.1L2.7000022,15.1 2.7000022,16C2.7000022,20.400001 6.2000053,23.900001 10.600009,23.900001 15.000013,23.900001 18.500016,20.400001 18.500016,16L18.500016,15.2 21.200018,15.2 21.200018,16C21.200018,21.400001,17.100015,25.900001,11.80001,26.500001L11.80001,30.500001 13.600012,30.500001 13.600012,32.000001 7.7000069,32.000001 7.7000069,30.500001 9.2000079,30.500001 9.2000079,26.400001C4.0000033,25.8,0,21.400001,0,16z M10.600009,0C13.000011,0,14.900013,1.9000001,14.900013,4.3000004L14.900013,16.6C14.900013,19 13.000011,20.900001 10.600009,20.900001 8.2000071,20.900001 6.3000054,19 6.3000052,16.6L6.3000052,4.3000004C6.3000054,1.9000001,8.2000071,0,10.600009,0z"
+                        extensions:Extensions.Carrier="M0,15.1L2.7000022,15.1 2.7000022,16C2.7000022,20.400001 6.2000053,23.900001 10.600009,23.900001 15.000013,23.900001 18.500016,20.400001 18.500016,16L18.500016,15.2 21.200018,15.2 21.200018,16C21.200018,21.400001,17.100015,25.900001,11.80001,26.500001L11.80001,30.500001 13.600012,30.500001 13.600012,32.000001 7.7000069,32.000001 7.7000069,30.500001 9.2000079,30.500001 9.2000079,26.400001C4.0000033,25.8,0,21.400001,0,16z M10.600009,0C13.000011,0,14.900013,1.9000001,14.900013,4.3000004L14.900013,16.6C14.900013,19 13.000011,20.900001 10.600009,20.900001 8.2000071,20.900001 6.3000054,19 6.3000052,16.6L6.3000052,4.3000004C6.3000054,1.9000001,8.2000071,0,10.600009,0z"
                         Background="SeaGreen"
                         Command="{Binding Global.StartRecordingCommand}"
                         Content="{Binding Global.AppLang.Start}"
@@ -163,7 +167,7 @@
                         Grid.Column="2"
                         Margin="30,0"
                         VerticalAlignment="Center"
-                        extensions:Extensions.Icon="M28.500003,0L31.999999,3.5 20.199962,15.300018 20.199962,16.5C20.199962,18.600006 18.500013,20.400024 16.300002,20.400024 15.899979,20.400024 15.599991,20.400024 15.300003,20.300018L13.199968,22.400024 13.300005,22.5C14.199968,22.900024 15.300003,23.200012 16.399978,23.200012 20.299998,23.200012 23.500009,20 23.500009,16.100006L23.500009,15.300018 25.899968,15.300018 25.899968,16C25.899968,20.900024,22.19996,25,17.399978,25.5L17.399978,29.100006 19.000013,29.100006 19.000013,30.400024 13.699968,30.400024 13.699968,29.100006 15.099992,29.100006 15.099992,25.400024C13.800005,25.200012,12.500018,24.800018,11.500019,24.100006L11.399983,24.100006 3.5000271,32 0,28.5 7.8999864,20.600006 7.8000108,20.5C7.0999991,19.200012,6.6999752,17.700012,6.6999752,16.100006L6.6999752,15.300018 9.0999977,15.300018 9.0999977,16C9.0999977,16.900024,9.3000089,17.800018,9.5999967,18.600006L9.5999967,18.700012 12.300006,16 12.300006,5.5C12.300006,3.4000244 14.000017,1.6000061 16.199966,1.6000061 18.3,1.6000061 20.099986,3.3000183 20.099986,5.5L20.099986,8.3000183z"
+                        extensions:Extensions.Carrier="M28.500003,0L31.999999,3.5 20.199962,15.300018 20.199962,16.5C20.199962,18.600006 18.500013,20.400024 16.300002,20.400024 15.899979,20.400024 15.599991,20.400024 15.300003,20.300018L13.199968,22.400024 13.300005,22.5C14.199968,22.900024 15.300003,23.200012 16.399978,23.200012 20.299998,23.200012 23.500009,20 23.500009,16.100006L23.500009,15.300018 25.899968,15.300018 25.899968,16C25.899968,20.900024,22.19996,25,17.399978,25.5L17.399978,29.100006 19.000013,29.100006 19.000013,30.400024 13.699968,30.400024 13.699968,29.100006 15.099992,29.100006 15.099992,25.400024C13.800005,25.200012,12.500018,24.800018,11.500019,24.100006L11.399983,24.100006 3.5000271,32 0,28.5 7.8999864,20.600006 7.8000108,20.5C7.0999991,19.200012,6.6999752,17.700012,6.6999752,16.100006L6.6999752,15.300018 9.0999977,15.300018 9.0999977,16C9.0999977,16.900024,9.3000089,17.800018,9.5999967,18.600006L9.5999967,18.700012 12.300006,16 12.300006,5.5C12.300006,3.4000244 14.000017,1.6000061 16.199966,1.6000061 18.3,1.6000061 20.099986,3.3000183 20.099986,5.5L20.099986,8.3000183z"
                         Background="SteelBlue"
                         Command="{Binding Global.StopRecordingCommand}"
                         Content="{Binding Global.AppLang.Stop}"
@@ -180,7 +184,7 @@
                         Style="{StaticResource Spinner}"
                         Visibility="{Binding Global.EmergencyActionVisibility}" />
                     <Button
-                        extensions:Extensions.Icon="{StaticResource SpeakerPathData}"
+                        extensions:Extensions.Carrier="{StaticResource SpeakerPathData}"
                         Background="IndianRed"
                         Command="{Binding Global.EmergencyCommand}"
                         Content="{Binding Global.AppLang.Emergency}"
@@ -199,7 +203,7 @@
             x:Name="MonitoringGroupBox"
             Grid.Row="1"
             Grid.Column="1"
-            Margin="5,0,0,5"
+            Margin="5,0,0,0"
             Padding="3"
             FontSize="14"
             Header="{Binding Global.AppLang.Monitoring}">
@@ -231,9 +235,6 @@
                     Foreground="Blue">
                     <Run FlowDirection="LeftToRight" Text="{Binding Global.SystemTime}" />
                 </TextBlock>
-
-
-
                 <Path
                     Grid.Row="1"
                     Width="15"
@@ -274,8 +275,6 @@
                     Foreground="OrangeRed">
                     <Run FlowDirection="LeftToRight" Text="{Binding Global.ShowTimeLeft}" />
                 </TextBlock>
-
-
             </Grid>
         </GroupBox>
 
@@ -283,13 +282,15 @@
             x:Name="HolidayGroupBox"
             Grid.Row="2"
             Grid.Column="1"
-            Margin="5,0,0,5"
+            Margin="5,0,0,0"
             Padding="5"
+            extensions:Extensions.Carrier="{Binding Global.AppLang.ItemsCount}"
+            extensions:Extensions.Carrier2="{Binding ElementName=HolidayListView, Path=Items.Count, Mode=OneWay}"
             FontSize="14"
-            Header="{Binding Global.AppLang.Holidays}">
+            Header="{Binding Global.AppLang.Holidays}"
+            Style="{StaticResource GroupBoxListView}">
             <Grid>
-                <ListView
-                    x:Name="MonitoringHolidayListView"
+                <ListView x:Name="HolidayListView"
                     Grid.Row="2"
                     d:ItemsSource="{d:SampleData ItemCount=5}"
                     Background="Transparent"

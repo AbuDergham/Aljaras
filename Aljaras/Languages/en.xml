@@ -69,5 +69,6 @@
 	<PlaybackDevices>Playback Devices</PlaybackDevices>
 	<Start>Start</Start>
 	<Stop>Stop</Stop>
+	<ItemsCount>Items Count</ItemsCount>
 
 </AppLanguage>

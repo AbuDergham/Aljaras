@@ -72,7 +72,7 @@
                         Margin="0,0,-20,0"
                         HorizontalAlignment="Center"
                         Panel.ZIndex="10"
-                        extensions:Extensions.Icon="{StaticResource AudiFilePathData}"
+                        extensions:Extensions.Carrier="{StaticResource AudiFilePathData}"
                         Background="Gray"
                         Command="{Binding SelectEmergencyAudioFileCommand}"
                         Style="{DynamicResource RoundButtons}" />
@@ -91,7 +91,7 @@
                     <Button
                         Margin="-15,0,0,0"
                         HorizontalAlignment="Center"
-                        extensions:Extensions.Icon="{StaticResource PlayPathData}"
+                        extensions:Extensions.Carrier="{StaticResource PlayPathData}"
                         Background="Gray"
                         Command="{Binding PlayEmergencyAudioFileCommand}"
                         Style="{DynamicResource RoundButtons}" />
@@ -144,7 +144,7 @@
                     Text="{Binding Global.AppLang.DatabaseOperations}" />
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <Button
-                        extensions:Extensions.Icon="{StaticResource ImportDataBasePathData}"
+                        extensions:Extensions.Carrier="{StaticResource ImportDataBasePathData}"
                         Background="DodgerBlue"
                         Command="{Binding ImportDataBaseCommand}"
                         Content="{Binding Global.AppLang.Import}"
@@ -156,7 +156,7 @@
                         Margin="20,0"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        extensions:Extensions.Icon="{StaticResource ExportDataBasePathData}"
+                        extensions:Extensions.Carrier="{StaticResource ExportDataBasePathData}"
                         Background="ForestGreen"
                         Command="{Binding ExportDataBaseCommand}"
                         Content="{Binding Global.AppLang.Export}"
@@ -167,7 +167,7 @@
                         Grid.ColumnSpan="10"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        extensions:Extensions.Icon="{StaticResource DeleteDataBasePathData}"
+                        extensions:Extensions.Carrier="{StaticResource DeleteDataBasePathData}"
                         Background="OrangeRed"
                         Command="{Binding DeleteDataBaseCommand}"
                         Content="{Binding Global.AppLang.Delete}"
@@ -192,7 +192,7 @@
             Grid.ColumnSpan="10"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            extensions:Extensions.Icon="{DynamicResource SavePathData}"
+            extensions:Extensions.Carrier="{DynamicResource SavePathData}"
             Background="#FF597ED8"
             Command="{Binding SaveSettingsCommand}"
             Content="{Binding Global.AppLang.Save}"

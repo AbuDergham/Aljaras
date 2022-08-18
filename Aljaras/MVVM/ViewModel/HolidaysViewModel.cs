@@ -73,7 +73,7 @@ namespace Aljaras.MVVM.ViewModel
             using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
             {
                 var col = db.GetCollection<Holiday>("Holidays");
-                HolidayList = col.Query().ToList();
+                HolidayList = col.Query().OrderBy(h => h.HolidayDate).ToList();
             }
             if (HolidayList != null && HolidayList.Count > 0)
                 IsNOHolidayMessageVisible = "Hidden";
@@ -147,7 +147,6 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         private void SaveHoliday()
         {
-           
                 if (CurrentHoliday != null && !string.IsNullOrEmpty(CurrentHoliday.HolidayTitle) && !string.IsNullOrWhiteSpace(CurrentHoliday.HolidayTitle))
                 {
                     var fileLocation = new string[] { CurrentHoliday.ReminderAudioFileLocation, AppDomain.CurrentDomain.BaseDirectory + "Audio\\School.mp3" }.FirstOrDefault(s => !string.IsNullOrEmpty(s) && File.Exists(s)) ?? "";
@@ -164,15 +163,15 @@ namespace Aljaras.MVVM.ViewModel
                     }
                     using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
                     {
-                        CurrentHoliday.FullTime = DateTime.Parse(CurrentHoliday.ReminderHour + ":" + CurrentHoliday.ReminderMinute + " " + CurrentHoliday.ReminderDayTime);
+                        CurrentHoliday.FullTime = ChangeDateOnly(CurrentHoliday.ReminderDate, DateTime.Parse(CurrentHoliday.ReminderHour + ":" + CurrentHoliday.ReminderMinute + " " + CurrentHoliday.ReminderDayTime));
                         CurrentHoliday.ReminderAudioFileLocation = fileLocation;
-
                         var col = db.GetCollection<Holiday>("Holidays");
                         if (CurrentHoliday.HolidayId > 0)
                             col.Update(CurrentHoliday);
                         else
                         {
                             CurrentHoliday.HolidayId = DateTime.Now.Ticks;
+                            CurrentHoliday.FullTime = ChangeDateOnly(CurrentHoliday.ReminderDate, DateTime.Parse(CurrentHoliday.ReminderHour + ":" + CurrentHoliday.ReminderMinute + " " + CurrentHoliday.ReminderDayTime));
                             col.Insert(CurrentHoliday);
                         }
                     }
@@ -191,6 +190,11 @@ namespace Aljaras.MVVM.ViewModel
             
             CurrentHoliday = new();
             CallGlobal();
+        }
+
+        public static DateTime ChangeDateOnly(DateTime _date, DateTime _time)
+        {
+            return _date.Date + _time.TimeOfDay;
         }
 
         public HolidaysViewModel()

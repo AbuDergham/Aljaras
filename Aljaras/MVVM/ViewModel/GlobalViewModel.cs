@@ -39,6 +39,9 @@ namespace Aljaras.MVVM.ViewModel
         private List<Holiday> holidayList = new();
 
         [ObservableProperty]
+        private List<Alarm> alarmList = new();
+
+        [ObservableProperty]
         AudioFilePlayer audioPlayer = new();
 
         [ObservableProperty]
@@ -72,7 +75,7 @@ namespace Aljaras.MVVM.ViewModel
         private List<Schedule> scheduleList = new();
 
         [ObservableProperty]
-        private List<Alarm> alarmList = new();
+        private List<Alarm> reminderList = new();
 
         [ObservableProperty]
         private string isNOAlarmMessageVisible = "";
@@ -115,6 +118,9 @@ namespace Aljaras.MVVM.ViewModel
 
         [ObservableProperty]
         private string emergencyActionVisibility = "Hidden";
+
+        [ObservableProperty]
+        private Random startRandom = new Random();
         #endregion
 
         #region RelayCommands
@@ -167,13 +173,12 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         private void PushToast()
         {
-            Random random = new Random();
             NotificationMessage = new()
             {
                 ActiveMessage = ((MessageVisibility)2).ToString(),
-                BackgroundColor = ((MessageBackground)random.Next(16)).ToString(),
+                BackgroundColor = ((MessageBackground)startRandom.Next(16)).ToString(),
                 Text = new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 10)
-                .Select(s => s[random.Next(s.Length)]).ToArray())
+                .Select(s => s[startRandom.Next(s.Length)]).ToArray())
             };
             NotificationList.Add(NotificationMessage);
         }
@@ -345,7 +350,30 @@ namespace Aljaras.MVVM.ViewModel
             using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
             {
                 var holidayCollection = db.GetCollection<Holiday>("Holidays");
-                HolidayList = holidayCollection.Find(h => h.HolidayDate > DateTime.Now).ToList();
+                HolidayList = holidayCollection.Find(h => h.HolidayDate > DateTime.Now && h.IsHolidayActive).OrderBy(x => x.HolidayDate).ToList();
+                if(HolidayList!= null && HolidayList.Count>0)
+                {
+                    List<Holiday> _tmp = HolidayList.FindAll(h => h.IsReminderActive && h.ReminderDate.Date == DateTime.Now.Date);
+                    if (_tmp != null && _tmp.Count > 0)
+                        foreach (var item in _tmp)
+                        {
+                            Alarm _alr = new()
+                            {
+                                AlarmTitle = item.HolidayTitle,
+                                FullTime = item.FullTime,
+                                AudioFileLocation = item.ReminderAudioFileLocation
+                            };
+                            AlarmList.Add(_alr);
+                            NotificationMessage = new()
+                            {
+                                ActiveMessage = ((MessageVisibility)2).ToString(),
+                                BackgroundColor = ((MessageBackground)startRandom.Next(16)).ToString(),
+                                Text = item.HolidayTitle + item.HolidayDate
+                            };
+                            NotificationList.Add(NotificationMessage);
+                        }
+                }
+
                 if (HolidayList != null && HolidayList.Count > 0)
                     IsNOHolidayMessageVisible = "Hidden";
 
@@ -364,6 +392,8 @@ namespace Aljaras.MVVM.ViewModel
                             {
                                 _item.FullTime = ChangeDateOnly(_item.FullTime);
                                 AlarmList.Add(_item);
+
+
                             }
                             AlarmList = AlarmList.OrderBy(x => x.FullTime).ToList();
                             

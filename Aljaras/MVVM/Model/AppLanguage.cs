@@ -214,10 +214,8 @@ namespace Aljaras.MVVM.Model
         [ObservableProperty]
         private string _stop = "Stop";
 
-
-
-
-
+        [ObservableProperty]
+        private string _itemsCount = "Items Count";
 
 
 

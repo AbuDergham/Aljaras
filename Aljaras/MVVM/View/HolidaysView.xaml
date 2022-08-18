@@ -19,10 +19,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <GroupBox
-            Padding="5,0,5,0"
-            FontSize="14"
-            Header="{Binding Global.AppLang.HolidayInformation}">
+        <GroupBox Padding="5,0,5,0" Header="{Binding Global.AppLang.HolidayInformation}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50" />
@@ -150,7 +147,7 @@
                         Grid.RowSpan="2"
                         Grid.Column="4"
                         HorizontalAlignment="Center"
-                        extensions:Extensions.Icon="{StaticResource TimeNowPathData}"
+                        extensions:Extensions.Carrier="{StaticResource TimeNowPathData}"
                         Background="SteelBlue"
                         Command="{Binding TimeNowCommand}"
                         Foreground="SteelBlue"
@@ -167,7 +164,7 @@
                     <Button
                         HorizontalAlignment="Center"
                         Panel.ZIndex="10"
-                        extensions:Extensions.Icon="{StaticResource AudiFilePathData}"
+                        extensions:Extensions.Carrier="{StaticResource AudiFilePathData}"
                         Background="CornflowerBlue"
                         Command="{Binding SelectAudioFileCommand}"
                         IsEnabled="{Binding CurrentHoliday.IsReminderActive}"
@@ -191,7 +188,7 @@
                         Grid.Column="2"
                         MinWidth="120"
                         HorizontalAlignment="Center"
-                        extensions:Extensions.Icon="{StaticResource PlayStopPathData}"
+                        extensions:Extensions.Carrier="{StaticResource PlayStopPathData}"
                         Background="MediumVioletRed"
                         Command="{Binding PlayPauseAudioFileCommand}"
                         Content="{Binding Global.AppLang.PlayStop}"
@@ -208,7 +205,7 @@
                         <Button
                             Margin="0,0,20,0"
                             HorizontalAlignment="Center"
-                            extensions:Extensions.Icon="{StaticResource NewPathData}"
+                            extensions:Extensions.Carrier="{StaticResource NewPathData}"
                             Background="Purple"
                             Command="{Binding NewHolidayCommand}"
                             Content="{Binding Global.AppLang.New}"
@@ -217,7 +214,7 @@
                             Style="{DynamicResource ListRoundButtons}"
                             ToolTip="{Binding Global.AppLang.New}" />
                         <Button
-                            extensions:Extensions.Icon="{StaticResource SavePathData}"
+                            extensions:Extensions.Carrier="{StaticResource SavePathData}"
                             Background="#FF597ED8"
                             Command="{Binding SaveHolidayCommand}"
                             Content="{Binding Global.AppLang.Save}"
@@ -231,8 +228,11 @@
         </GroupBox>
         <GroupBox
             Grid.Row="1"
+            extensions:Extensions.Carrier="{Binding Global.AppLang.ItemsCount}"
+            extensions:Extensions.Carrier2="{Binding ElementName=HolidayListView, Path=Items.Count, Mode=OneWay}"
             FontSize="14"
-            Header="{Binding Global.AppLang.Holidays}">
+            Header="{Binding Global.AppLang.Holidays}"
+            Style="{StaticResource GroupBoxListView}">
             <Grid Margin="0,5,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -352,14 +352,15 @@
                                 <TextBlock
                                     Grid.Column="3"
                                     VerticalAlignment="Center"
-                                    Text="{Binding ReminderDate, StringFormat=d}" />
+                                    Text="{Binding ReminderDate, StringFormat=d}"
+                                    Visibility="{Binding ReminderVisibility}" />
                                 <StackPanel
                                     Grid.Column="4"
                                     Margin="0,0,30,0"
                                     Orientation="Horizontal">
                                     <Button
                                         HorizontalAlignment="Center"
-                                        extensions:Extensions.Icon="{StaticResource ClonePathData}"
+                                        extensions:Extensions.Carrier="{StaticResource ClonePathData}"
                                         Background="Purple"
                                         Command="{Binding ElementName=HolidayListView, Path=DataContext.CloneHolidayCommand}"
                                         CommandParameter="{Binding}"
@@ -372,7 +373,7 @@
                                     <Button
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
-                                        extensions:Extensions.Icon="{StaticResource DeletePathData}"
+                                        extensions:Extensions.Carrier="{StaticResource DeletePathData}"
                                         Background="#FFDC3636"
                                         Command="{Binding ElementName=HolidayListView, Path=DataContext.DeleteHolidayCommand}"
                                         CommandParameter="{Binding}"

@@ -35,7 +35,7 @@ namespace Aljaras.MVVM.ViewModel
         private string isNOAlarmMessageVisible;
 
         [ObservableProperty]
-        private bool enableScheduleTitleTB = false;
+        private bool enableScheduleTitleTB = true;
 
         [ObservableProperty]
         private long playPauseAlarmButton;
@@ -97,11 +97,10 @@ namespace Aljaras.MVVM.ViewModel
             };
             GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
         }
-
         [RelayCommand]
         private void EnableAddNewSchedule()
         {
-            CurrentSchedule = new Schedule();
+            CurrentSchedule = new();
             EnableScheduleTitleTB = true;
         }
 
@@ -236,7 +235,6 @@ namespace Aljaras.MVVM.ViewModel
                 GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
             }
             LoadScheduleCollectionData();
-            EnableScheduleTitleTB = false;
             CurrentSchedule = new();
             CallGlobal();
         }
@@ -354,8 +352,11 @@ namespace Aljaras.MVVM.ViewModel
         partial void OnCurrentScheduleChanged(Schedule value)
         {
             if (CurrentSchedule != null && CurrentSchedule.ScheduleId > 0)
+            {
                 LoadAlarmCollectionData(CurrentSchedule.ScheduleId);
-            EnableScheduleTitleTB = false;
+                EnableScheduleTitleTB = false;
+            }else EnableScheduleTitleTB = true;
+
             if (CurrentAlarm == null)
                 CurrentAlarm = new();
         }
@@ -375,11 +376,7 @@ namespace Aljaras.MVVM.ViewModel
             }
             if (ScheduleList != null && ScheduleList.Count > 0)
                 IsNOScheduleMessageVisible = "Hidden";
-            else
-            {
-                IsNOScheduleMessageVisible = "Visible";
-                EnableScheduleTitleTB = true;
-            }
+            else IsNOScheduleMessageVisible = "Visible";
         }
 
         private void LoadAlarmCollectionData(long _SId)
