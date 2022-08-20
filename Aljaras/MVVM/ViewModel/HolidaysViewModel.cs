@@ -16,6 +16,7 @@ namespace Aljaras.MVVM.ViewModel
     {
         public GlobalViewModel Global { get; } = GlobalViewModel.Instance;
 
+        #region Observable 
         [ObservableProperty]
         private Holiday currentHoliday = new();
 
@@ -23,11 +24,13 @@ namespace Aljaras.MVVM.ViewModel
         private List<Holiday> holidayList = new();
 
         [ObservableProperty]
-        private string isNOHolidayMessageVisible;
+        private string isNOHolidayMessageVisible = GetVisibility.Visible.ToString();
 
         [ObservableProperty]
         private TimePicker timePicker = new();
+        #endregion
 
+        #region RelayCommands
         [RelayCommand]
         private void NewHoliday() { CurrentHoliday = new(); }
 
@@ -48,7 +51,7 @@ namespace Aljaras.MVVM.ViewModel
                 var holidayCol = db.GetCollection<Holiday>("Holidays");
                 Holiday tmp = obj;
                 tmp.HolidayId = DateTime.Now.Ticks;
-                tmp.HolidayTitle = obj.HolidayTitle + "Clone";
+                tmp.HolidayTitle = obj.HolidayTitle + Global.AppLang.Clone;
                 holidayCol.Insert(tmp);
             }
             LoadHolidayCollectionData();
@@ -65,35 +68,20 @@ namespace Aljaras.MVVM.ViewModel
         void PlayPauseAudioFile()
         {
             if (!Global.AudioPlayer.IsEmergency)
-                Global.AudioPlayer.PlayPauseAudioFile(CurrentHoliday.ReminderAudioFileLocation, false);
-        }
-
-        private void LoadHolidayCollectionData()
-        {
-            using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
-            {
-                var col = db.GetCollection<Holiday>("Holidays");
-                HolidayList = col.Query().OrderBy(h => h.HolidayDate).ToList();
-            }
-            if (HolidayList != null && HolidayList.Count > 0)
-                IsNOHolidayMessageVisible = "Hidden";
-            else
-            {
-                IsNOHolidayMessageVisible = "Visible";
-            }
+                _ = Global.AudioPlayer.PlayPauseAudioFile(CurrentHoliday.ReminderAudioFileLocation, false);
         }
 
         [RelayCommand]
         private void SelectAudioFile()
         {
             System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            string path = AppDomain.CurrentDomain.BaseDirectory + "Audio"; // this is the path that you are checking.
+            string path = AppDomain.CurrentDomain.BaseDirectory + "Audio";
             if (Directory.Exists(path))
                 openFileDialog.InitialDirectory = path;
             openFileDialog.Filter = "Audio File (*.mp3;*.wav)|*.mp3;*.wav;";
             if (openFileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
             if (!Global.AudioPlayer.IsEmergency)
-                Global.AudioPlayer.PlayPauseAudioFile(openFileDialog.FileName, false);
+                _ = Global.AudioPlayer.PlayPauseAudioFile(openFileDialog.FileName, false);
             CurrentHoliday.ReminderAudioFileLocation = openFileDialog.FileName;
         }
 
@@ -103,10 +91,7 @@ namespace Aljaras.MVVM.ViewModel
             using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
             {
                 var holidayCol = db.GetCollection<Holiday>("Holidays");
-                Holiday _hResults = holidayCol.Find(x => x.HolidayId.ToString().Contains(obj.HolidayId.ToString())).FirstOrDefault();
-                _hResults.IsHolidayActive = obj.IsHolidayActive;
-                if (_hResults != null)
-                    holidayCol.Update(_hResults);
+                holidayCol.Update(obj);
             }
             Global.NotificationMessage = new()
             {
@@ -115,12 +100,6 @@ namespace Aljaras.MVVM.ViewModel
             };
             GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
             CallGlobal();
-        }
-
-        private static void CallGlobal()
-        {
-            GlobalViewModel.Instance.LoadMonitoringAlarmCollectionData();
-            GlobalViewModel.Instance.NextAlarm();
         }
 
         [RelayCommand]
@@ -145,34 +124,34 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         private void SaveHoliday()
         {
-                if (CurrentHoliday != null && !string.IsNullOrEmpty(CurrentHoliday.HolidayTitle) && !string.IsNullOrWhiteSpace(CurrentHoliday.HolidayTitle))
+            if (CurrentHoliday != null && !string.IsNullOrEmpty(CurrentHoliday.HolidayTitle) && !string.IsNullOrWhiteSpace(CurrentHoliday.HolidayTitle))
+            {
+                var fileLocation = new string[] { CurrentHoliday.ReminderAudioFileLocation, AppDomain.CurrentDomain.BaseDirectory + "Audio\\Attention.mp3" }.FirstOrDefault(s => !string.IsNullOrEmpty(s) && File.Exists(s)) ?? "";
+                if (string.IsNullOrEmpty(fileLocation) || string.IsNullOrWhiteSpace(fileLocation))
                 {
-                    var fileLocation = new string[] { CurrentHoliday.ReminderAudioFileLocation, AppDomain.CurrentDomain.BaseDirectory + "Audio\\Attention.mp3" }.FirstOrDefault(s => !string.IsNullOrEmpty(s) && File.Exists(s)) ?? "";
-                    if (string.IsNullOrEmpty(fileLocation) || string.IsNullOrWhiteSpace(fileLocation))
+                    Global.NotificationMessage = new()
                     {
-                        Global.NotificationMessage = new()
-                        {
-                            BackgroundColor = MessageBackground.IndianRed.ToString(),
-                            MessageText = Global.AppLang.NotCorrectAudio
-                        };
-                        GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
-                        return;
-                    }
-                    using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
+                        BackgroundColor = MessageBackground.IndianRed.ToString(),
+                        MessageText = Global.AppLang.NotCorrectAudio
+                    };
+                    GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+                    return;
+                }
+                using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
+                {
+                    CurrentHoliday.FullTime = ChangeDateOnly(CurrentHoliday.ReminderDate, DateTime.Parse(CurrentHoliday.ReminderHour + ":" + CurrentHoliday.ReminderMinute + " " + CurrentHoliday.ReminderDayTime));
+                    CurrentHoliday.ReminderAudioFileLocation = fileLocation;
+                    var col = db.GetCollection<Holiday>("Holidays");
+                    if (CurrentHoliday.HolidayId > 0)
+                        col.Update(CurrentHoliday);
+                    else
                     {
+                        CurrentHoliday.HolidayId = DateTime.Now.Ticks;
                         CurrentHoliday.FullTime = ChangeDateOnly(CurrentHoliday.ReminderDate, DateTime.Parse(CurrentHoliday.ReminderHour + ":" + CurrentHoliday.ReminderMinute + " " + CurrentHoliday.ReminderDayTime));
-                        CurrentHoliday.ReminderAudioFileLocation = fileLocation;
-                        var col = db.GetCollection<Holiday>("Holidays");
-                        if (CurrentHoliday.HolidayId > 0)
-                            col.Update(CurrentHoliday);
-                        else
-                        {
-                            CurrentHoliday.HolidayId = DateTime.Now.Ticks;
-                            CurrentHoliday.FullTime = ChangeDateOnly(CurrentHoliday.ReminderDate, DateTime.Parse(CurrentHoliday.ReminderHour + ":" + CurrentHoliday.ReminderMinute + " " + CurrentHoliday.ReminderDayTime));
-                            col.Insert(CurrentHoliday);
-                        }
+                        col.Insert(CurrentHoliday);
                     }
-                    LoadHolidayCollectionData();
+                }
+                LoadHolidayCollectionData();
                 Global.NotificationMessage = new()
                 {
                     BackgroundColor = MessageBackground.SeaGreen.ToString(),
@@ -180,28 +159,46 @@ namespace Aljaras.MVVM.ViewModel
                 };
                 GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
             }
-                else
+            else
+            {
+                Global.NotificationMessage = new()
                 {
-                    Global.NotificationMessage = new()
-                    {
-                        BackgroundColor = MessageBackground.IndianRed.ToString(),
-                        MessageText = Global.AppLang.InvalidTitle
-                    };
-                    GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
-                }
-            
+                    BackgroundColor = MessageBackground.IndianRed.ToString(),
+                    MessageText = Global.AppLang.InvalidTitle
+                };
+                GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+            }
             CurrentHoliday = new();
             CallGlobal();
         }
+        #endregion
 
-        public static DateTime ChangeDateOnly(DateTime _date, DateTime _time)
+        #region Functions
+        private void LoadHolidayCollectionData()
         {
-            return _date.Date + _time.TimeOfDay;
+            using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
+            {
+                var col = db.GetCollection<Holiday>("Holidays");
+                HolidayList = col.Query().OrderBy(h => h.HolidayDate).ToList();
+            }
+            if (HolidayList != null && HolidayList.Count > 0)
+                IsNOHolidayMessageVisible = GetVisibility.Hidden.ToString();
+            else
+            {
+                IsNOHolidayMessageVisible = GetVisibility.Visible.ToString();
+            }
         }
 
-        public HolidaysViewModel()
+        private static void CallGlobal()
         {
-            LoadHolidayCollectionData();
+            GlobalViewModel.Instance.LoadMonitoringAlarmCollectionData();
+            GlobalViewModel.Instance.NextAlarm();
         }
+
+        public static DateTime ChangeDateOnly(DateTime _date, DateTime _time) { return _date.Date + _time.TimeOfDay; }
+
+        public HolidaysViewModel() { LoadHolidayCollectionData();}
+        #endregion
+
     }
 }

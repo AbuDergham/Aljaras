@@ -27,14 +27,15 @@
 
 	<ItemGroup>
 	  <None Remove="mustafa.jpg" />
-	  <None Remove="MVVM\View\mustafa.jpg" />
 	</ItemGroup>
 	
   <ItemGroup>
     <Content Include="mustafa.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="SchoolBell.ico" />
+    <Content Include="SchoolBell.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -47,10 +48,6 @@
     <Reference Include="CommunityToolkit.Mvvm">
       <HintPath>bin\Debug\net6.0-windows\CommunityToolkit.Mvvm.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="MVVM\View\mustafa.jpg" />
   </ItemGroup>
 
   <ItemGroup>

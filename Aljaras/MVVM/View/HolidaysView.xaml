@@ -4,12 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Aljaras.Core"
-    xmlns:local="clr-namespace:Aljaras.MVVM.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodel="clr-namespace:Aljaras.MVVM.ViewModel"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    Background="White"
+    Background="{StaticResource WhiteBrush}"
     mc:Ignorable="d">
     <UserControl.DataContext>
         <viewmodel:HolidaysViewModel />
@@ -44,9 +43,8 @@
                         Padding="5,0,5,0"
                         VerticalContentAlignment="Center"
                         Background="Transparent"
-                        BorderBrush="gray"
+                        BorderBrush="{StaticResource GrayBrush}"
                         BorderThickness="0,0,0,1"
-                        FontFamily="Consolas"
                         Text="{Binding CurrentHoliday.HolidayTitle}" />
                     <TextBlock
                         Grid.Column="2"
@@ -59,7 +57,7 @@
                         Grid.Column="3"
                         Height="25"
                         Margin="15,0,0,0"
-                        BorderBrush="gray"
+                        BorderBrush="{StaticResource GrayBrush}"
                         BorderThickness="0,0,0,0.5"
                         SelectedDate="{Binding CurrentHoliday.HolidayDate}" />
                     <CheckBox
@@ -71,7 +69,6 @@
                         IsChecked="{Binding CurrentHoliday.IsReminderActive}"
                         Style="{DynamicResource SliderCheckBox}" />
                 </Grid>
-
                 <Grid Grid.Row="1" IsEnabled="{Binding CurrentHoliday.IsReminderActive}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -87,35 +84,35 @@
                     <Border
                         Grid.ColumnSpan="5"
                         Height="25"
-                        Background="WhiteSmoke"
-                        BorderBrush="LightGray"
+                        Background="{StaticResource WhiteSmokeBrush}"
+                        BorderBrush="{StaticResource LightGrayBrush}"
                         BorderThickness="0,0.5" />
                     <TextBlock VerticalAlignment="Center" Text="{Binding Global.AppLang.ReminderDate}" />
                     <DatePicker
                         Grid.Row="1"
                         Height="25"
                         Margin="15,0,0,0"
-                        BorderBrush="gray"
+                        BorderBrush="{StaticResource GrayBrush}"
                         BorderThickness="0,0,0,0.5"
                         SelectedDate="{Binding CurrentHoliday.ReminderDate}" />
-                    <Label
+                    <TextBlock
                         Grid.Column="1"
-                        HorizontalAlignment="Center"
-                        Content="{Binding Global.AppLang.Hour}" />
-                    <Label
+                        VerticalAlignment="Center"
+                        Text="{Binding Global.AppLang.Hour}" />
+                    <TextBlock
                         Grid.Column="2"
-                        HorizontalAlignment="Center"
-                        Content="{Binding Global.AppLang.Minute}" />
-                    <Label
+                        VerticalAlignment="Center"
+                        Text="{Binding Global.AppLang.Minute}" />
+                    <TextBlock
                         Grid.Column="3"
-                        HorizontalAlignment="Center"
-                        Content="{Binding Global.AppLang.Daytime}" />
+                        VerticalAlignment="Center"
+                        Text="{Binding Global.AppLang.Daytime}" />
                     <ComboBox
                         Name="hours"
                         Grid.Row="1"
                         Grid.Column="1"
                         HorizontalAlignment="Stretch"
-                        BorderBrush="LightGray"
+                        BorderBrush="{StaticResource LightGrayBrush}"
                         BorderThickness="0,0,0,1"
                         ItemsSource="{Binding TimePicker.Hour}"
                         SelectedIndex="0"
@@ -126,7 +123,7 @@
                         Grid.Row="1"
                         Grid.Column="2"
                         HorizontalAlignment="Stretch"
-                        BorderBrush="LightGray"
+                        BorderBrush="{StaticResource LightGrayBrush}"
                         BorderThickness="0,0,0,1"
                         ItemsSource="{Binding TimePicker.Minute}"
                         SelectedIndex="0"
@@ -137,7 +134,7 @@
                         Grid.Row="1"
                         Grid.Column="3"
                         HorizontalAlignment="Stretch"
-                        BorderBrush="LightGray"
+                        BorderBrush="{StaticResource LightGrayBrush}"
                         BorderThickness="0,0,0,1"
                         ItemsSource="{Binding TimePicker.DayTime}"
                         SelectedIndex="0"
@@ -148,11 +145,10 @@
                         Grid.Column="4"
                         HorizontalAlignment="Center"
                         extensions:Extensions.Carrier="{StaticResource TimeNowPathData}"
-                        Background="SteelBlue"
+                        Background="{StaticResource SteelBlueBrush}"
                         Command="{Binding TimeNowCommand}"
-                        Foreground="SteelBlue"
-                        Style="{DynamicResource RoundButtons}"
-                         />
+                        Foreground="{StaticResource SteelBlueBrush}"
+                        Style="{DynamicResource RoundButtons}" />
                 </Grid>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
@@ -165,7 +161,7 @@
                         HorizontalAlignment="Center"
                         Panel.ZIndex="10"
                         extensions:Extensions.Carrier="{StaticResource AudiFilePathData}"
-                        Background="CornflowerBlue"
+                        Background="{StaticResource CornflowerBlueBrush}"
                         Command="{Binding SelectAudioFileCommand}"
                         IsEnabled="{Binding CurrentHoliday.IsReminderActive}"
                         Style="{DynamicResource RoundButtons}" />
@@ -174,12 +170,9 @@
                         Height="30"
                         Margin="15,0,105,0"
                         Padding="20,0,0,0"
-                        VerticalContentAlignment="Center"
-                        Background="White"
-                        BorderBrush="CornflowerBlue"
-                        FontWeight="Bold"
+                        Background="{StaticResource WhiteBrush}"
+                        BorderBrush="{StaticResource CornflowerBlueBrush}"
                         IsEnabled="{Binding CurrentHoliday.IsReminderActive}"
-                        IsManipulationEnabled="False"
                         IsReadOnly="True"
                         Text="{Binding CurrentHoliday.ReminderAudioFileLocation}"
                         TextWrapping="Wrap"
@@ -187,13 +180,12 @@
                     <Button
                         Grid.Column="2"
                         MinWidth="120"
-                        HorizontalAlignment="Center"
                         extensions:Extensions.Carrier="{StaticResource PlayStopPathData}"
-                        Background="MediumVioletRed"
+                        Background="{StaticResource MediumVioletRedBrush}"
                         Command="{Binding PlayPauseAudioFileCommand}"
                         Content="{Binding Global.AppLang.PlayStop}"
                         FontWeight="Bold"
-                        Foreground="MediumVioletRed"
+                        Foreground="{StaticResource MediumVioletRedBrush}"
                         IsEnabled="{Binding CurrentHoliday.IsReminderActive}"
                         Style="{DynamicResource RoundButtons}" />
                     <StackPanel
@@ -206,19 +198,17 @@
                             Margin="0,0,20,0"
                             HorizontalAlignment="Center"
                             extensions:Extensions.Carrier="{StaticResource NewPathData}"
-                            Background="Purple"
+                            Background="{StaticResource PurpleBrush}"
                             Command="{Binding NewHolidayCommand}"
                             Content="{Binding Global.AppLang.New}"
-                            FontSize="12"
-                            Foreground="Purple"
+                            Foreground="{StaticResource PurpleBrush}"
                             Style="{DynamicResource ListRoundButtons}" />
                         <Button
                             extensions:Extensions.Carrier="{StaticResource SavePathData}"
-                            Background="#FF597ED8"
+                            Background="{StaticResource SteelBlueBrush}"
                             Command="{Binding SaveHolidayCommand}"
                             Content="{Binding Global.AppLang.Save}"
-                            FontSize="12"
-                            Foreground="#FF597ED8"
+                            Foreground="{StaticResource SteelBlueBrush}"
                             Style="{DynamicResource ListRoundButtons}" />
                     </StackPanel>
                 </Grid>
@@ -228,7 +218,6 @@
             Grid.Row="1"
             extensions:Extensions.Carrier="{Binding Global.AppLang.ItemsCount}"
             extensions:Extensions.Carrier2="{Binding ElementName=HolidayListView, Path=Items.Count, Mode=OneWay}"
-            FontSize="14"
             Header="{Binding Global.AppLang.Holidays}"
             Style="{StaticResource GroupBoxListView}">
             <Grid Margin="0,5,0,0">
@@ -245,8 +234,8 @@
                     </Grid.ColumnDefinitions>
                     <Border
                         Grid.ColumnSpan="4"
-                        Background="WhiteSmoke"
-                        BorderBrush="LightGray"
+                        Background="{StaticResource WhiteSmokeBrush}"
+                        BorderBrush="{StaticResource LightGrayBrush}"
                         BorderThickness="0,0.5" />
                     <TextBlock
                         Margin="10,0,0,0"
@@ -254,7 +243,7 @@
                         FontSize="12">
                         <Path
                             Height="8"
-                            Data="M8.6620483,17.699996L32,17.699996 32,21.116015 8.6620483,21.116015z M2.6040039,16.805007C4.0390015,16.805007 5.2059937,17.97502 5.2059937,19.410996 5.2059937,20.851001 4.0390015,22.006 2.6040039,22.006 1.1640015,22.006 0,20.851001 0,19.410996 0,17.97502 1.1640015,16.805007 2.6040039,16.805007z M8.6620483,8.984993L32,8.984993 32,12.401011 8.6620483,12.401011z M2.6040039,8.0849981C4.0390015,8.0849981 5.2059937,9.2500076 5.2059937,10.690011 5.2059937,12.130015 4.0390015,13.290997 2.6040039,13.290997 1.1640015,13.290997 0,12.130015 0,10.690011 0,9.2500076 1.1640015,8.0849981 2.6040039,8.0849981z M8.6620483,0.82498215L32,0.82498215 32,4.2410006 8.6620483,4.2410006z M2.6040039,0C4.0390015,1.6889317E-08 5.2059937,1.1600046 5.2059937,2.6049824 5.2059937,4.0409884 4.0390015,5.2059979 2.6040039,5.2059979 1.1640015,5.2059979 0,4.0409884 0,2.6049824 0,1.1600046 1.1640015,1.6889317E-08 2.6040039,0z"
+                            Data="{StaticResource ListPathData}"
                             Fill="{DynamicResource DarkBackgroundBrush}"
                             Stretch="Uniform" />
                         <Run Text="{Binding Global.AppLang.List}" />
@@ -285,32 +274,31 @@
                         <TextBlock
                             VerticalAlignment="Center"
                             FontSize="12"
-                            Foreground="Purple">
+                            Foreground="{StaticResource PurpleBrush}">
                             <Path
                                 Height="12"
                                 Margin="0,0,0,-1"
                                 Data="{StaticResource ClonePathData}"
-                                Fill="Purple"
+                                Fill="{StaticResource PurpleBrush}"
                                 Stretch="Uniform" />
                             <Run Text="{Binding Global.AppLang.Clone}" />
                         </TextBlock>
                         <Border
                             Margin="5"
-                            BorderBrush="LightGray"
+                            BorderBrush="{StaticResource LightGrayBrush}"
                             BorderThickness="1,0,0,0" />
                         <TextBlock
                             Margin="0,0,10,0"
                             FontSize="12"
-                            Foreground="#FFDC3636">
+                            Foreground="{StaticResource MediumRedBrush}">
                             <Path
                                 Height="10"
                                 Data="{StaticResource DeletePathData}"
-                                Fill="#FFDC3636"
+                                Fill="{StaticResource MediumRedBrush}"
                                 Stretch="Uniform" />
                             <Run Text="{Binding Global.AppLang.Delete}" />
                         </TextBlock>
                     </StackPanel>
-
                 </Grid>
                 <ListView
                     x:Name="HolidayListView"
@@ -359,19 +347,19 @@
                                     <Button
                                         HorizontalAlignment="Center"
                                         extensions:Extensions.Carrier="{StaticResource ClonePathData}"
-                                        Background="Purple"
+                                        Background="{StaticResource PurpleBrush}"
                                         Command="{Binding ElementName=HolidayListView, Path=DataContext.CloneHolidayCommand}"
                                         CommandParameter="{Binding}"
                                         Style="{DynamicResource ListRoundButtons}" />
                                     <Border
                                         Margin="3"
-                                        BorderBrush="LightGray"
+                                        BorderBrush="{StaticResource LightGrayBrush}"
                                         BorderThickness="1,0,0,0" />
                                     <Button
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         extensions:Extensions.Carrier="{StaticResource DeletePathData}"
-                                        Background="#FFDC3636"
+                                        Background="{StaticResource MediumRedBrush}"
                                         Command="{Binding ElementName=HolidayListView, Path=DataContext.DeleteHolidayCommand}"
                                         CommandParameter="{Binding}"
                                         Style="{DynamicResource ListRoundButtons}" />
@@ -393,7 +381,4 @@
             </Grid>
         </GroupBox>
     </Grid>
-
-
-
 </UserControl>

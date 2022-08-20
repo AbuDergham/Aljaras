@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Aljaras.Core"
-    xmlns:local="clr-namespace:Aljaras.MVVM.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodel="clr-namespace:Aljaras.MVVM.ViewModel"
     d:DesignHeight="450"
@@ -24,22 +23,17 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <!--
-            extensions:Extensions.Carrier="{Binding ElementName=UpcomingListView, Path=Items.Count, Mode=OneWay}"
-        -->
         <GroupBox
             Grid.RowSpan="3"
             Padding="5"
             extensions:Extensions.Carrier="{Binding Global.AppLang.ItemsCount}"
             extensions:Extensions.Carrier2="{Binding ElementName=UpcomingListView, Path=Items.Count, Mode=OneWay}"
-            FontSize="14"
             Header="{Binding Global.AppLang.UpcomingAlerts}"
             Style="{StaticResource GroupBoxListView}">
             <Grid>
                 <ListView
                     x:Name="UpcomingListView"
                     d:ItemsSource="{d:SampleData ItemCount=5}"
-                    BorderBrush="LightGray"
                     BorderThickness="0"
                     Focusable="False"
                     IsEnabled="True"
@@ -63,7 +57,7 @@
                                     Grid.Column="1"
                                     VerticalAlignment="Center"
                                     FontSize="14"
-                                    Foreground="SeaGreen">
+                                    Foreground="{StaticResource SeaGreenBrush}">
                                     <Run Text="⏰" />
                                     <Run FlowDirection="LeftToRight" Text="{Binding FullTime, StringFormat=t}" />
                                 </TextBlock>
@@ -148,55 +142,49 @@
                         Height="10"
                         Margin="0,0,-6,0"
                         VerticalAlignment="Top"
-                        Data="M16.062402,9.2779838C12.570367,9.2779838 9.7773439,12.071989 9.7773439,15.563994 9.7773439,19.055997 12.570367,21.848996 16.062402,21.848996 19.554435,21.848996 22.347459,18.955991 22.347459,15.563994 22.347459,12.071989 19.554435,9.2779838 16.062402,9.2779838z M11.473342,0C12.37136,2.2949828 14.266365,4.4899899 17.35941,3.8909909 19.055408,3.5919796 20.053434,2.0950011 20.452422,0.29898095 23.345452,0.79800415 24.742469,1.4969786 26.937495,3.6919855 23.644467,6.8840018 26.138477,13.468992 31.526523,11.673003 32.12452,14.066984 32.224527,17.160001 31.426517,19.453977 27.535491,18.955991 24.542455,20.551999 25.240459,24.641996 25.340465,25.44 26.737481,26.936978 26.737481,26.936978 26.737481,26.936978 24.243472,30.128995 20.551423,30.828 19.953426,26.038999 12.171346,26.038999 11.573349,30.828 8.1813213,30.229001 6.9833132,29.430997 4.8882944,27.23599 8.3803283,24.342984 5.4872981,17.658994 0.2992656,19.553983 -0.099755201,17.160001 -0.099755201,13.966978 0.2992656,11.572997 5.088308,12.769987 7.9813382,8.4799796 5.9862954,5.0879818L4.9883009,4.0910031C4.9883009,4.0910031,6.8843137,1.4969786,11.473342,0z"
-                        Fill="SeaGreen"
+                        Data="{StaticResource SettingsPathData}"
+                        Fill="{StaticResource SeaGreenBrush}"
                         Stretch="Uniform"
                         Style="{StaticResource Spinner}"
                         Visibility="{Binding Global.RecordingActionVisibility}" />
                     <Button
                         Grid.Column="2"
                         VerticalAlignment="Center"
-                        extensions:Extensions.Carrier="M0,15.1L2.7000022,15.1 2.7000022,16C2.7000022,20.400001 6.2000053,23.900001 10.600009,23.900001 15.000013,23.900001 18.500016,20.400001 18.500016,16L18.500016,15.2 21.200018,15.2 21.200018,16C21.200018,21.400001,17.100015,25.900001,11.80001,26.500001L11.80001,30.500001 13.600012,30.500001 13.600012,32.000001 7.7000069,32.000001 7.7000069,30.500001 9.2000079,30.500001 9.2000079,26.400001C4.0000033,25.8,0,21.400001,0,16z M10.600009,0C13.000011,0,14.900013,1.9000001,14.900013,4.3000004L14.900013,16.6C14.900013,19 13.000011,20.900001 10.600009,20.900001 8.2000071,20.900001 6.3000054,19 6.3000052,16.6L6.3000052,4.3000004C6.3000054,1.9000001,8.2000071,0,10.600009,0z"
-                        Background="SeaGreen"
+                        extensions:Extensions.Carrier="{StaticResource MicOnPathData}"
+                        Background="{StaticResource SeaGreenBrush}"
                         Command="{Binding Global.StartRecordingCommand}"
                         Content="{Binding Global.AppLang.Start}"
-                        Foreground="SeaGreen"
+                        Foreground="{StaticResource SeaGreenBrush}"
                         IsEnabled="{Binding Global.RecordButtonEnabled}"
                         Style="{DynamicResource ListRoundButtons}" />
                     <Button
                         Grid.Column="2"
                         Margin="30,0"
                         VerticalAlignment="Center"
-                        extensions:Extensions.Carrier="M28.500003,0L31.999999,3.5 20.199962,15.300018 20.199962,16.5C20.199962,18.600006 18.500013,20.400024 16.300002,20.400024 15.899979,20.400024 15.599991,20.400024 15.300003,20.300018L13.199968,22.400024 13.300005,22.5C14.199968,22.900024 15.300003,23.200012 16.399978,23.200012 20.299998,23.200012 23.500009,20 23.500009,16.100006L23.500009,15.300018 25.899968,15.300018 25.899968,16C25.899968,20.900024,22.19996,25,17.399978,25.5L17.399978,29.100006 19.000013,29.100006 19.000013,30.400024 13.699968,30.400024 13.699968,29.100006 15.099992,29.100006 15.099992,25.400024C13.800005,25.200012,12.500018,24.800018,11.500019,24.100006L11.399983,24.100006 3.5000271,32 0,28.5 7.8999864,20.600006 7.8000108,20.5C7.0999991,19.200012,6.6999752,17.700012,6.6999752,16.100006L6.6999752,15.300018 9.0999977,15.300018 9.0999977,16C9.0999977,16.900024,9.3000089,17.800018,9.5999967,18.600006L9.5999967,18.700012 12.300006,16 12.300006,5.5C12.300006,3.4000244 14.000017,1.6000061 16.199966,1.6000061 18.3,1.6000061 20.099986,3.3000183 20.099986,5.5L20.099986,8.3000183z"
-                        Background="SteelBlue"
+                        extensions:Extensions.Carrier="{StaticResource MicOffPathData}"
+                        Background="{StaticResource SteelBlueBrush}"
                         Command="{Binding Global.StopRecordingCommand}"
                         Content="{Binding Global.AppLang.Stop}"
-                        Foreground="SteelBlue"
+                        Foreground="{StaticResource SteelBlueBrush}"
                         IsEnabled="{Binding Global.StopButtonEnabled}"
                         Style="{DynamicResource ListRoundButtons}" />
                     <Path
                         Height="10"
                         Margin="0,0,-25,0"
                         VerticalAlignment="Top"
-                        Data="M16.062402,9.2779838C12.570367,9.2779838 9.7773439,12.071989 9.7773439,15.563994 9.7773439,19.055997 12.570367,21.848996 16.062402,21.848996 19.554435,21.848996 22.347459,18.955991 22.347459,15.563994 22.347459,12.071989 19.554435,9.2779838 16.062402,9.2779838z M11.473342,0C12.37136,2.2949828 14.266365,4.4899899 17.35941,3.8909909 19.055408,3.5919796 20.053434,2.0950011 20.452422,0.29898095 23.345452,0.79800415 24.742469,1.4969786 26.937495,3.6919855 23.644467,6.8840018 26.138477,13.468992 31.526523,11.673003 32.12452,14.066984 32.224527,17.160001 31.426517,19.453977 27.535491,18.955991 24.542455,20.551999 25.240459,24.641996 25.340465,25.44 26.737481,26.936978 26.737481,26.936978 26.737481,26.936978 24.243472,30.128995 20.551423,30.828 19.953426,26.038999 12.171346,26.038999 11.573349,30.828 8.1813213,30.229001 6.9833132,29.430997 4.8882944,27.23599 8.3803283,24.342984 5.4872981,17.658994 0.2992656,19.553983 -0.099755201,17.160001 -0.099755201,13.966978 0.2992656,11.572997 5.088308,12.769987 7.9813382,8.4799796 5.9862954,5.0879818L4.9883009,4.0910031C4.9883009,4.0910031,6.8843137,1.4969786,11.473342,0z"
-                        Fill="IndianRed"
+                        Data="{StaticResource SettingsPathData}"
+                        Fill="{StaticResource IndianRedBrush}"
                         Stretch="Uniform"
                         Style="{StaticResource Spinner}"
                         Visibility="{Binding Global.EmergencyActionVisibility}" />
                     <Button
                         extensions:Extensions.Carrier="{StaticResource SpeakerPathData}"
-                        Background="IndianRed"
+                        Background="{StaticResource IndianRedBrush}"
                         Command="{Binding Global.EmergencyCommand}"
                         Content="{Binding Global.AppLang.Emergency}"
-                        Foreground="IndianRed"
+                        Foreground="{StaticResource IndianRedBrush}"
                         Style="{DynamicResource ListRoundButtons}" />
                 </StackPanel>
-                <StackPanel
-                    Grid.RowSpan="3"
-                    Grid.ColumnSpan="2"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
-                    Orientation="Horizontal" />
             </Grid>
         </GroupBox>
         <GroupBox
@@ -221,63 +209,57 @@
                 <Path
                     Width="15"
                     Data="{StaticResource SystemTimePathData}"
-                    Fill="Black"
+                    Fill="{StaticResource DarkBackgroundBrush}"
                     Stretch="Uniform" />
                 <TextBlock
                     Grid.Column="1"
                     VerticalAlignment="Center"
-                    FontSize="14"
                     Text="{Binding Global.AppLang.SystemTime}" />
                 <TextBlock
                     Grid.Column="2"
                     VerticalAlignment="Center"
-                    FontSize="14"
-                    Foreground="Blue">
+                    Foreground="{StaticResource DodgerBlueBrush}">
                     <Run FlowDirection="LeftToRight" Text="{Binding Global.SystemTime}" />
                 </TextBlock>
                 <Path
                     Grid.Row="1"
                     Width="15"
                     Data="{StaticResource AlarmBellPathData}"
-                    Fill="Black"
+                    Fill="{StaticResource DarkBackgroundBrush}"
                     Stretch="Uniform" />
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="1"
                     VerticalAlignment="Center"
-                    FontSize="14"
                     Text="{Binding Global.AppLang.NextAlarm}" />
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="2"
                     VerticalAlignment="Center"
-                    FontSize="14"
-                    Foreground="SeaGreen">
+                    Foreground="{StaticResource SeaGreenBrush}">
                     <Run FlowDirection="LeftToRight" Text="{Binding Global.CurrentAlarm}" />
                 </TextBlock>
                 <Path
                     Grid.Row="2"
                     Height="15"
                     Data="{StaticResource TimeLeftPathData}"
-                    Fill="Black"
+                    Fill="{StaticResource DarkBackgroundBrush}"
                     Stretch="Uniform" />
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="1"
                     VerticalAlignment="Center"
-                    FontSize="14"
                     Text="{Binding Global.AppLang.TimeLeft}" />
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="2"
                     VerticalAlignment="Center"
                     FontSize="14"
-                    Foreground="OrangeRed">
+                    Foreground="{StaticResource OrangeRedBrush}">
                     <Run FlowDirection="LeftToRight" Text="{Binding Global.ShowTimeLeft}" />
                 </TextBlock>
             </Grid>
         </GroupBox>
-
         <GroupBox
             x:Name="HolidayGroupBox"
             Grid.Row="2"
@@ -310,8 +292,8 @@
                                 <Path
                                     Height="15"
                                     Margin="0,0,10,0"
-                                    Data="M13.801697,10.700935L15.701725,11.700937C16.201727,31.10001,27.901758,32.000008,27.901758,32.000008L17.001714,32.000008C10.602717,26.899986,12.302732,11.500955,12.302732,11.500955z M21.111505,8.7545962E-05C25.491596,0.020965152 28.297037,3.7800306 28.001735,8.7009288 25.901756,3.7019211 19.601696,3.1019133 17.001714,5.8019334 23.301714,5.1019188 32.000765,9.4009429 25.801719,22.000984 24.601703,12.400951 17.10169,9.4009429 13.901734,9.0009471 9.4027021,9.3009358 3.4026916,14.30095 3.1027036,22.000984 -6.4963129,9.500949 8.9027011,5.0019432 12.60272,6.4019409 11.802731,4.4019352 6.5026729,2.7019182 1.1026997,7.3019377 3.0026665,-5.5980934 14.00171,2.7019182 14.00171,2.7019182 16.501714,0.80191897 18.901743,0.0019288592 20.901746,0.0019290915 20.972059,0.0003662593 21.04198,-0.00024419089 21.111505,8.7545962E-05z"
-                                    Fill="Black"
+                                    Data="{StaticResource PalmPathData}"
+                                    Fill="{StaticResource DarkBackgroundBrush}"
                                     Stretch="Uniform" />
                                 <TextBlock
                                     Grid.Column="1"
@@ -337,20 +319,5 @@
                     Visibility="{Binding Global.IsNOHolidayMessageVisible}" />
             </Grid>
         </GroupBox>
-        <StackPanel
-            Grid.RowSpan="5"
-            Grid.ColumnSpan="5"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Bottom"
-            Orientation="Horizontal">
-            <Button
-                Width="100"
-                Height="100"
-                Background="red"
-                Command="{Binding Global.PushToastCommand}"
-                Content="test"
-                Style="{x:Null}"
-                Visibility="Hidden" />
-        </StackPanel>
     </Grid>
 </UserControl>

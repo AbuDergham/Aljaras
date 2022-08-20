@@ -18,7 +18,6 @@
             <ColumnDefinition Width="1.9*" />
             <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
-        <!--#region *** Schedule List ***-->
         <GroupBox
             extensions:Extensions.Carrier="{Binding Global.AppLang.ItemsCount}"
             extensions:Extensions.Carrier2="{Binding ElementName=ScheduleListView, Path=Items.Count, Mode=OneWay}"
@@ -55,12 +54,10 @@
                         Margin="3,0,0,0"
                         Orientation="Horizontal">
                         <Button
-                            HorizontalAlignment="Center"
                             extensions:Extensions.Carrier="{StaticResource NewPathData}"
                             Background="{StaticResource PurpleBrush}"
                             Command="{Binding EnableAddNewScheduleCommand}"
                             Content="{Binding Global.AppLang.New}"
-                            FontSize="12"
                             Foreground="{StaticResource PurpleBrush}"
                             Style="{DynamicResource ListRoundButtons}" />
                         <Border
@@ -72,7 +69,6 @@
                             Background="{StaticResource SteelBlueBrush}"
                             Command="{Binding SaveScheduleCommand}"
                             Content="{Binding Global.AppLang.Save}"
-                            FontSize="12"
                             Foreground="{StaticResource SteelBlueBrush}"
                             Style="{DynamicResource ListRoundButtons}" />
                     </StackPanel>
@@ -117,7 +113,6 @@
                             Margin="5"
                             BorderBrush="{StaticResource LightGrayBrush}"
                             BorderThickness="1,0,0,0" />
-
                         <TextBlock
                             VerticalAlignment="Center"
                             FontSize="12"
@@ -145,7 +140,6 @@
                                 Stretch="Uniform" />
                             <Run Text="{Binding Global.AppLang.Delete}" />
                         </TextBlock>
-
                     </StackPanel>
                 </Grid>
                 <ListView
@@ -190,11 +184,11 @@
                                         Style="{DynamicResource ListRoundButtons}" />
                                     <Border
                                         Margin="3"
-                                        BorderBrush="LightGray"
+                                        BorderBrush="{StaticResource LightGrayBrush}"
                                         BorderThickness="1,0,0,0" />
                                     <Button
                                         HorizontalAlignment="Center"
-                                        extensions:Extensions.Carrier="M15.844,11.559021L15.844,15.695984C15.844,15.695984,15.764998,18.413025,12.761999,18.177002L9.253997,18.194031 9.253997,29.643982C9.253997,29.908997,9.4619972,30.117004,9.7219984,30.117004L22.904995,30.117004C23.163998,30.117004,23.371998,29.90802,23.371998,29.643982L23.374996,29.643982 23.374996,12.026978C23.374996,11.768982,23.166996,11.559021,22.906994,11.559021z M10.267996,2.28302L10.267996,7.3029785C10.267996,7.3029785,10.176001,10.598999,6.5360023,10.315002L2.2779993,10.333008 2.2779993,24.223022C2.2779995,24.536987,2.5360028,24.79303,2.8560022,24.79303L7.368003,24.79303 7.368003,17.700012 13.235998,11.47998 13.251997,11.47998 14.971998,9.6740112 19.405996,9.6740112 19.405996,2.8499756C19.405996,2.5369873,19.151999,2.28302,18.835997,2.28302z M9.2209999,0L18.837996,0C20.415999,0,21.695997,1.2789917,21.695997,2.8530273L21.695997,9.677002 22.902996,9.677002 22.905995,9.6749878C24.202999,9.6749878,25.258999,10.728027,25.258999,12.028015L25.258999,29.643982C25.258999,30.945984,24.202999,32,22.905995,32L9.7229978,32C8.4230033,32,7.3690025,30.944031,7.3690025,29.643982L7.3690025,27.078003 2.8570017,27.078003C1.2770001,27.078003,-1.3611906E-07,25.798035,1.4210855E-14,24.221985L1.4210855E-14,9.7319946 7.1129981,2.1940308 7.140998,2.1940308z"
+                                        extensions:Extensions.Carrier="{StaticResource ClonePathData}"
                                         Background="{StaticResource PurpleBrush}"
                                         Command="{Binding ElementName=ScheduleListView, Path=DataContext.CloneScheduleCommand}"
                                         CommandParameter="{Binding}"
@@ -228,8 +222,6 @@
                     Visibility="{Binding IsNOScheduleMessageVisible}" />
             </Grid>
         </GroupBox>
-        <!--#endregion Schedule List-->
-        <!--#region *** Alerts Form ***-->
         <Grid Grid.Column="1" Margin="5,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -306,12 +298,10 @@
                             Text="{Binding CurrentAlarm.AlarmTitle}" />
                         <StackPanel Grid.Column="2" Orientation="Horizontal">
                             <Button
-                                HorizontalAlignment="Center"
                                 extensions:Extensions.Carrier="{StaticResource NewPathData}"
                                 Background="{StaticResource PurpleBrush}"
                                 Command="{Binding NewAlarmCommand}"
                                 Content="{Binding Global.AppLang.New}"
-                                FontSize="12"
                                 Foreground="{StaticResource PurpleBrush}"
                                 Style="{DynamicResource ListRoundButtons}" />
                             <Border
@@ -323,7 +313,6 @@
                                 Background="{StaticResource SteelBlueBrush}"
                                 Command="{Binding SaveAlarmCommand}"
                                 Content="{Binding Global.AppLang.Save}"
-                                FontSize="12"
                                 Foreground="{StaticResource SteelBlueBrush}"
                                 Style="{DynamicResource ListRoundButtons}" />
                         </StackPanel>
@@ -360,7 +349,6 @@
                                 HorizontalAlignment="Center"
                                 Content="{Binding Global.AppLang.Daytime}" />
                             <ComboBox
-                                Name="hours"
                                 Grid.Row="1"
                                 HorizontalAlignment="Stretch"
                                 BorderBrush="{StaticResource LightGrayBrush}"
@@ -370,7 +358,6 @@
                                 SelectedItem="{Binding CurrentAlarm.Hour}"
                                 Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" />
                             <ComboBox
-                                Name="minutes"
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 HorizontalAlignment="Stretch"
@@ -381,7 +368,6 @@
                                 SelectedItem="{Binding CurrentAlarm.Minute}"
                                 Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" />
                             <ComboBox
-                                Name="daytime"
                                 Grid.Row="1"
                                 Grid.Column="2"
                                 HorizontalAlignment="Stretch"
@@ -394,7 +380,6 @@
                             <Button
                                 Grid.RowSpan="2"
                                 Grid.Column="3"
-                                HorizontalAlignment="Center"
                                 extensions:Extensions.Carrier="{StaticResource TimeNowPathData}"
                                 Background="{StaticResource SteelBlueBrush}"
                                 Command="{Binding TimeNowCommand}"
@@ -413,30 +398,24 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
-                            <Button
-                                HorizontalAlignment="Center"
-                                Panel.ZIndex="10"
-                                extensions:Extensions.Carrier="{StaticResource AudiFilePathData}"
-                                Background="{StaticResource CornflowerBlueBrush}"
-                                Command="{Binding SelectAudioFileCommand}"
-                                Style="{DynamicResource RoundButtons}" />
                             <TextBox
                                 Grid.ColumnSpan="3"
                                 Height="30"
                                 Margin="15,0,105,0"
                                 Padding="20,0,0,0"
-                                VerticalContentAlignment="Center"
                                 Background="{StaticResource WhiteBrush}"
                                 BorderBrush="{StaticResource CornflowerBlueBrush}"
-                                FontWeight="Bold"
-                                IsManipulationEnabled="False"
                                 IsReadOnly="True"
                                 Text="{Binding CurrentAlarm.AudioFileLocation}"
                                 TextWrapping="Wrap"
                                 VerticalScrollBarVisibility="Auto" />
                             <Button
+                                extensions:Extensions.Carrier="{StaticResource AudiFilePathData}"
+                                Background="{StaticResource CornflowerBlueBrush}"
+                                Command="{Binding SelectAudioFileCommand}"
+                                Style="{DynamicResource RoundButtons}" />
+                            <Button
                                 Grid.Column="2"
-                                Height="50"
                                 MinWidth="120"
                                 HorizontalAlignment="Center"
                                 extensions:Extensions.Carrier="{StaticResource PlayStopPathData}"
@@ -455,7 +434,6 @@
                 Margin="0,5,0,0"
                 extensions:Extensions.Carrier="{Binding Global.AppLang.ItemsCount}"
                 extensions:Extensions.Carrier2="{Binding ElementName=AlarmListView, Path=Items.Count, Mode=OneWay}"
-                FontSize="14"
                 Header="{Binding Global.AppLang.AlarmList}"
                 Style="{StaticResource GroupBoxListView}">
                 <Grid>
@@ -498,14 +476,12 @@
                                         <Run Text="⏰" />
                                         <Run FlowDirection="LeftToRight" Text="{Binding FullTime, StringFormat=t}" />
                                     </TextBlock>
-
                                     <StackPanel
                                         Grid.Column="3"
                                         Margin="0,0,30,0"
                                         Orientation="Horizontal">
                                         <Button
-                                            HorizontalAlignment="Center"
-                                            extensions:Extensions.Carrier="M15.844,11.559021L15.844,15.695984C15.844,15.695984,15.764998,18.413025,12.761999,18.177002L9.253997,18.194031 9.253997,29.643982C9.253997,29.908997,9.4619972,30.117004,9.7219984,30.117004L22.904995,30.117004C23.163998,30.117004,23.371998,29.90802,23.371998,29.643982L23.374996,29.643982 23.374996,12.026978C23.374996,11.768982,23.166996,11.559021,22.906994,11.559021z M10.267996,2.28302L10.267996,7.3029785C10.267996,7.3029785,10.176001,10.598999,6.5360023,10.315002L2.2779993,10.333008 2.2779993,24.223022C2.2779995,24.536987,2.5360028,24.79303,2.8560022,24.79303L7.368003,24.79303 7.368003,17.700012 13.235998,11.47998 13.251997,11.47998 14.971998,9.6740112 19.405996,9.6740112 19.405996,2.8499756C19.405996,2.5369873,19.151999,2.28302,18.835997,2.28302z M9.2209999,0L18.837996,0C20.415999,0,21.695997,1.2789917,21.695997,2.8530273L21.695997,9.677002 22.902996,9.677002 22.905995,9.6749878C24.202999,9.6749878,25.258999,10.728027,25.258999,12.028015L25.258999,29.643982C25.258999,30.945984,24.202999,32,22.905995,32L9.7229978,32C8.4230033,32,7.3690025,30.944031,7.3690025,29.643982L7.3690025,27.078003 2.8570017,27.078003C1.2770001,27.078003,-1.3611906E-07,25.798035,1.4210855E-14,24.221985L1.4210855E-14,9.7319946 7.1129981,2.1940308 7.140998,2.1940308z"
+                                            extensions:Extensions.Carrier="{StaticResource ClonePathData}"
                                             Background="{StaticResource PurpleBrush}"
                                             Command="{Binding ElementName=AlarmListView, Path=DataContext.CloneAlarmCommand}"
                                             CommandParameter="{Binding}"
@@ -515,8 +491,6 @@
                                             BorderBrush="{StaticResource LightGrayBrush}"
                                             BorderThickness="1,0,0,0" />
                                         <Button
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
                                             extensions:Extensions.Carrier="{StaticResource DeletePathData}"
                                             Background="{StaticResource MediumRedBrush}"
                                             Command="{Binding ElementName=AlarmListView, Path=DataContext.DeleteAlarmCommand}"
@@ -539,6 +513,5 @@
                 </Grid>
             </GroupBox>
         </Grid>
-        <!--#endregion *** Alerts Form ***-->
     </Grid>
 </UserControl>

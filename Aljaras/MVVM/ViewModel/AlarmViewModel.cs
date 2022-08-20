@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
+using System.Windows.Forms;
 
 namespace Aljaras.MVVM.ViewModel
 {
@@ -30,10 +30,10 @@ namespace Aljaras.MVVM.ViewModel
         private TimePicker timePicker = new();
 
         [ObservableProperty]
-        private string isNOScheduleMessageVisible;
+        private string isNOScheduleMessageVisible = GetVisibility.Visible.ToString();
 
         [ObservableProperty]
-        private string isNOAlarmMessageVisible;
+        private string isNOAlarmMessageVisible = GetVisibility.Visible.ToString();
 
         [ObservableProperty]
         private bool enableScheduleTitleTB = true;
@@ -96,6 +96,7 @@ namespace Aljaras.MVVM.ViewModel
             };
             GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
         }
+
         [RelayCommand]
         private void EnableAddNewSchedule()
         {
@@ -177,19 +178,19 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         private void SelectAudioFile()
         {
-            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            string path = AppDomain.CurrentDomain.BaseDirectory + "Audio"; // this is the path that you are checking.
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            string path = AppDomain.CurrentDomain.BaseDirectory + "Audio";
             if (Directory.Exists(path))
                 openFileDialog.InitialDirectory = path;
             openFileDialog.Filter = "Audio File (*.mp3;*.wav)|*.mp3;*.wav;";
-            if (openFileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
             if(!Global.AudioPlayer.IsEmergency)
             Global.AudioPlayer.PlayPauseAudioFile(openFileDialog.FileName, false);
             CurrentAlarm.AudioFileLocation = openFileDialog.FileName;
         }
 
         [RelayCommand]
-        void PlayPauseAudioFile()
+        private void PlayPauseAudioFile()
         {
             if (!Global.AudioPlayer.IsEmergency)
                 Global.AudioPlayer.PlayPauseAudioFile(CurrentAlarm.AudioFileLocation, false);
@@ -262,7 +263,7 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         private void DeleteSchedule(Schedule obj)
         {
-            MessageBoxResult messageBoxResult = MessageBox.Show(Global.AppLang.DeleteNotification, Global.AppLang.Delete +"\"" + obj.ScheduleTitle+"\"", MessageBoxButton.YesNo,MessageBoxImage.Warning);
+            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show(Global.AppLang.DeleteNotification, Global.AppLang.Delete +"\"" + obj.ScheduleTitle+"\"", MessageBoxButton.YesNo,MessageBoxImage.Warning);
             if (messageBoxResult != MessageBoxResult.Yes)
                 return;
                 using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
@@ -272,11 +273,8 @@ namespace Aljaras.MVVM.ViewModel
                     if (_aResult != null && _aResult.Count > 0)
                     foreach (var _item in _aResult)
                             aLarmCol.Delete(_item.AlarmId);
-
                     var scheduleCol = db.GetCollection<Schedule>("Schedules");
-                    Schedule _sResults = scheduleCol.Find(x => x.ScheduleId.ToString().Contains(obj.ScheduleId.ToString())).FirstOrDefault();
-                    if (_sResults != null)
-                        scheduleCol.Delete(_sResults.ScheduleId);
+                        scheduleCol.Delete(obj.ScheduleId);
                 }
             Global.NotificationMessage = new()
             {
@@ -286,7 +284,7 @@ namespace Aljaras.MVVM.ViewModel
             GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
             LoadScheduleCollectionData();
                 AlarmList = new();
-                IsNOAlarmMessageVisible = "Visible";
+                IsNOAlarmMessageVisible = GetVisibility.Visible.ToString();
             CurrentSchedule = new();
             CallGlobal();
         }
@@ -297,10 +295,7 @@ namespace Aljaras.MVVM.ViewModel
             using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
             {
                 var scheduleCol = db.GetCollection<Schedule>("Schedules");
-                Schedule _sResults = scheduleCol.Find(x => x.ScheduleId.ToString().Contains(obj.ScheduleId.ToString())).FirstOrDefault();
-                _sResults.IsScheduleActive = obj.IsScheduleActive;
-                if (_sResults != null)
-                    scheduleCol.Update(_sResults);
+                    scheduleCol.Update(obj);
             }
             Global.NotificationMessage = new()
             {
@@ -317,10 +312,7 @@ namespace Aljaras.MVVM.ViewModel
             using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
             {
                 var alarmCol = db.GetCollection<Alarm>("Alarms");
-                Alarm _aResults = alarmCol.Find(x => x.AlarmId.ToString().Contains(obj.AlarmId.ToString())).FirstOrDefault();
-                _aResults.IsAlarmActive = obj.IsAlarmActive;
-                if (_aResults != null)
-                    alarmCol.Update(_aResults);
+                    alarmCol.Update(obj);
             }
             Global.NotificationMessage = new()
             {
@@ -346,7 +338,6 @@ namespace Aljaras.MVVM.ViewModel
                 LoadAlarmCollectionData(CurrentSchedule.ScheduleId);
                 EnableScheduleTitleTB = false;
             }else EnableScheduleTitleTB = true;
-
             if (CurrentAlarm == null)
                 CurrentAlarm = new();
         }
@@ -365,8 +356,8 @@ namespace Aljaras.MVVM.ViewModel
                 ScheduleList = col.Query().ToList();
             }
             if (ScheduleList != null && ScheduleList.Count > 0)
-                IsNOScheduleMessageVisible = "Hidden";
-            else IsNOScheduleMessageVisible = "Visible";
+                IsNOScheduleMessageVisible = GetVisibility.Hidden.ToString();
+            else IsNOScheduleMessageVisible = GetVisibility.Visible.ToString();
         }
 
         private void LoadAlarmCollectionData(long _SId)
@@ -378,9 +369,10 @@ namespace Aljaras.MVVM.ViewModel
                 AlarmList = col.Find(x => x.ScheduleId.ToString().Contains(CurrentSchedule.ScheduleId.ToString())).ToList().OrderBy(x => x.FullTime).ToList();;
             }
             if (AlarmList != null && AlarmList.Count > 0)
-                IsNOAlarmMessageVisible = "Hidden";
-            else IsNOAlarmMessageVisible = "Visible";
+                IsNOAlarmMessageVisible = GetVisibility.Hidden.ToString();
+            else IsNOAlarmMessageVisible = GetVisibility.Visible.ToString();
         }
         #endregion
+
     }
 }

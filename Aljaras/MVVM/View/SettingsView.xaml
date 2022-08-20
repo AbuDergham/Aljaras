@@ -4,12 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Aljaras.Core"
-    xmlns:local="clr-namespace:Aljaras.MVVM.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodel="clr-namespace:Aljaras.MVVM.ViewModel"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    Background="White"
+    Background="{StaticResource WhiteBrush}"
     mc:Ignorable="d">
     <UserControl.DataContext>
         <viewmodel:SettingsViewModel />
@@ -24,21 +23,21 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <Border
-            Background="OldLace"
-            BorderBrush="LightGray"
+            Background="{StaticResource OldLaceBrush}"
+            BorderBrush="{StaticResource LightGrayBrush}"
             BorderThickness="0,0,1,1">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Path
                     Width="60"
                     Data="{StaticResource LanguagePathData}"
-                    Fill="Black"
+                    Fill="{StaticResource DarkBackgroundBrush}"
                     Stretch="Uniform" />
                 <TextBlock
                     Height="20"
                     Margin="0,0,0,10"
                     HorizontalAlignment="Center"
                     FontSize="16"
-                    Foreground="Black"
+                    Foreground="{StaticResource DarkBackgroundBrush}"
                     Text="{Binding Global.AppLang.Language}" />
                 <ComboBox
                     Width="150"
@@ -50,14 +49,14 @@
         </Border>
         <Border
             Grid.Column="1"
-            Background="LightYellow"
-            BorderBrush="LightGray"
+            Background="{StaticResource LightYellowBrush}"
+            BorderBrush="{StaticResource LightGrayBrush}"
             BorderThickness="0,0,0,1">
             <StackPanel Grid.Row="1" VerticalAlignment="Center">
                 <Path
                     Width="50"
                     Data="{StaticResource EmergencyPathData}"
-                    Fill="Black"
+                    Fill="{StaticResource DarkBackgroundBrush}"
                     Stretch="Uniform" />
                 <TextBlock
                     Height="20"
@@ -73,17 +72,14 @@
                         HorizontalAlignment="Center"
                         Panel.ZIndex="10"
                         extensions:Extensions.Carrier="{StaticResource AudiFilePathData}"
-                        Background="Gray"
+                        Background="{StaticResource DodgerBlueBrush}"
                         Command="{Binding SelectEmergencyAudioFileCommand}"
                         Style="{DynamicResource RoundButtons}" />
                     <TextBox
                         Width="200"
                         Height="30"
                         Padding="20,0,0,0"
-                        VerticalContentAlignment="Center"
-                        Background="White"
-                        FontWeight="Bold"
-                        IsManipulationEnabled="False"
+                        Background="{StaticResource WhiteBrush}"
                         IsReadOnly="True"
                         Text="{Binding UserSet.EmergencyAudioFileLocation}"
                         TextWrapping="Wrap"
@@ -92,24 +88,22 @@
                         Margin="-15,0,0,0"
                         HorizontalAlignment="Center"
                         extensions:Extensions.Carrier="{StaticResource PlayPathData}"
-                        Background="Gray"
+                        Background="{StaticResource MediumVioletRedBrush}"
                         Command="{Binding PlayEmergencyAudioFileCommand}"
                         Style="{DynamicResource RoundButtons}" />
                 </StackPanel>
-
             </StackPanel>
         </Border>
-
         <Border
             Grid.Row="1"
-            Background="MintCream"
-            BorderBrush="LightGray"
+            Background="{StaticResource MintCreamBrush}"
+            BorderBrush="{StaticResource LightGrayBrush}"
             BorderThickness="0,0,1,0">
             <StackPanel Grid.Row="2" VerticalAlignment="Center">
                 <Path
                     Width="50"
                     Data="{StaticResource RepeatPathData}"
-                    Fill="Black"
+                    Fill="{StaticResource DarkBackgroundBrush}"
                     Stretch="Uniform" />
                 <TextBlock
                     Height="20"
@@ -121,7 +115,7 @@
                     Height="20"
                     HorizontalAlignment="Center"
                     Content="{Binding Global.AppLang.EnableRepeat}"
-                    Foreground="Green"
+                    Foreground="{StaticResource ForestGreenBrush}"
                     IsChecked="{Binding UserSet.RepeatEmergency}"
                     Style="{DynamicResource SliderCheckBox}" />
             </StackPanel>
@@ -129,12 +123,12 @@
         <Border
             Grid.Row="1"
             Grid.Column="1"
-            Background="GhostWhite">
+            Background="{StaticResource GhostWhiteBrush}">
             <StackPanel Grid.Row="2" VerticalAlignment="Center">
                 <Path
                     Width="50"
                     Data="{StaticResource DataBasePathData}"
-                    Fill="Black"
+                    Fill="{StaticResource DarkBackgroundBrush}"
                     Stretch="Uniform" />
                 <TextBlock
                     Height="20"
@@ -145,38 +139,29 @@
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <Button
                         extensions:Extensions.Carrier="{StaticResource ImportDataBasePathData}"
-                        Background="DodgerBlue"
+                        Background="{StaticResource DodgerBlueBrush}"
                         Command="{Binding ImportDataBaseCommand}"
                         Content="{Binding Global.AppLang.Import}"
-                        Foreground="DodgerBlue"
+                        Foreground="{StaticResource DodgerBlueBrush}"
                         Style="{DynamicResource ListRoundButtons}" />
                     <Button
-                        Grid.RowSpan="10"
-                        Grid.ColumnSpan="10"
                         Margin="20,0"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
                         extensions:Extensions.Carrier="{StaticResource ExportDataBasePathData}"
-                        Background="ForestGreen"
+                        Background="{StaticResource ForestGreenBrush}"
                         Command="{Binding ExportDataBaseCommand}"
                         Content="{Binding Global.AppLang.Export}"
-                        Foreground="ForestGreen"
+                        Foreground="{StaticResource ForestGreenBrush}"
                         Style="{DynamicResource ListRoundButtons}" />
                     <Button
-                        Grid.RowSpan="10"
-                        Grid.ColumnSpan="10"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
                         extensions:Extensions.Carrier="{StaticResource DeleteDataBasePathData}"
-                        Background="OrangeRed"
+                        Background="{StaticResource OrangeRedBrush}"
                         Command="{Binding DeleteDataBaseCommand}"
                         Content="{Binding Global.AppLang.Delete}"
-                        Foreground="OrangeRed"
+                        Foreground="{StaticResource OrangeRedBrush}"
                         Style="{DynamicResource ListRoundButtons}" />
                 </StackPanel>
             </StackPanel>
         </Border>
-
         <Ellipse
             Grid.RowSpan="10"
             Grid.ColumnSpan="10"
@@ -184,24 +169,18 @@
             Height="100"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Fill="White"
-            Stroke="LightGray"
+            Fill="{StaticResource WhiteBrush}"
+            Stroke="{StaticResource LightGrayBrush}"
             StrokeThickness="1" />
         <Button
-            Grid.RowSpan="10"
-            Grid.ColumnSpan="10"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
+            Grid.RowSpan="2"
+            Grid.ColumnSpan="2"
             extensions:Extensions.Carrier="{DynamicResource SavePathData}"
-            Background="#FF597ED8"
+            Background="{StaticResource DodgerBlueBrush}"
             Command="{Binding SaveSettingsCommand}"
             Content="{Binding Global.AppLang.Save}"
             FontSize="14"
-            Foreground="#FF597ED8"
+            Foreground="{StaticResource DodgerBlueBrush}"
             Style="{DynamicResource ListRoundButtons}" />
-        <!--
-            :Extensions.Icon="M29.042969,18.955L23.935974,24.063003 21.518982,21.642006 20.575989,22.583 23.935974,25.942001 29.985962,19.897001z M25.281006,15.865003C28.974976,15.865003 32,18.890005 32,22.583 32,26.277 28.974976,29.302002 25.281006,29.302002 21.588013,29.302002 18.562988,26.277 18.562988,22.583 18.562988,18.890005 21.588013,15.865003 25.281006,15.865003z M16.515991,0L20.190002,0 20.190002,8.1180008 16.515991,8.1180008z M2.5189819,0L6.7879944,0 6.7879944,7.8380025C6.7879944,8.9980028,7.7279968,9.9380014,8.8880005,9.9380014L19.594971,9.9380014C20.755005,9.9380014,21.695007,8.9980028,21.695007,7.8380025L21.695007,0 24.588013,0 28.482971,3.8950015 28.482971,15.188001C27.500977,14.760999 26.419006,14.521002 25.281982,14.521002 20.835999,14.521002 17.219971,18.136999 17.219971,22.583 17.219971,24.768005 18.096008,26.750007 19.513,28.203003L2.5189819,28.203003C1.1279907,28.203003,0,27.076004,0,25.684006L0,2.5190015C0,1.1279986,1.1279907,1.9563436E-07,2.5189819,0z"
-            extensions:Extensions.Text="EmergencyPath"
-        -->
     </Grid>
 </UserControl>

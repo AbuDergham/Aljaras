@@ -11,7 +11,7 @@ namespace Aljaras.Core
         }
         public static object GetCarrier(UIElement element)
         {
-            return (object)element.GetValue(CarrierProperty);
+            return element.GetValue(CarrierProperty);
         }
 
         public static readonly DependencyProperty Carrier2Property = DependencyProperty.RegisterAttached("Carrier2", typeof(object), typeof(Extensions), new PropertyMetadata(default(string)));
@@ -21,7 +21,7 @@ namespace Aljaras.Core
         }
         public static object GetCarrier2(UIElement element)
         {
-            return (object)element.GetValue(Carrier2Property);
+            return element.GetValue(Carrier2Property);
         }
     }
 }

@@ -1,24 +1,21 @@
-﻿using System.IO;
-using System;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System.Collections.Generic;
+﻿using Aljaras.Core;
 using Aljaras.MVVM.Model;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Windows;
 using LiteDB;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Forms;
-using Microsoft.Win32;
 using MessageBox = System.Windows.MessageBox;
-using System.Windows.Shapes;
 using Path = System.IO.Path;
-using Aljaras.Core;
 
 namespace Aljaras.MVVM.ViewModel
 {
     internal partial class SettingsViewModel : ObservableRecipient
     {
-
         public GlobalViewModel Global { get; } = GlobalViewModel.Instance;
 
         #region Observable Properties
@@ -126,20 +123,20 @@ namespace Aljaras.MVVM.ViewModel
         private void PlayEmergencyAudioFile()
         {
             if (!Global.AudioPlayer.IsEmergency)
-                Global.AudioPlayer.PlayPauseAudioFile(userSet.EmergencyAudioFileLocation, false);
+                _ = Global.AudioPlayer.PlayPauseAudioFile(userSet.EmergencyAudioFileLocation, false);
         }
 
         [RelayCommand]
         private void SelectEmergencyAudioFile()
         {
-            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            OpenFileDialog openFileDialog = new();
             string path = AppDomain.CurrentDomain.BaseDirectory + "Audio"; // this is the path that you are checking.
             if (Directory.Exists(path))
             {
                 openFileDialog.InitialDirectory = path;
             }
             openFileDialog.Filter = "Audio File (*.mp3;*.wav)|*.mp3;*.wav;";
-            if (openFileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+            if (openFileDialog.ShowDialog() !=DialogResult.OK) return;
 
             userSet.EmergencyAudioFileLocation = openFileDialog.FileName;
             if (Global.AudioPlayer.Output != null && Global.AudioPlayer.Output.PlaybackState != NAudio.Wave.PlaybackState.Stopped)
@@ -148,7 +145,7 @@ namespace Aljaras.MVVM.ViewModel
                 Global.AudioPlayer.Output = null;
             }
             if (!Global.AudioPlayer.IsEmergency)
-                Global.AudioPlayer.PlayPauseAudioFile(openFileDialog.FileName, false);
+                _ = Global.AudioPlayer.PlayPauseAudioFile(openFileDialog.FileName, false);
         }
         #endregion
 
@@ -170,12 +167,11 @@ namespace Aljaras.MVVM.ViewModel
             }
         }
 
-        public FileInfo MakeUnique(string path)
+        public static FileInfo MakeUnique(string path)
         {
-            string dir = Path.GetDirectoryName(path);
+            string dir = Path.GetDirectoryName(path)!;
             string fileName = Path.GetFileNameWithoutExtension(path);
             string fileExt = Path.GetExtension(path);
-
             for (int i = 1; ; ++i)
             {
                 if (!File.Exists(path))

@@ -65,7 +65,12 @@ namespace Aljaras.MVVM.ViewModel
         static void MinimizeWindow(){Application.Current.MainWindow.WindowState = WindowState.Minimized;}
 
         [RelayCommand]
-        void ShowMonitoringView(){CurrentView = MonitoringVM;}
+        void ShowMonitoringView()
+        { 
+            GlobalViewModel.Instance.LoadMonitoringAlarmCollectionData();
+            GlobalViewModel.Instance.NextAlarm();
+            CurrentView = MonitoringVM;
+        }
 
         [RelayCommand]
         void ShowAlarmView(){CurrentView = AlarmVM;}
@@ -82,19 +87,14 @@ namespace Aljaras.MVVM.ViewModel
         {
             CurrentView = MonitoringVM;
             Application.Current.MainWindow.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
-
             try
             {
-                //// get deployment version
-                GetVersion = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
+                GetVersion = System.Reflection.Assembly.GetEntryAssembly()!.GetName().Version!.ToString();
             }
             catch (Exception)
             {
-                //// you cannot read publish version when app isn't installed 
-                //// (e.g. during debug)
                 GetVersion = "not configured";
             }
-
             if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + "Languages\\en.xml"))
             {
                 AppLanguage overview = new AppLanguage();
