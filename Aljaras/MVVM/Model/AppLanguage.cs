@@ -222,5 +222,8 @@ namespace Aljaras.MVVM.Model
 
         [ObservableProperty]
         private string _alreadyRunning = "App is already running! if you don't see app window, its in the Tray near system clock.";
+
+        [ObservableProperty]
+        private string _sample = "Sample";
     }
 }

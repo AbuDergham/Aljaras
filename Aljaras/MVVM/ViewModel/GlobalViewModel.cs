@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -42,7 +43,7 @@ namespace Aljaras.MVVM.ViewModel
         private List<Alarm> alarmList = new();
 
         [ObservableProperty]
-        AudioFilePlayer audioPlayer = new();
+        AudioFileOperations audioOperations = new();
 
         [ObservableProperty]
         UserSettings getUserSettings = new();
@@ -130,9 +131,49 @@ namespace Aljaras.MVVM.ViewModel
 
         [ObservableProperty]
         private Random startRandom = new();
+
+        [ObservableProperty]
+        private ZipFileCreator fileCompression = new();
         #endregion
 
         #region RelayCommands
+        [RelayCommand]
+        private void Test()
+        {
+            string UserAudioLibrary = string.Concat(AppDomain.CurrentDomain.BaseDirectory,"Audio\\", App.PCCurrentUserName);
+            string DestinationPath = @"C:\Users\Rellax\Documents\result.zip";//URL for your ZIP file           
+            DestinationPath = MakeUnique(DestinationPath).ToString();
+            ZipFile.CreateFromDirectory(UserAudioLibrary, DestinationPath, CompressionLevel.Fastest, true);
+            ZipArchive zipArchive = ZipFile.Open(DestinationPath, ZipArchiveMode.Update);
+            var dbfile = string.Concat(AppDomain.CurrentDomain.BaseDirectory, App.PCCurrentUserName, "Aljaras.jrsdb");
+            zipArchive.CreateEntryFromFile(dbfile, Path.GetFileNameWithoutExtension(dbfile) + ".jrsbck", CompressionLevel.Fastest);
+            zipArchive.Dispose();
+            /*
+            List<string> sourceFiles=new();
+            sourceFiles.Add(startPath);
+            FileCompression.CreateZipFile(zipPath, sourceFiles);*/
+
+            //CreateZipFile();
+            //string extractPath = @"c:\example\extract";//path to extract
+            //ZipFile.ExtractToDirectory(zipPath, extractPath);
+
+            //MessageBox.Show(AudioOperations.MoveAudioFileToLibrary("C:\\Users\\Rellax\\source\\repos\\Aljaras\\Aljaras\\bin\\Debug\\net6.0-windows\\Audio\\School.mp3"));
+        }
+
+        public static FileInfo MakeUnique(string path)
+        {
+            string dir = Path.GetDirectoryName(path)!;
+            string fileName = Path.GetFileNameWithoutExtension(path);
+            string fileExt = Path.GetExtension(path);
+            for (int i = 1; ; ++i)
+            {
+                if (!File.Exists(path))
+                    return new FileInfo(path);
+
+                path = Path.Combine(dir, fileName + " " + i + fileExt);
+            }
+        }
+
         [RelayCommand]
         private void StopRecording()
         {
@@ -147,10 +188,10 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         private void StartRecording()
         {
-            if (AudioPlayer.IsEmergency || MicDevicesList == null || SpeakerDevicesList == null || !MicDevicesList.Any() || !SpeakerDevicesList.Any()) return;
+            if (AudioOperations.IsEmergency || MicDevicesList == null || SpeakerDevicesList == null || !MicDevicesList.Any() || !SpeakerDevicesList.Any()) return;
             RecordingActionVisibility = GetVisibility.Visible.ToString();
             if(File.Exists(AppDomain.CurrentDomain.BaseDirectory + "Audio\\Attention.mp3"))
-                _ = AudioPlayer.PlayPauseAudioFile(AppDomain.CurrentDomain.BaseDirectory + "Audio\\Attention.mp3", false);
+                _ = AudioOperations.PlayPauseAudioFile(Instance.AudioOperations.MoveAudioFileToLibrary(AppDomain.CurrentDomain.BaseDirectory + "Audio\\Attention.mp3"), false);
             RecordButtonEnabled = false;
             StopButtonEnabled = true;
             wave = new()
@@ -185,13 +226,13 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         private void Emergency()
         {
-            AudioPlayer.IsEmergency = !AudioPlayer.IsEmergency;
-            if (AudioPlayer.IsEmergency) 
+            AudioOperations.IsEmergency = !AudioOperations.IsEmergency;
+            if (AudioOperations.IsEmergency) 
             {
                 EmergencyActionVisibility = GetVisibility.Visible.ToString();
                 StopRecording();
             } else EmergencyActionVisibility = GetVisibility.Hidden.ToString();
-            _ = AudioPlayer.PlayPauseAudioFile(GetUserSettings.EmergencyAudioFileLocation, AudioPlayer.IsEmergency);
+            _ = AudioOperations.PlayPauseAudioFile(GetUserSettings.EmergencyAudioFileLocation, AudioOperations.IsEmergency);
         }
 
         [RelayCommand]
@@ -203,7 +244,7 @@ namespace Aljaras.MVVM.ViewModel
 
         private void Wave_DataAvailable(object sender, WaveInEventArgs e) { provider.AddSamples(e.Buffer, 0, e.BytesRecorded); }
 
-        partial void OnGetUserSettingsChanged(UserSettings value) { AudioPlayer.Repeat = GetUserSettings.RepeatEmergency;}
+        partial void OnGetUserSettingsChanged(UserSettings value) { AudioOperations.Repeat = GetUserSettings.RepeatEmergency;}
 
         partial void OnAppLangChanged(AppLanguage value) 
         { 
@@ -257,7 +298,7 @@ namespace Aljaras.MVVM.ViewModel
                         Alarm? _alr = AlarmList.FirstOrDefault(x => TrimMilliseconds(x.FullTime) == TrimMilliseconds(DateTime.Now));
                         if (_alr != null)
                         {
-                            if (!AudioPlayer.IsEmergency)
+                            if (!AudioOperations.IsEmergency)
                             StartAudio(_alr.AudioFileLocation);
                             NextAlarm();
                         }
@@ -269,9 +310,9 @@ namespace Aljaras.MVVM.ViewModel
 
         public void SetAppLang()
         {
-            using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
+            using (App.db)
             {
-                var col = db.GetCollection<UserSettings>("UserSettings");
+                var col = App.db.GetCollection<UserSettings>("UserSettings");
                 UserSettings? results = col.Find(x => x.Id == 1).FirstOrDefault();
                 if (results != null)
                     GetUserSettings = results;
@@ -279,9 +320,9 @@ namespace Aljaras.MVVM.ViewModel
                 {
                     try
                     {
-                        Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                        Microsoft.Win32.RegistryKey? key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
                         Assembly curAssembly = Assembly.GetExecutingAssembly();
-                        key.SetValue(curAssembly.GetName().Name, Path.ChangeExtension(curAssembly.Location, ".exe"));
+                        key?.SetValue(curAssembly.GetName().Name, Path.ChangeExtension(curAssembly.Location, ".exe"));
                         GetUserSettings.IsKeyRegistered = true;
                         col.Insert(GetUserSettings);
                     }
@@ -324,8 +365,9 @@ namespace Aljaras.MVVM.ViewModel
                 };
                 return;
             }
-            AudioPlayer.Output = null;
-            _ = AudioPlayer.PlayPauseAudioFile(fileLocation, false);
+            _afl = Instance.AudioOperations.MoveAudioFileToLibrary(_afl);
+            AudioOperations.Output = null;
+            _ = AudioOperations.PlayPauseAudioFile(fileLocation, false);
         }
 
         public void NextAlarm()
@@ -369,9 +411,9 @@ namespace Aljaras.MVVM.ViewModel
             ScheduleList = new();
             AlarmList = new();
             HolidayList = new();
-            using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
+            using (App.db)
             {
-                var holidayCollection = db.GetCollection<Holiday>("Holidays");
+                var holidayCollection = App.db.GetCollection<Holiday>("Holidays");
                 HolidayList = holidayCollection.Find(h => h.HolidayDate > DateTime.Now && h.IsHolidayActive).OrderBy(x => x.HolidayDate).ToList();
                 if(HolidayList!= null && HolidayList.Count>0)
                 {
@@ -392,13 +434,13 @@ namespace Aljaras.MVVM.ViewModel
                     IsNOHolidayMessageVisible = GetVisibility.Hidden.ToString();
                 else IsNOHolidayMessageVisible = GetVisibility.Visible.ToString();
 
-                var scheduleCollection = db.GetCollection<Schedule>("Schedules");
+                var scheduleCollection = App.db.GetCollection<Schedule>("Schedules");
                 ScheduleList = scheduleCollection.Find(x => x.IsScheduleActive == true).ToList();
                 if (ScheduleList != null && ScheduleList.Count > 0)
                 {
                     foreach (Schedule item in ScheduleList)
                     {
-                        var alarmCollection = db.GetCollection<Alarm>("Alarms");
+                        var alarmCollection = App.db.GetCollection<Alarm>("Alarms");
                         List<Alarm> result = alarmCollection.Find(x => x.ScheduleId.ToString().Contains(item.ScheduleId.ToString()) && x.IsAlarmActive == true).ToList();
                         if (result != null && result.Count > 0)
                         { 

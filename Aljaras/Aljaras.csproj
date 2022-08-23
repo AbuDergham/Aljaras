@@ -13,7 +13,7 @@
     <Copyright>Mustafa Al-Klieb </Copyright>
     <PackageIcon></PackageIcon>
     <IncrementVersionOnBuild>1.yyyy.Mdd.Hmm</IncrementVersionOnBuild>
-    <Version>1.2022.823.125</Version>
+    <Version>1.2022.824.226</Version>
   </PropertyGroup>
 
 	<Target Name="RemoveDuplicateAnalyzers" BeforeTargets="CoreCompile">
@@ -51,8 +51,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Aljaras.jrsdb">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    <None Update="Sample.jrsdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Audio\Attention.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

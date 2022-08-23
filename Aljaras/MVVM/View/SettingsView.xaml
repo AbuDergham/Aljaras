@@ -72,13 +72,14 @@
                         HorizontalAlignment="Center"
                         Panel.ZIndex="10"
                         extensions:Extensions.Carrier="{StaticResource AudiFilePathData}"
-                        Background="{StaticResource DodgerBlueBrush}"
+                        Background="{StaticResource SteelBlueBrush}"
                         Command="{Binding SelectEmergencyAudioFileCommand}"
                         Style="{DynamicResource RoundButtons}" />
                     <TextBox
                         Width="200"
                         Height="30"
                         Padding="20,0,0,0"
+                        VerticalContentAlignment="Center"
                         Background="{StaticResource WhiteBrush}"
                         IsReadOnly="True"
                         Text="{Binding UserSet.EmergencyAudioFileLocation}"
@@ -158,10 +159,10 @@
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <Button
                         extensions:Extensions.Carrier="{StaticResource ImportDataBasePathData}"
-                        Background="{StaticResource DodgerBlueBrush}"
+                        Background="{StaticResource SteelBlueBrush}"
                         Command="{Binding ImportDataBaseCommand}"
                         Content="{Binding Global.AppLang.Import}"
-                        Foreground="{StaticResource DodgerBlueBrush}"
+                        Foreground="{StaticResource SteelBlueBrush}"
                         Style="{DynamicResource ListRoundButtons}" />
                     <Button
                         Margin="20,0"
@@ -177,6 +178,14 @@
                         Command="{Binding DeleteDataBaseCommand}"
                         Content="{Binding Global.AppLang.Delete}"
                         Foreground="{StaticResource OrangeRedBrush}"
+                        Style="{DynamicResource ListRoundButtons}" />
+                    <Button
+                        Margin="20,0,0,0"
+                        extensions:Extensions.Carrier="{StaticResource SampleDataBasePathData}"
+                        Background="{StaticResource DarkVioletBrush}"
+                        Command="{Binding LoadSampleCommand}"
+                        Content="{Binding Global.AppLang.Sample}"
+                        Foreground="{StaticResource DarkVioletBrush}"
                         Style="{DynamicResource ListRoundButtons}" />
                 </StackPanel>
             </StackPanel>

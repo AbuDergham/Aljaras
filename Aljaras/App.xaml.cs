@@ -1,4 +1,5 @@
 ﻿using Aljaras.MVVM.ViewModel;
+using LiteDB;
 using System;
 using System.Drawing;
 using System.IO;
@@ -11,7 +12,10 @@ namespace Aljaras
     public partial class App : Application
     {
         private readonly Forms.NotifyIcon _notifyIcon;
-        private static Mutex _mutex = null;
+        private static Mutex? _mutex = null;
+        public static readonly string PCCurrentUserName = Environment.UserName;
+        public static readonly string dbConnectionString = string.Concat("Filename=", PCCurrentUserName, "Aljaras.jrsdb;connection=shared");
+        public static readonly LiteDatabase db = new(dbConnectionString);
 
         public App()
         {

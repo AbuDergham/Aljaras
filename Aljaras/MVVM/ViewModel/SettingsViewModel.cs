@@ -5,11 +5,14 @@ using CommunityToolkit.Mvvm.Input;
 using LiteDB;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Shapes;
 using MessageBox = System.Windows.MessageBox;
 using Path = System.IO.Path;
 
@@ -35,13 +38,36 @@ namespace Aljaras.MVVM.ViewModel
             openFileDialog.Filter = "Aljaras DataBase (*.jrsdb;*.jrsbck)|*.jrsdb;*.jrsbck;";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                string fileExists = AppDomain.CurrentDomain.BaseDirectory + "Aljaras.jrsdb";
-                if (File.Exists(fileExists))
-                    File.Delete(fileExists);
-                File.Copy(openFileDialog.FileName, Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Aljaras.jrsdb"));
+                if(Path.GetExtension(openFileDialog.FileName).ToLower() == ".jrsdb")
+                {
+                    string fileExists = string.Concat(AppDomain.CurrentDomain.BaseDirectory, App.PCCurrentUserName, "Aljaras.jrsdb");
+                    if (File.Exists(fileExists))
+                        File.Delete(fileExists);
+                    File.Copy(openFileDialog.FileName, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, App.PCCurrentUserName+"Aljaras.jrsdb"));
+                }
+                else
+                {
+                    string GetAudioLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory ,"Audio");
+                    ZipFile.ExtractToDirectory(openFileDialog.FileName, GetAudioLocation, true);
+                    string? dbSourceFile = Directory.GetFiles(GetAudioLocation, "*.jrsdb").FirstOrDefault();
+                    string dbDestinationFile = AppDomain.CurrentDomain.BaseDirectory + App.PCCurrentUserName + "Aljaras.jrsdb";
+                    if(!File.Exists(dbSourceFile))
+                    {
+                        Global.NotificationMessage = new()
+                        {
+                            BackgroundColor = MessageBackground.IndianRed.ToString(),
+                            MessageText = Global.AppLang.NoDataBase                      
+                        };
+                        GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+                        return;
+                    }
+                    if(File.Exists(dbDestinationFile))
+                        File.Delete(dbDestinationFile);
+                    File.Move(dbSourceFile, dbDestinationFile);
+                }
                 Global.NotificationMessage = new()
                 {
-                    BackgroundColor = MessageBackground.IndianRed.ToString(),
+                    BackgroundColor = MessageBackground.SeaGreen.ToString(),
                     MessageText = Global.AppLang.Done
                 };
                 GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
@@ -50,33 +76,61 @@ namespace Aljaras.MVVM.ViewModel
         }
 
         [RelayCommand]
+        private void LoadSample()
+        {
+            string SampleFile = string.Concat(AppDomain.CurrentDomain.BaseDirectory, "Sample.jrsdb");
+            string DestinationFile = string.Concat(AppDomain.CurrentDomain.BaseDirectory, App.PCCurrentUserName, "Aljaras.jrsdb");
+            if (File.Exists(SampleFile))
+            {
+                if (File.Exists(DestinationFile))
+                    File.Delete(DestinationFile);
+                File.Copy(SampleFile, DestinationFile);
+                Global.NotificationMessage = new()
+                {
+                    BackgroundColor = MessageBackground.SeaGreen.ToString(),
+                    MessageText = Global.AppLang.Done
+                };
+                GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+            }
+        }
+
+        [RelayCommand]
         private void ExportDataBase()
         {
-            using (var fbd = new FolderBrowserDialog())
+            FolderBrowserDialog folderBrowserDialog = new();
+            if (folderBrowserDialog.ShowDialog() != DialogResult.OK) return;
+            string UserAudioLibrary = string.Concat(AppDomain.CurrentDomain.BaseDirectory, "Audio\\", App.PCCurrentUserName);
+            string dbfile = string.Concat(AppDomain.CurrentDomain.BaseDirectory, App.PCCurrentUserName, "Aljaras.jrsdb");
+            string DestinationPath = Path.Combine(folderBrowserDialog.SelectedPath, string.Concat(App.PCCurrentUserName , "Aljaras.jrsbck"));
+            DestinationPath = MakeUnique(DestinationPath).ToString();
+            if (Directory.Exists(UserAudioLibrary) && File.Exists(dbfile))
             {
-                DialogResult result = fbd.ShowDialog();
-                string fileToCopy = AppDomain.CurrentDomain.BaseDirectory + "Aljaras.jrsdb";
-                if (File.Exists(fileToCopy))
-                {
-                    string _desFile = Path.Combine(fbd.SelectedPath, Path.GetFileNameWithoutExtension(fileToCopy) + ".jrsbck");
-                    File.Copy(fileToCopy, MakeUnique(_desFile).ToString());
-                    Global.NotificationMessage = new()
-                    {
-                        BackgroundColor = MessageBackground.IndianRed.ToString(),
-                        MessageText = Global.AppLang.Done
-                    };
-                    GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
-                }
-                else 
-                {
-                    Global.NotificationMessage = new()
-                    {
-                        BackgroundColor = MessageBackground.IndianRed.ToString(),
-                        MessageText = Global.AppLang.NoDataBase
-                    };
-                    GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
-                }
+                ZipFile.CreateFromDirectory(UserAudioLibrary, DestinationPath, CompressionLevel.Fastest, true);
+                ZipArchive zipArchive = ZipFile.Open(DestinationPath, ZipArchiveMode.Update);
+                zipArchive.CreateEntryFromFile(dbfile, Path.GetFileName(dbfile), CompressionLevel.Fastest);
+                zipArchive.Dispose();
             }
+            else if (File.Exists(dbfile))
+            {
+                DestinationPath = Path.Combine(folderBrowserDialog.SelectedPath, Path.GetFileName(dbfile));
+                File.Copy(dbfile, DestinationPath);
+            }
+            else
+            {
+                Global.NotificationMessage = new()
+                {
+                    BackgroundColor = MessageBackground.IndianRed.ToString(),
+                    MessageText = Global.AppLang.NoDataBase
+                };
+                GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+                return;
+            }
+            Global.NotificationMessage = new()
+            {
+                BackgroundColor = MessageBackground.SeaGreen.ToString(),
+                MessageText = Global.AppLang.Done
+            };
+            GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
         }
 
         [RelayCommand]
@@ -85,7 +139,7 @@ namespace Aljaras.MVVM.ViewModel
             MessageBoxResult messageBoxResult = MessageBox.Show(Global.AppLang.DeleteNotification, Global.AppLang.Delete+" " + Global.AppLang.Database, MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (messageBoxResult != MessageBoxResult.Yes)
                 return;
-            string fileExists = AppDomain.CurrentDomain.BaseDirectory + "Aljaras.jrsdb";
+            string fileExists = string.Concat(AppDomain.CurrentDomain.BaseDirectory, App.PCCurrentUserName, "Aljaras.jrsdb");
             if (File.Exists(fileExists))
                 File.Delete(fileExists);
             Global.LoadMonitoringAlarmCollectionData();
@@ -100,7 +154,7 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         private void SaveSettings()
         {
-            using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
+            using (App.db)
             {
                 if (UserSet.IsKeyRegistered)
                 {
@@ -123,9 +177,9 @@ namespace Aljaras.MVVM.ViewModel
                 } else {
                     try
                     {
-                        Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                        Microsoft.Win32.RegistryKey? key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
                         Assembly curAssembly = Assembly.GetExecutingAssembly();
-                        key.DeleteValue(curAssembly.GetName().Name);
+                        key?.DeleteValue(curAssembly.GetName().Name);
                     }
                     catch
                     {
@@ -137,7 +191,8 @@ namespace Aljaras.MVVM.ViewModel
                         UserSet.IsKeyRegistered = true;
                     }
                 }
-                var col = db.GetCollection<UserSettings>("UserSettings");
+                UserSet.EmergencyAudioFileLocation = Global.AudioOperations.MoveAudioFileToLibrary(UserSet.EmergencyAudioFileLocation);
+                var col = App.db.GetCollection<UserSettings>("UserSettings");
                 UserSettings? results = col.Find(x => x.Id == 1).FirstOrDefault();
                 if (results != null)
                     col.Update(UserSet);
@@ -158,8 +213,8 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         private void PlayEmergencyAudioFile()
         {
-            if (!Global.AudioPlayer.IsEmergency)
-                _ = Global.AudioPlayer.PlayPauseAudioFile(userSet.EmergencyAudioFileLocation, false);
+            if (!Global.AudioOperations.IsEmergency)
+                _ = Global.AudioOperations.PlayPauseAudioFile(UserSet.EmergencyAudioFileLocation, false);
         }
 
         [RelayCommand]
@@ -173,15 +228,15 @@ namespace Aljaras.MVVM.ViewModel
             }
             openFileDialog.Filter = "Audio File (*.mp3;*.wav)|*.mp3;*.wav;";
             if (openFileDialog.ShowDialog() !=DialogResult.OK) return;
-
-            userSet.EmergencyAudioFileLocation = openFileDialog.FileName;
-            if (Global.AudioPlayer.Output != null && Global.AudioPlayer.Output.PlaybackState != NAudio.Wave.PlaybackState.Stopped)
+            string newPath = Global.AudioOperations.MoveAudioFileToLibrary(openFileDialog.FileName);
+            UserSet.EmergencyAudioFileLocation = newPath;
+            if (Global.AudioOperations.Output != null && Global.AudioOperations.Output.PlaybackState != NAudio.Wave.PlaybackState.Stopped)
             {
-                Global.AudioPlayer.Output.Stop();
-                Global.AudioPlayer.Output = null;
+                Global.AudioOperations.Output.Stop();
+                Global.AudioOperations.Output = null;
             }
-            if (!Global.AudioPlayer.IsEmergency)
-                _ = Global.AudioPlayer.PlayPauseAudioFile(openFileDialog.FileName, false);
+            if (!Global.AudioOperations.IsEmergency)
+                _ = Global.AudioOperations.PlayPauseAudioFile(newPath, false);
         }
         #endregion
 
@@ -194,13 +249,15 @@ namespace Aljaras.MVVM.ViewModel
                 foreach (FileInfo file in files)
                     _lang.Add(Path.GetFileNameWithoutExtension(file.Name));
             }
-            using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
+            using (App.db)
             {
-                var col = db.GetCollection<UserSettings>("UserSettings");
+                var col = App.db.GetCollection<UserSettings>("UserSettings");
                 var results = col.Find(x => x.Id == 1).FirstOrDefault();
                 if (results != null)
                     UserSet = results;
             }
+            if(!File.Exists(string.Concat(AppDomain.CurrentDomain.BaseDirectory, UserSet.EmergencyAudioFileLocation)))
+            UserSet.EmergencyAudioFileLocation = GlobalViewModel.Instance.AudioOperations.MoveAudioFileToLibrary(AppDomain.CurrentDomain.BaseDirectory + "Audio\\Emerg.mp3");
         }
 
         public static FileInfo MakeUnique(string path)

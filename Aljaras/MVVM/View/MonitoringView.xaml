@@ -170,7 +170,7 @@
                         Style="{DynamicResource ListRoundButtons}" />
                     <Button
                         Grid.Column="2"
-                        Margin="0,0,30,0"
+                        Margin="0,0,20,0"
                         VerticalAlignment="Center"
                         extensions:Extensions.Carrier="{StaticResource ReloadPathData}"
                         Background="{StaticResource MediumVioletRedBrush}"
@@ -349,5 +349,15 @@
                     Visibility="{Binding Global.IsNOHolidayMessageVisible}" />
             </Grid>
         </GroupBox>
+        <Button
+            Grid.RowSpan="3"
+            Grid.ColumnSpan="2"
+            Width="100"
+            Height="100"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Background="Red"
+            Command="{Binding Global.TestCommand}"
+            Content="Test" />
     </Grid>
 </UserControl>

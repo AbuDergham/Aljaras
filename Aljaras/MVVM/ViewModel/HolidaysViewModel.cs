@@ -46,9 +46,9 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         private void CloneHoliday(Holiday obj)
         {
-            using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
+            using (App.db)
             {
-                var holidayCol = db.GetCollection<Holiday>("Holidays");
+                var holidayCol = App.db.GetCollection<Holiday>("Holidays");
                 Holiday tmp = obj;
                 tmp.HolidayId = DateTime.Now.Ticks;
                 tmp.HolidayTitle = obj.HolidayTitle + Global.AppLang.Clone;
@@ -67,8 +67,8 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         void PlayPauseAudioFile()
         {
-            if (!Global.AudioPlayer.IsEmergency)
-                _ = Global.AudioPlayer.PlayPauseAudioFile(CurrentHoliday.ReminderAudioFileLocation, false);
+            if (!Global.AudioOperations.IsEmergency)
+                _ = Global.AudioOperations.PlayPauseAudioFile(CurrentHoliday.ReminderAudioFileLocation, false);
         }
 
         [RelayCommand]
@@ -80,17 +80,18 @@ namespace Aljaras.MVVM.ViewModel
                 openFileDialog.InitialDirectory = path;
             openFileDialog.Filter = "Audio File (*.mp3;*.wav)|*.mp3;*.wav;";
             if (openFileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
-            if (!Global.AudioPlayer.IsEmergency)
-                _ = Global.AudioPlayer.PlayPauseAudioFile(openFileDialog.FileName, false);
-            CurrentHoliday.ReminderAudioFileLocation = openFileDialog.FileName;
+            string newPath = Global.AudioOperations.MoveAudioFileToLibrary(openFileDialog.FileName);
+            if (!Global.AudioOperations.IsEmergency)
+                _ = Global.AudioOperations.PlayPauseAudioFile(newPath, false);
+            CurrentHoliday.ReminderAudioFileLocation = newPath;
         }
 
         [RelayCommand]
         private void De_ActivateHoliday(Holiday obj)
         {
-            using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
+            using (App.db)
             {
-                var holidayCol = db.GetCollection<Holiday>("Holidays");
+                var holidayCol = App.db.GetCollection<Holiday>("Holidays");
                 holidayCol.Update(obj);
             }
             Global.NotificationMessage = new()
@@ -105,9 +106,9 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         private void DeleteHoliday(Holiday obj)
         {
-            using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
+            using (App.db)
             {
-                var col = db.GetCollection<Holiday>("Holidays");
+                var col = App.db.GetCollection<Holiday>("Holidays");
                 col.Delete(obj.HolidayId);
                 Global.NotificationMessage = new()
                 {
@@ -137,11 +138,12 @@ namespace Aljaras.MVVM.ViewModel
                     GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
                     return;
                 }
-                using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
+                fileLocation = Global.AudioOperations.MoveAudioFileToLibrary(fileLocation);
+                using (App.db)
                 {
                     CurrentHoliday.FullTime = ChangeDateOnly(CurrentHoliday.ReminderDate, DateTime.Parse(CurrentHoliday.ReminderHour + ":" + CurrentHoliday.ReminderMinute + " " + CurrentHoliday.ReminderDayTime));
                     CurrentHoliday.ReminderAudioFileLocation = fileLocation;
-                    var col = db.GetCollection<Holiday>("Holidays");
+                    var col = App.db.GetCollection<Holiday>("Holidays");
                     if (CurrentHoliday.HolidayId > 0)
                         col.Update(CurrentHoliday);
                     else
@@ -176,9 +178,9 @@ namespace Aljaras.MVVM.ViewModel
         #region Functions
         private void LoadHolidayCollectionData()
         {
-            using (var db = new LiteDatabase(@"Filename=Aljaras.jrsdb;connection=shared"))
+            using (App.db)
             {
-                var col = db.GetCollection<Holiday>("Holidays");
+                var col = App.db.GetCollection<Holiday>("Holidays");
                 HolidayList = col.Query().OrderBy(h => h.HolidayDate).ToList();
             }
             if (HolidayList != null && HolidayList.Count > 0)

@@ -1,12 +1,14 @@
 ﻿using Aljaras.MVVM.ViewModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using NAudio.Wave;
+using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Aljaras.Core
 {
-    internal partial class AudioFilePlayer : ObservableRecipient
+    internal partial class AudioFileOperations : ObservableRecipient
     {
 
         #region Observable Properties
@@ -31,7 +33,8 @@ namespace Aljaras.Core
 
         public async Task PlayPauseAudioFile(string fileLocation, bool emergency)
         {
-            if(!File.Exists(fileLocation))
+            fileLocation = string.Concat(AppDomain.CurrentDomain.BaseDirectory, fileLocation);
+            if (!File.Exists(fileLocation))
             {
                 GlobalViewModel.Instance.NotificationMessage = new()
                 {
@@ -60,7 +63,7 @@ namespace Aljaras.Core
                         await Task.Delay(500);
                     }
                     if(!Repeat)
-                    GlobalViewModel.Instance.AudioPlayer.isEmergency = false;
+                    GlobalViewModel.Instance.AudioOperations.isEmergency = false;
                 }
         }
 
@@ -91,6 +94,19 @@ namespace Aljaras.Core
                 stream.Dispose();
                 stream = null;
             }
+        }
+
+        public string MoveAudioFileToLibrary(string OriginalAudioFileLocation)
+        {
+            string UserAudioLibraryPath = string.Concat(AppDomain.CurrentDomain.BaseDirectory, "Audio\\", App.PCCurrentUserName, "\\");
+            if (!Directory.Exists(UserAudioLibraryPath))
+                Directory.CreateDirectory(UserAudioLibraryPath);
+            string DestinationAudioFilePath = string.Concat(UserAudioLibraryPath, Path.GetFileName(OriginalAudioFileLocation));
+            if (!File.Exists(OriginalAudioFileLocation))
+                return "Audio File Not Found...";
+            if (!File.Exists(DestinationAudioFilePath))
+            File.Copy(OriginalAudioFileLocation, DestinationAudioFilePath, true);
+            return string.Concat("Audio\\", App.PCCurrentUserName, "\\", Path.GetFileName(OriginalAudioFileLocation));
         }
         #endregion
 

@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Aljaras.MVVM.ViewModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 
 namespace Aljaras.MVVM.Model
@@ -12,7 +13,7 @@ namespace Aljaras.MVVM.Model
         private string currentLang = "en";
 
         [ObservableProperty]
-        private string emergencyAudioFileLocation = AppDomain.CurrentDomain.BaseDirectory + "Audio\\Emerg.mp3";
+        private string emergencyAudioFileLocation = "";
 
         [ObservableProperty]
         private bool repeatEmergency = true;

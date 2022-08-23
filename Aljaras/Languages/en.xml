@@ -74,4 +74,5 @@
 	<StartWithWindows>Start With Windows</StartWithWindows>
 	<ShutdownOnClose>Shutdown On Close</ShutdownOnClose>
 	<AlreadyRunning>App is already running! if you don't see app window, its in the Tray near system clock.</AlreadyRunning>
+	<Sample>Sample</Sample>
 </AppLanguage>
