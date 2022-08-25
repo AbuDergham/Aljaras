@@ -125,8 +125,9 @@
                         <Run Text="{Binding Global.AppLang.NextAlarm}" />
                         <Run FlowDirection="LeftToRight" Text="{Binding Global.CurrentAlarm}" />
                     </TextBlock>
-                    <Border Margin="3"
-                            BorderBrush="{StaticResource LightGrayBrush}"
+                    <Border
+                        Margin="3"
+                        BorderBrush="{StaticResource LightGrayBrush}"
                         BorderThickness="1,0,0,0" />
                     <TextBlock
                         VerticalAlignment="Center"
@@ -142,8 +143,9 @@
                         <Run Text="{Binding Global.AppLang.TimeLeft}" />
                         <Run Text="{Binding Global.ShowTimeLeft}" />
                     </TextBlock>
-                    <Border Margin="3"
-                            BorderBrush="{StaticResource LightGrayBrush}"
+                    <Border
+                        Margin="3"
+                        BorderBrush="{StaticResource LightGrayBrush}"
                         BorderThickness="1,0,0,0" />
                     <Button
                         Margin="3,0"
@@ -168,7 +170,7 @@
                                         <Storyboard>
                                             <DoubleAnimation
                                                 Storyboard.TargetProperty="(Border.Width)"
-                                                To="145"
+                                                To="150"
                                                 Duration="0:0:.1" />
                                         </Storyboard>
                                     </BeginStoryboard>
@@ -210,7 +212,7 @@
                     <RadioButton
                         extensions:Extensions.Carrier="{StaticResource HelpPathData}"
                         Command="{Binding ShowAboutViewCommand}"
-                        Content="{Binding Global.AppLang.Help}" />
+                        Content="{Binding Global.AppLang.Guide}" />
                 </StackPanel>
             </Border>
             <ContentPresenter Content="{Binding CurrentView}" />
@@ -226,10 +228,9 @@
             d:ItemsSource="{d:SampleData ItemCount=5}"
             Background="Transparent"
             BorderThickness="0"
-            ItemsSource="{Binding Global.NotificationList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ItemsSource="{Binding Global.NotificationList, Mode=TwoWay}"
             ScrollViewer.HorizontalScrollBarVisibility="Hidden"
             ScrollViewer.VerticalScrollBarVisibility="Hidden"
-            SelectionMode="Single"
             VirtualizingPanel.IsVirtualizing="False">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
@@ -241,6 +242,31 @@
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
+                    <Setter Property="LayoutTransform">
+                        <Setter.Value>
+                            <TranslateTransform />
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="0"
+                                            To="1"
+                                            Duration="0:0:0.5" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="LayoutTransform.X"
+                                            From="0"
+                                            To="200"
+                                            Duration="0:0:3" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </Style.Triggers>
                 </Style>
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>

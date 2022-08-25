@@ -38,9 +38,9 @@
 	<MonitoringNOAlarmMessage>There are no upcoming alarm click the alarm icon ⏰ in the menu to get started.</MonitoringNOAlarmMessage>
 	<NOScheduleMessage>You haven't set up any schedules add new title and click the save button to get started.</NOScheduleMessage>
 	<NOAlarmMessage>You haven't set up any alarm click the save button above to get started.</NOAlarmMessage>
-	<SystemTime>System Time:</SystemTime>
-	<NextAlarm>Next Alarm:</NextAlarm>
-	<TimeLeft>Time Left:</TimeLeft>
+	<SystemTime>System Time</SystemTime>
+	<NextAlarm>Next Alarm</NextAlarm>
+	<TimeLeft>Time Left</TimeLeft>
 	<Emergency>Emergency</Emergency>
 	<SelectFile>Select File</SelectFile>
 	<RepeatEmergency>Repeat Emergency</RepeatEmergency>
@@ -75,4 +75,5 @@
 	<ShutdownOnClose>Shutdown On Close</ShutdownOnClose>
 	<AlreadyRunning>App is already running! if you don't see app window, its in the Tray near system clock.</AlreadyRunning>
 	<Sample>Sample</Sample>
+	<AlarmTitle>Alarm Title</AlarmTitle>
 </AppLanguage>

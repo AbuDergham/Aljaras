@@ -3,6 +3,7 @@ using Aljaras.MVVM.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiteDB;
+using Microsoft.VisualBasic;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using System.Xml.Serialization;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace Aljaras.MVVM.ViewModel
 {
@@ -110,7 +112,7 @@ namespace Aljaras.MVVM.ViewModel
 
         [ObservableProperty]
         private WaveInCapabilities selectedMicDevice = new();
-
+        
         [ObservableProperty]
         private int indexOfMicDevice = 0;
 
@@ -137,43 +139,6 @@ namespace Aljaras.MVVM.ViewModel
         #endregion
 
         #region RelayCommands
-        [RelayCommand]
-        private void Test()
-        {
-            string UserAudioLibrary = string.Concat(AppDomain.CurrentDomain.BaseDirectory,"Audio\\", App.PCCurrentUserName);
-            string DestinationPath = @"C:\Users\Rellax\Documents\result.zip";//URL for your ZIP file           
-            DestinationPath = MakeUnique(DestinationPath).ToString();
-            ZipFile.CreateFromDirectory(UserAudioLibrary, DestinationPath, CompressionLevel.Fastest, true);
-            ZipArchive zipArchive = ZipFile.Open(DestinationPath, ZipArchiveMode.Update);
-            var dbfile = string.Concat(AppDomain.CurrentDomain.BaseDirectory, App.PCCurrentUserName, "Aljaras.jrsdb");
-            zipArchive.CreateEntryFromFile(dbfile, Path.GetFileNameWithoutExtension(dbfile) + ".jrsbck", CompressionLevel.Fastest);
-            zipArchive.Dispose();
-            /*
-            List<string> sourceFiles=new();
-            sourceFiles.Add(startPath);
-            FileCompression.CreateZipFile(zipPath, sourceFiles);*/
-
-            //CreateZipFile();
-            //string extractPath = @"c:\example\extract";//path to extract
-            //ZipFile.ExtractToDirectory(zipPath, extractPath);
-
-            //MessageBox.Show(AudioOperations.MoveAudioFileToLibrary("C:\\Users\\Rellax\\source\\repos\\Aljaras\\Aljaras\\bin\\Debug\\net6.0-windows\\Audio\\School.mp3"));
-        }
-
-        public static FileInfo MakeUnique(string path)
-        {
-            string dir = Path.GetDirectoryName(path)!;
-            string fileName = Path.GetFileNameWithoutExtension(path);
-            string fileExt = Path.GetExtension(path);
-            for (int i = 1; ; ++i)
-            {
-                if (!File.Exists(path))
-                    return new FileInfo(path);
-
-                path = Path.Combine(dir, fileName + " " + i + fileExt);
-            }
-        }
-
         [RelayCommand]
         private void StopRecording()
         {
@@ -213,25 +178,18 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         private void DeleteNotification(UserNotificationMessage obj) {NotificationList.Remove(obj);}
 
-        /*partial void OnNotificationMessageChanged(UserNotificationMessage value)
-        {
-            _ = Task.Run(async () =>
-            {
-                await Task.Delay(5000);
-                if (NotificationList != null && NotificationList.Count > 0)
-                    NotificationList.Remove(value);
-            });
-        }*/
-
         [RelayCommand]
         private void Emergency()
         {
+            
             AudioOperations.IsEmergency = !AudioOperations.IsEmergency;
             if (AudioOperations.IsEmergency) 
             {
                 EmergencyActionVisibility = GetVisibility.Visible.ToString();
                 StopRecording();
             } else EmergencyActionVisibility = GetVisibility.Hidden.ToString();
+            if (!File.Exists(string.Concat(AppDomain.CurrentDomain.BaseDirectory, GetUserSettings.EmergencyAudioFileLocation)))
+                GetUserSettings.EmergencyAudioFileLocation = AudioOperations.MoveAudioFileToLibrary(AppDomain.CurrentDomain.BaseDirectory + "Audio\\Emerg.mp3");
             _ = AudioOperations.PlayPauseAudioFile(GetUserSettings.EmergencyAudioFileLocation, AudioOperations.IsEmergency);
         }
 
@@ -241,6 +199,20 @@ namespace Aljaras.MVVM.ViewModel
 
         #region Functions
         public static GlobalViewModel Instance { get; set; } = new GlobalViewModel();
+
+        public static FileInfo MakeUnique(string path)
+        {
+            string dir = Path.GetDirectoryName(path)!;
+            string fileName = Path.GetFileNameWithoutExtension(path);
+            string fileExt = Path.GetExtension(path);
+            for (int i = 1; ; ++i)
+            {
+                if (!File.Exists(path))
+                    return new FileInfo(path);
+
+                path = Path.Combine(dir, fileName + " " + i + fileExt);
+            }
+        }
 
         private void Wave_DataAvailable(object sender, WaveInEventArgs e) { provider.AddSamples(e.Buffer, 0, e.BytesRecorded); }
 
@@ -481,6 +453,19 @@ namespace Aljaras.MVVM.ViewModel
                 ShowTimeLeft = $"{display.Hours:D2}:{display.Minutes:D2}:{display.Seconds:D2}";
             }
             TimerEvt?.Invoke("parameter");
+        }
+
+        partial void OnNotificationMessageChanged(UserNotificationMessage value)
+        {
+            Task.Run(async () =>
+            {
+                await Task.Delay(5000);
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    if (NotificationList != null && NotificationList.Count > 0)
+                        NotificationList.RemoveAt(0);
+                }));
+            });
         }
         #endregion
 

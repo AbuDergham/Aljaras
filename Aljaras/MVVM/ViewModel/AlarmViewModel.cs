@@ -152,6 +152,12 @@ namespace Aljaras.MVVM.ViewModel
                             CurrentAlarm.ScheduleId = CurrentSchedule.ScheduleId;
                             col.Insert(CurrentAlarm);
                         }
+                        Global.NotificationMessage = new()
+                        {
+                            BackgroundColor = MessageBackground.SeaGreen.ToString(),
+                            MessageText = Global.AppLang.Done
+                        };
+                        GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
                     }
                     LoadAlarmCollectionData(CurrentSchedule.ScheduleId);
                 }
@@ -371,7 +377,7 @@ namespace Aljaras.MVVM.ViewModel
             using (App.db)
             {
                 var col = App.db.GetCollection<Alarm>("Alarms");
-                AlarmList = col.Find(x => x.ScheduleId.ToString().Contains(CurrentSchedule.ScheduleId.ToString())).ToList().OrderBy(x => x.FullTime).ToList();;
+                AlarmList = col.Find(x => x.ScheduleId.ToString().Contains(CurrentSchedule.ScheduleId.ToString())).ToList().OrderBy(x => x.FullTime.TimeOfDay).ToList();;
             }
             if (AlarmList != null && AlarmList.Count > 0)
                 IsNOAlarmMessageVisible = GetVisibility.Hidden.ToString();

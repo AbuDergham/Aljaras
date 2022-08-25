@@ -150,7 +150,6 @@
                     </Paragraph>
                     <Paragraph FlowDirection="RightToLeft" TextAlignment="Justify">
                         ملاحظة: تم الحصول على اصوات التنبيهات العربية من مطور البرمجيات سيد درويش - موقع المطور (aljaras2010.blogspot.com) - كإضافة للبرنامج فاذا امتلكت مكتبة اصوات اخرى تستطيع استخدامها بسهولة.
-                        بيئة العمل:  Windows 7+, .net 7
                     </Paragraph>
                     <Paragraph FlowDirection="RightToLeft" TextAlignment="Justify">
                         بيئة العمل:  Windows 7+, .net 7
@@ -166,8 +165,9 @@
                 BorderThickness="0,0,0,1" />
         </Grid>
         <ListBox
-            Name="listBox2" HorizontalContentAlignment="Center" HorizontalAlignment="Center"
             Grid.Row="2"
+            HorizontalAlignment="Center"
+            HorizontalContentAlignment="Center"
             Background="Transparent"
             BorderThickness="0">
             <ListBox.ItemsPanel>
@@ -208,7 +208,7 @@
             </ListBoxItem>
             <ListBoxItem>
                 <StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel FlowDirection="LeftToRight" Orientation="Horizontal">
                         <Path
                             Width="25"
                             Height="25"
@@ -267,15 +267,15 @@
                     <Path
                         Height="25"
                         Data="{StaticResource XMLPathData}"
-                        Fill="{StaticResource TomatoBrush}"
+                        Fill="{StaticResource GrayBrush}"
                         Stretch="Uniform" />
-                    <TextBlock HorizontalAlignment="Center" Foreground="{StaticResource TomatoBrush}">
+                    <TextBlock HorizontalAlignment="Center" Foreground="{StaticResource GrayBrush}">
                         <Run Text="XML" />
                     </TextBlock>
                 </StackPanel>
             </ListBoxItem>
             <ListBoxItem>
-                <StackPanel>
+                <StackPanel FlowDirection="LeftToRight">
                     <Viewbox Width="40" Stretch="Uniform">
                         <Canvas Width="64" Height="64">
                             <Ellipse
@@ -300,6 +300,20 @@
                     </Viewbox>
                     <TextBlock HorizontalAlignment="Center" Foreground="{StaticResource DarkVioletBrush}">
                         <Run Text=".NET" />
+                    </TextBlock>
+                </StackPanel>
+            </ListBoxItem>
+            <ListBoxItem>
+                <StackPanel>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        FontSize="30"
+                        FontWeight="Bold"
+                        Foreground="{StaticResource ForestGreenBrush}">
+                        <Run Text="&lt;MVVM/&gt;" />
+                    </TextBlock>
+                    <TextBlock HorizontalAlignment="Center" Foreground="{StaticResource ForestGreenBrush}">
+                        <Run Text="Software Design Pattern" />
                     </TextBlock>
                 </StackPanel>
             </ListBoxItem>

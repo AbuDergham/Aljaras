@@ -5,14 +5,13 @@ using CommunityToolkit.Mvvm.Input;
 using LiteDB;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Shapes;
 using MessageBox = System.Windows.MessageBox;
 using Path = System.IO.Path;
 
@@ -34,7 +33,8 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         private void ImportDataBase()
         {
-            System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            Global.AudioOperations.DisposeWave();
+            OpenFileDialog openFileDialog = new();
             openFileDialog.Filter = "Aljaras DataBase (*.jrsdb;*.jrsbck)|*.jrsdb;*.jrsbck;";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -48,7 +48,7 @@ namespace Aljaras.MVVM.ViewModel
                 else
                 {
                     string GetAudioLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory ,"Audio");
-                    ZipFile.ExtractToDirectory(openFileDialog.FileName, GetAudioLocation, true);
+                    ZipFile.ExtractToDirectory(openFileDialog.FileName, GetAudioLocation,  true);
                     string? dbSourceFile = Directory.GetFiles(GetAudioLocation, "*.jrsdb").FirstOrDefault();
                     string dbDestinationFile = AppDomain.CurrentDomain.BaseDirectory + App.PCCurrentUserName + "Aljaras.jrsdb";
                     if(!File.Exists(dbSourceFile))
@@ -78,13 +78,27 @@ namespace Aljaras.MVVM.ViewModel
         [RelayCommand]
         private void LoadSample()
         {
-            string SampleFile = string.Concat(AppDomain.CurrentDomain.BaseDirectory, "Sample.jrsdb");
-            string DestinationFile = string.Concat(AppDomain.CurrentDomain.BaseDirectory, App.PCCurrentUserName, "Aljaras.jrsdb");
+            Global.AudioOperations.DisposeWave();
+            string SampleFile = string.Concat(AppDomain.CurrentDomain.BaseDirectory, "Sample.jrsbck");
             if (File.Exists(SampleFile))
-            {
-                if (File.Exists(DestinationFile))
-                    File.Delete(DestinationFile);
-                File.Copy(SampleFile, DestinationFile);
+            { 
+                string GetAudioLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Audio");
+                ZipFile.ExtractToDirectory(SampleFile, GetAudioLocation,  true);
+                string? dbSourceFile = Directory.GetFiles(GetAudioLocation, "*.jrsdb").FirstOrDefault();
+                string dbDestinationFile = AppDomain.CurrentDomain.BaseDirectory + App.PCCurrentUserName + "Aljaras.jrsdb";
+                if (!File.Exists(dbSourceFile))
+                {
+                    Global.NotificationMessage = new()
+                    {
+                        BackgroundColor = MessageBackground.IndianRed.ToString(),
+                        MessageText = Global.AppLang.NoDataBase
+                    };
+                    GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+                    return;
+                }
+                if (File.Exists(dbDestinationFile))
+                    File.Delete(dbDestinationFile);
+                File.Move(dbSourceFile, dbDestinationFile);
                 Global.NotificationMessage = new()
                 {
                     BackgroundColor = MessageBackground.SeaGreen.ToString(),
@@ -92,6 +106,7 @@ namespace Aljaras.MVVM.ViewModel
                 };
                 GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
             }
+            Global.LoadMonitoringAlarmCollectionData();
         }
 
         [RelayCommand]

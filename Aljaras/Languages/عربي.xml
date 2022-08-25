@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AppLanguage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<IsActive>false</IsActive>
+	<Apptitle>برنامج الجرس: نظام تنبيه مدرسي - النسخة</Apptitle>
+	<FlowDirection>RightToLeft</FlowDirection>
+	<Menu>القائمة</Menu>
+	<Monitoring>المراقبة</Monitoring>
+	<Alarm>المنبه</Alarm>
+	<Settings>الاعدادات</Settings>
+	<About>نبذة عن البرنامج</About>
+	<Help>مساعدة</Help>
+	<UpcomingAlerts>التنبيهات القادمة</UpcomingAlerts>
+	<ScheduleList>قائمة الاجندة</ScheduleList>
+	<AlarmList>قائمة التنبيهات</AlarmList>
+	<AlertInformation>معلومات المنبه</AlertInformation>
+	<Title>العنوان</Title>
+	<Days>الايام</Days>
+	<Fri>الجمعة</Fri>
+	<Sat>السبت</Sat>
+	<Sun>الاحد</Sun>
+	<Mon>الاثنين</Mon>
+	<Tue>الثلاثاء</Tue>
+	<Wed>الاربعاء</Wed>
+	<Thu>الخميس</Thu>
+	<New>جديد</New>
+	<Edit>تعديل</Edit>
+	<Save>حفظ</Save>
+	<Delete>حذف</Delete>
+	<TimeNow>الوقت الان</TimeNow>
+	<PlayStop>تشغيل/ايقاف</PlayStop>
+	<Hour>الساعة</Hour>
+	<Minute>الدقائق</Minute>
+	<Daytime>نهار/ ليل</Daytime>
+	<Time>الوقت</Time>
+	<AudioFile>ملف الصوت</AudioFile>
+	<Language>اللغة</Language>
+	<Guide>دليل المستخدم</Guide>
+	<MonitoringNOAlarmMessage>لا يوجد منبه قادم ، انقر فوق رمز المنبه ⏰ في القائمة للبدء.</MonitoringNOAlarmMessage>
+	<NOScheduleMessage>لم تقم بإعداد أي اجندة أضف عنوانًا جديدًا وانقر  زر الحفظ للبدء.</NOScheduleMessage>
+	<NOAlarmMessage>لم تقم بإعداد أي منبه ، انقر فوق زر الحفظ أعلاه للبدء.</NOAlarmMessage>
+	<SystemTime>وقت النظام</SystemTime>
+	<NextAlarm>الإنذار التالي</NextAlarm>
+	<TimeLeft>الوقت المتبقي</TimeLeft>
+	<Emergency>انذار الطواريء</Emergency>
+	<SelectFile>اختيار ملف</SelectFile>
+	<RepeatEmergency>تكرار انذار الطواريء</RepeatEmergency>
+	<EnableRepeat>تفعيل التكرار</EnableRepeat>
+	<NoMoreAlarms>لا يوجد تنبيهات</NoMoreAlarms>
+	<DeleteNotification>هل انت متاكد؟</DeleteNotification>
+	<Database>قاعدة البيانات</Database>
+	<DatabaseOperations>عمليات على قاعدة البيانات</DatabaseOperations>
+	<Import>استيراد</Import>
+	<Export>تصدير</Export>
+	<Done>انتهت المهمة</Done>
+	<NoDataBase>لا يوجد قاعدة بيانات</NoDataBase>
+	<NotCorrectAudio>ملف الصوت غير صحيح</NotCorrectAudio>
+	<InvalidTitle>قيمة العنوان خاطئة</InvalidTitle>
+	<SelectSchedule>قم باختيار الجدولة اولا</SelectSchedule>
+	<Holidays>الاجازات</Holidays>
+	<HolidayInformation>معلومات الاجازة</HolidayInformation>
+	<HolidayDate>تاريخ الاجازة</HolidayDate>
+	<EnableReminder>تفعيل التذكير</EnableReminder>
+	<ReminderDate>تاريخ التذكير</ReminderDate>
+	<List>القائمة</List>
+	<Clone>نسخة</Clone>
+	<NOHolidayMessage>لم تقم بإعداد أي 🌴 اجازة.</NOHolidayMessage>
+	<Intercom>نظام الصوت الداخلي</Intercom>
+	<RecordingDevices>اجهزة التسجيل</RecordingDevices>
+	<PlaybackDevices>اجهزة الصوت</PlaybackDevices>
+	<Start>ابدأ</Start>
+	<Stop>ايقاف</Stop>
+	<ItemsCount>عدد العناصر</ItemsCount>
+	<GeneralSettings>اعدادات عامة</GeneralSettings>
+	<StartWithWindows>ابدأ مع نظام التشغيل</StartWithWindows>
+	<ShutdownOnClose>ايقاف البرنامج عند الضغط على اغلاق</ShutdownOnClose>
+	<AlreadyRunning>لا يمكن تشغيل عدة نوافذ للتطبيق! اذا كنت لا ترى النافذة ستجدها بجوار ساعة النظام </AlreadyRunning>
+	<Sample>عينة</Sample>
+	<AlarmTitle>عنوان المنبه</AlarmTitle>
+</AppLanguage>

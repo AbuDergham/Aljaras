@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>SchoolBell.ico</ApplicationIcon>
@@ -13,7 +13,7 @@
     <Copyright>Mustafa Al-Klieb </Copyright>
     <PackageIcon></PackageIcon>
     <IncrementVersionOnBuild>1.yyyy.Mdd.Hmm</IncrementVersionOnBuild>
-    <Version>1.2022.824.226</Version>
+    <Version>1.2022.825.1415</Version>
   </PropertyGroup>
 
 	<Target Name="RemoveDuplicateAnalyzers" BeforeTargets="CoreCompile">
@@ -51,7 +51,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Sample.jrsdb">
+    <None Update="Guide\Slide1.PNG">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Guide\Slide2.PNG">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Guide\Slide3.PNG">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sample.jrsbck">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Audio\Attention.mp3">
@@ -414,7 +423,7 @@
     <None Update="Audio\الحصص\نهاية الفسحة.MP3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Languages\ar.xml">
+    <None Update="Languages\عربي.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Languages\en.xml">

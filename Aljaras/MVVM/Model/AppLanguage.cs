@@ -116,13 +116,13 @@ namespace Aljaras.MVVM.Model
         private string _nOAlarmMessage = "You haven't set up any alarm click the save button above to get started.";
 
         [ObservableProperty]
-        private string _systemTime = "System Time:";
+        private string _systemTime = "System Time";
 
         [ObservableProperty]
-        private string _nextAlarm = "Next Alarm:";
+        private string _nextAlarm = "Next Alarm";
 
         [ObservableProperty]
-        private string _timeLeft = "Time Left:";
+        private string _timeLeft = "Time Left";
 
         [ObservableProperty]
         private string _emergency = "Emergency";
@@ -225,5 +225,8 @@ namespace Aljaras.MVVM.Model
 
         [ObservableProperty]
         private string _sample = "Sample";
+
+        [ObservableProperty]
+        private string _alarmTitle = "Alarm Title";
     }
 }
