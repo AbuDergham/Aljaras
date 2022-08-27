@@ -36,10 +36,16 @@ namespace Aljaras.MVVM.ViewModel
         public GuideViewModel guideVM = new();
 
         [ObservableProperty]
+        public ActivationViewModel activationVM = new();
+
+        [ObservableProperty]
         public string getVersion = "";
         #endregion
 
         #region RelayCommands
+        [RelayCommand]
+        void ShowActivationView() { CurrentView = ActivationVM; }
+
         [RelayCommand]
         void ShowHolidaysView() { CurrentView = HolidaysVM; }
 

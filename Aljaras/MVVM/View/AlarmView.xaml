@@ -298,7 +298,6 @@
                             Background="Transparent"
                             BorderBrush="{StaticResource GrayBrush}"
                             BorderThickness="0,0,0,1"
-                            FontFamily="Consolas"
                             Text="{Binding CurrentAlarm.AlarmTitle}" />
                         <StackPanel Grid.Column="2" Orientation="Horizontal">
                             <Button

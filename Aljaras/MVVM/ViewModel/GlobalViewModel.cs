@@ -3,20 +3,17 @@ using Aljaras.MVVM.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiteDB;
-using Microsoft.VisualBasic;
+using Microsoft.Win32;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using System.Xml.Serialization;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace Aljaras.MVVM.ViewModel
 {
@@ -26,7 +23,7 @@ namespace Aljaras.MVVM.ViewModel
         #region Variables
         public delegate void TimerEvent(string sampleParam);
         public event TimerEvent? TimerEvt;
-        WaveIn wave = new();
+        WaveInEvent wave = new();
         WaveOut waveOut = new();
         BufferedWaveProvider provider;
         #endregion
@@ -136,6 +133,12 @@ namespace Aljaras.MVVM.ViewModel
 
         [ObservableProperty]
         private ZipFileCreator fileCompression = new();
+        
+        [ObservableProperty]
+        private string activationMessage = LicenseKeyGenerator.isProductActivated() ? "Activated" : "Not Activated";
+
+        [ObservableProperty]
+        string productActivated = LicenseKeyGenerator.isProductActivated()? GetVisibility.Hidden.ToString() : GetVisibility.Visible.ToString(); 
         #endregion
 
         #region RelayCommands
@@ -420,7 +423,10 @@ namespace Aljaras.MVVM.ViewModel
                                 _item.FullTime = ChangeDateOnly(_item.FullTime);
                                 AlarmList.Add(_item);
                             }
+                            if(LicenseKeyGenerator.isProductActivated())
                             AlarmList = AlarmList.OrderBy(x => x.FullTime).ToList();
+                            else AlarmList = AlarmList.OrderBy(x => x.FullTime).Take(5).ToList();
+                            
                         } 
                     }
                     if (AlarmList != null && AlarmList.Count > 0)

@@ -1,10 +1,12 @@
-﻿using Aljaras.MVVM.ViewModel;
+﻿using Aljaras.Core;
+using Aljaras.MVVM.ViewModel;
 using LiteDB;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows;
+using System.Windows.Threading;
 using Forms = System.Windows.Forms;
 
 namespace Aljaras
@@ -77,6 +79,49 @@ namespace Aljaras
         {
             _notifyIcon.Dispose();
             base.OnExit(e);
+        }
+        
+        /// <summary>
+        /// Catch unhandled exceptions thrown on the main UI thread and allow 
+        /// option for user to continue program. 
+        /// The OnDispatcherUnhandledException method below for AppDomain.UnhandledException will handle all other exceptions thrown by any thread.
+        /// </summary>
+        void AppUI_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            if (e.Exception == null)
+            {
+                Current.Shutdown();
+                return;
+            }
+            string errorMessage = string.Format("An application error occurred. If this error occurs again there seems to be a serious bug in the application, and you better close it.\n\nError:{0}\n\nDo you want to continue?\n(if you click Yes you will continue with your work, if you click No the application will close)", e.Exception.Message);
+            //insert code to log exception here
+            if (MessageBox.Show(errorMessage, "Application User Interface Error", MessageBoxButton.YesNoCancel, MessageBoxImage.Error) == MessageBoxResult.No)
+            {
+                if (MessageBox.Show("WARNING: The application will close. Any changes will not be saved!\nDo you really want to close it?", "Close the application!", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    Current.Shutdown();
+                }
+            }
+            e.Handled = true;
+        }
+
+        /// <summary>
+        /// Catch unhandled exceptions not thrown by the main UI thread.
+        /// The above AppUI_DispatcherUnhandledException method for DispatcherUnhandledException will only handle exceptions thrown by the main UI thread. 
+        /// Unhandled exceptions caught by this method typically terminate the runtime.
+        /// </summary>
+        void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            string errorMessage = string.Format("An application error occurred. If this error occurs again there seems to be a serious bug in the application, and you better close it.\n\nError:{0}\n\nDo you want to continue?\n(if you click Yes you will continue with your work, if you click No the application will close)", e.Exception.Message);
+            //insert code to log exception here
+            if (MessageBox.Show(errorMessage, "Application UnhandledException Error", MessageBoxButton.YesNoCancel, MessageBoxImage.Error) == MessageBoxResult.No)
+            {
+                if (MessageBox.Show("WARNING: The application will close. Any changes will not be saved!\nDo you really want to close it?", "Close the application!", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    Current.Shutdown();
+                }
+            }
+            e.Handled = true;
         }
     }
 }
