@@ -152,14 +152,14 @@
                     <TextBlock
                         VerticalAlignment="Center"
                         FontSize="12"
-                        Foreground="{StaticResource WhiteBrush}"
-                        Visibility="Collapsed">
+                        Foreground="{StaticResource WhiteBrush}">
                         <Run Text="© Company, All rights reserved." />
                     </TextBlock>
                     <Button
                         Margin="3,0"
                         Command="{Binding ShowAboutMeViewCommand}"
-                        Style="{StaticResource CopyrightButton}">
+                        Style="{StaticResource CopyrightButton}"
+                        Visibility="Collapsed">
                         <TextBlock Margin="3,0">
                             <Run Text="© Mustafa AlKlieb, All rights reserved." />
                         </TextBlock>

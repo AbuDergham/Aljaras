@@ -5,13 +5,10 @@ using CommunityToolkit.Mvvm.Input;
 using LiteDB;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Shapes;
-using Path = System.IO.Path;
 
 namespace Aljaras.MVVM.ViewModel
 {

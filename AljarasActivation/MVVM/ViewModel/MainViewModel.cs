@@ -10,7 +10,14 @@ namespace AljarasActivation.MVVM.ViewModel
     internal partial class MainViewModel : ObservableRecipient
     {
         [ObservableProperty]
-        private string generatedKey = LicenseKeyGenerator.GenerateLicenseKey(Environment.MachineName);
+        private string generatedKey = "";
+
+        partial void OnGeneratedKeyChanged(string value)
+        {
+            if (string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value))
+            { ActivationKey = ""; GeneratedKey = ""; }
+            else ActivationKey = LicenseKeyGenerator.GenerateLicenseKey(GeneratedKey);
+        }
 
         [ObservableProperty]
         private string activationKey = "";
@@ -18,7 +25,7 @@ namespace AljarasActivation.MVVM.ViewModel
         #region Functions
         public MainViewModel()
         {
-            ActivationKey = LicenseKeyGenerator.GenerateLicenseKey(GeneratedKey);
+            ActivationKey = "";
         }
         #endregion
 

@@ -258,10 +258,10 @@ namespace Aljaras.MVVM.ViewModel
 
         private GlobalViewModel()
         {
-            SetAppLang();
             LoadMonitoringAlarmCollectionData();
             NextAlarm();
             LoadDevices();
+            SetAppLang();
             NotificationList = new();
             Task.Run(async () =>
             {
@@ -285,43 +285,42 @@ namespace Aljaras.MVVM.ViewModel
 
         public void SetAppLang()
         {
-            using (App.db)
-            {
-                var col = App.db.GetCollection<UserSettings>("UserSettings");
-                UserSettings? results = col.Find(x => x.Id == 1).FirstOrDefault();
-                if (results != null)
-                    GetUserSettings = results;
-                else 
+            try { 
+                using (App.db)
                 {
-                    try
+                    var col = App.db.GetCollection<UserSettings>("UserSettings");
+                    UserSettings? results = col.Find(x => x.Id == 1).FirstOrDefault();
+                    if (results != null)
+                        GetUserSettings = results;
+                    else 
                     {
-                        StartUpManager.AddApplicationToAllUserStartup();
-                        GetUserSettings.IsKeyRegistered = true;
-                        col.Insert(GetUserSettings);
-                    }
-                    catch
-                    {
-                        col.Insert(GetUserSettings);
-                        Instance.NotificationMessage = new()
+                        try
                         {
-                            BackgroundColor = MessageBackground.IndianRed.ToString(),
-                            MessageText = "Setting up registry key Failed"
-                        };
-                    }
-                } 
+                            StartUpManager.AddApplicationToAllUserStartup();
+                            GetUserSettings.IsKeyRegistered = true;
+                            col.Insert(GetUserSettings);
+                        }
+                        catch
+                        {
+                            col.Insert(GetUserSettings);
+                            Instance.NotificationMessage = new()
+                            {
+                                BackgroundColor = MessageBackground.IndianRed.ToString(),
+                                MessageText = "Setting up registry key Failed"
+                            };
+                        }
+                    } 
+                }
+                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "Languages\\" + GetUserSettings.CurrentLang + ".xml"))
+                {
+                    XmlSerializer reader = new(typeof(UserSettings));
+                    reader = new XmlSerializer(typeof(AppLanguage));
+                    StreamReader file = new(AppDomain.CurrentDomain.BaseDirectory + "Languages\\" + GetUserSettings.CurrentLang + ".xml");
+                    AppLang = (AppLanguage)reader.Deserialize(file)!;
+                    file.Close();
+                }
             }
-            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "Languages\\" + GetUserSettings.CurrentLang + ".xml"))
-            {
-                XmlSerializer reader = new(typeof(UserSettings));
-                reader = new XmlSerializer(typeof(AppLanguage));
-                StreamReader file = new(AppDomain.CurrentDomain.BaseDirectory + "Languages\\" + GetUserSettings.CurrentLang + ".xml");
-                AppLang = (AppLanguage)reader.Deserialize(file)!;
-                file.Close();
-            }
-            if (!GetUserSettings.IsKeyRegistered)
-            {
-               
-            }
+            catch { return; }
         }
 
         public static DateTime TrimMilliseconds(DateTime dt) { return new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, 0, dt.Kind);}

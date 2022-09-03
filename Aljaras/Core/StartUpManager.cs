@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.VisualBasic.Devices;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Reflection;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace Aljaras.Core
 {
@@ -28,6 +30,14 @@ namespace Aljaras.Core
                 key.SetValue(Assembly.GetExecutingAssembly().GetName().Name, Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".exe"));
                 key.Close();
             }
+            if (Environment.Is64BitOperatingSystem)
+            {
+                using (RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+                {
+                    key.SetValue(Assembly.GetExecutingAssembly().GetName().Name, Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".exe"));
+                    key.Close();
+                }
+            }
         }
 
         public static void RemoveApplicationFromCurrentUserStartup()
@@ -45,6 +55,14 @@ namespace Aljaras.Core
             {
                 key.DeleteValue(Assembly.GetExecutingAssembly().GetName().Name, false);
                 key.Close();
+            }
+            if (Environment.Is64BitOperatingSystem)
+            {
+                using (RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+                {
+                    key.DeleteValue(Assembly.GetExecutingAssembly().GetName().Name, false);
+                    key.Close();
+                }
             }
         }
 
