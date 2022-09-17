@@ -1,9 +1,9 @@
-﻿using Aljaras.Core;
-using Aljaras.MVVM.ViewModel;
+﻿using Aljaras.MVVM.ViewModel;
 using LiteDB;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
@@ -15,8 +15,12 @@ namespace Aljaras
     {
         private readonly Forms.NotifyIcon _notifyIcon;
         private static Mutex? _mutex = null;
+        public static readonly string? AppName = Assembly.GetExecutingAssembly().GetName().Name;
+        public static readonly string AppLocation = AppDomain.CurrentDomain.BaseDirectory;
+        public static readonly string dbName = AppName + ".jrsdb";
+        public static readonly string dbBackupName = AppName + ".jrsbck";
         public static readonly string PCCurrentUserName = Environment.UserName;
-        public static readonly string dbConnectionString = string.Concat("Filename=", PCCurrentUserName, "Aljaras.jrsdb;connection=shared");
+        public static readonly string dbConnectionString = string.Concat("Filename=", PCCurrentUserName + dbName, ";connection=shared");
         public static readonly LiteDatabase db = new(dbConnectionString);
 
         public App()
@@ -27,19 +31,19 @@ namespace Aljaras
         protected override void OnStartup(StartupEventArgs e)
         {
             const string appName = "0C41354D-1236-4842-97F2-0EC4E8ACE4BD";
-            bool createdNew;
+            bool alreadyPresent = false;
 
-            _mutex = new Mutex(true, appName, out createdNew);
+            _mutex = new Mutex(true, appName, out alreadyPresent);
 
-            if (!createdNew)
+            if (!alreadyPresent)
             {
                 MessageBox.Show(GlobalViewModel.Instance.AppLang.AlreadyRunning);
                 //app is already running! Exiting the application
                 Current.Shutdown();
             }
 
-            if (File.Exists("SchoolBell.ico"))
-                _notifyIcon.Icon = new Icon("SchoolBell.ico");
+            if (File.Exists(AppLocation + AppName + ".ico"))
+                _notifyIcon.Icon = new Icon(AppLocation + AppName + ".ico");
             else
             {
                 Bitmap bmp = new(64, 64);
@@ -49,16 +53,16 @@ namespace Aljaras
             }
             try
             {
-                _notifyIcon.Text = GlobalViewModel.Instance.AppLang.Apptitle + System.Reflection.Assembly.GetEntryAssembly()!.GetName().Version!.ToString(); ;
+                _notifyIcon.Text = GlobalViewModel.Instance.AppLang.Apptitle + Assembly.GetEntryAssembly()!.GetName().Version!.ToString();
             }
             catch (Exception)
             {
                 _notifyIcon.Text = GlobalViewModel.Instance.AppLang.Apptitle;
             }
-            _notifyIcon.DoubleClick += NotifyIconDoubleClick;
+            _notifyIcon.DoubleClick += NotifyIconDoubleClick!;
             _notifyIcon.ContextMenuStrip = new Forms.ContextMenuStrip();
-            _notifyIcon.ContextMenuStrip.Items.Add("Open", null, NotifyIconDoubleClick);
-            _notifyIcon.ContextMenuStrip.Items.Add("Exit", null, OnExitClicked);
+            _notifyIcon.ContextMenuStrip.Items.Add(GlobalViewModel.Instance.AppLang.Open, null, NotifyIconDoubleClick!);
+            _notifyIcon.ContextMenuStrip.Items.Add(GlobalViewModel.Instance.AppLang.Exit, null, OnExitClicked!);
             _notifyIcon.Visible = true;
             base.OnStartup(e);
         }
@@ -80,7 +84,7 @@ namespace Aljaras
             _notifyIcon.Dispose();
             base.OnExit(e);
         }
-        
+
         /// <summary>
         /// Catch unhandled exceptions thrown on the main UI thread and allow 
         /// option for user to continue program. 

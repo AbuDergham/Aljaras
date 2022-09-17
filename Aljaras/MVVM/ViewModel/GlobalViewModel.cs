@@ -3,7 +3,6 @@ using Aljaras.MVVM.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiteDB;
-using Microsoft.Win32;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
@@ -19,6 +18,7 @@ namespace Aljaras.MVVM.ViewModel
 {
     internal partial class GlobalViewModel : ObservableRecipient
     {
+        public static GlobalViewModel Instance { get; set; } = new GlobalViewModel();
 
         #region Variables
         public delegate void TimerEvent(string sampleParam);
@@ -48,22 +48,22 @@ namespace Aljaras.MVVM.ViewModel
         UserSettings getUserSettings = new();
 
         [ObservableProperty]
-        private AppLanguage appLang = new();
+        public AppLanguage appLang = new();
 
         [ObservableProperty]
-        private string systemTime = "";
+        private string systemTime = string.Empty;
 
         [ObservableProperty]
-        private string alertStartTime = "";
+        private string alertStartTime = string.Empty;
 
         [ObservableProperty]
-        private string alertEndTime = "";
+        private string alertEndTime = string.Empty;
 
         [ObservableProperty]
-        private string currentAlarm = "";
+        private string currentAlarm = string.Empty;
 
         [ObservableProperty]
-        private string currentAlarmTitle = "";
+        private string currentAlarmTitle = string.Empty;
 
         [ObservableProperty]
         int defaultHour = 0;
@@ -87,7 +87,7 @@ namespace Aljaras.MVVM.ViewModel
         private string isNOHolidayMessageVisible = GetVisibility.Visible.ToString();
 
         [ObservableProperty]
-        private string showTimeLeft = "";
+        private string showTimeLeft = string.Empty;
 
         [ObservableProperty]
         DispatcherTimer dispatcherTimer = new();
@@ -130,15 +130,12 @@ namespace Aljaras.MVVM.ViewModel
 
         [ObservableProperty]
         private Random startRandom = new();
-
-        [ObservableProperty]
-        private ZipFileCreator fileCompression = new();
         
         [ObservableProperty]
-        private string activationMessage = LicenseKeyGenerator.isProductActivated() ? "Activated" : "Not Activated";
+        private string activationMessage = string.Empty;
 
         [ObservableProperty]
-        string productActivated = LicenseKeyGenerator.isProductActivated()? GetVisibility.Hidden.ToString() : GetVisibility.Visible.ToString(); 
+        string productActivated = LicenseKeyGenerator.IsProductActivated()? GetVisibility.Hidden.ToString() : GetVisibility.Visible.ToString(); 
         #endregion
 
         #region RelayCommands
@@ -158,8 +155,8 @@ namespace Aljaras.MVVM.ViewModel
         {
             if (AudioOperations.IsEmergency || MicDevicesList == null || SpeakerDevicesList == null || !MicDevicesList.Any() || !SpeakerDevicesList.Any()) return;
             RecordingActionVisibility = GetVisibility.Visible.ToString();
-            if(File.Exists(AppDomain.CurrentDomain.BaseDirectory + "Audio\\Attention.mp3"))
-                _ = AudioOperations.PlayPauseAudioFile(Instance.AudioOperations.MoveAudioFileToLibrary(AppDomain.CurrentDomain.BaseDirectory + "Audio\\Attention.mp3"), false);
+            if(File.Exists(App.AppLocation + "Audio\\Attention.mp3"))
+                _ = AudioOperations.PlayPauseAudioFile(AudioOperations.MoveAudioFileToLibrary(App.AppLocation + "Audio\\Attention.mp3"), false);
             RecordButtonEnabled = false;
             StopButtonEnabled = true;
             wave = new()
@@ -174,35 +171,32 @@ namespace Aljaras.MVVM.ViewModel
             provider = new BufferedWaveProvider(wave.WaveFormat);
             waveOut.Init(provider);
             waveOut.Play();
-            wave.DataAvailable += Wave_DataAvailable;
+            wave.DataAvailable += Wave_DataAvailable!;
             wave.StartRecording();
         }
 
         [RelayCommand]
-        private void DeleteNotification(UserNotificationMessage obj) {NotificationList.Remove(obj);}
+        private void DeleteNotification(UserNotificationMessage obj) => NotificationList.Remove(obj);
 
         [RelayCommand]
         private void Emergency()
         {
-            
             AudioOperations.IsEmergency = !AudioOperations.IsEmergency;
             if (AudioOperations.IsEmergency) 
             {
                 EmergencyActionVisibility = GetVisibility.Visible.ToString();
                 StopRecording();
             } else EmergencyActionVisibility = GetVisibility.Hidden.ToString();
-            if (!File.Exists(string.Concat(AppDomain.CurrentDomain.BaseDirectory, GetUserSettings.EmergencyAudioFileLocation)))
-                GetUserSettings.EmergencyAudioFileLocation = AudioOperations.MoveAudioFileToLibrary(AppDomain.CurrentDomain.BaseDirectory + "Audio\\Emerg.mp3");
+            if (!File.Exists(string.Concat(App.AppLocation, GetUserSettings.EmergencyAudioFileLocation)))
+                GetUserSettings.EmergencyAudioFileLocation = AudioOperations.MoveAudioFileToLibrary(App.AppLocation + "Audio\\Emerg.mp3");
             _ = AudioOperations.PlayPauseAudioFile(GetUserSettings.EmergencyAudioFileLocation, AudioOperations.IsEmergency);
         }
 
         [RelayCommand]
-        private void ReloadDevices() { LoadDevices(); }
+        private void ReloadDevices() => LoadDevices();
         #endregion
 
         #region Functions
-        public static GlobalViewModel Instance { get; set; } = new GlobalViewModel();
-
         public static FileInfo MakeUnique(string path)
         {
             string dir = Path.GetDirectoryName(path)!;
@@ -212,19 +206,18 @@ namespace Aljaras.MVVM.ViewModel
             {
                 if (!File.Exists(path))
                     return new FileInfo(path);
-
                 path = Path.Combine(dir, fileName + " " + i + fileExt);
             }
         }
 
-        private void Wave_DataAvailable(object sender, WaveInEventArgs e) { provider.AddSamples(e.Buffer, 0, e.BytesRecorded); }
+        private void Wave_DataAvailable(object sender, WaveInEventArgs e) => provider.AddSamples(e.Buffer, 0, e.BytesRecorded);
 
-        partial void OnGetUserSettingsChanged(UserSettings value) { AudioOperations.Repeat = GetUserSettings.RepeatEmergency;}
+        partial void OnGetUserSettingsChanged(UserSettings value) => AudioOperations.Repeat = value.RepeatEmergency;
 
         partial void OnAppLangChanged(AppLanguage value) 
         { 
-            CurrentAlarm = AppLang.NoMoreAlarms;
-            CurrentAlarmTitle = AppLang.NoMoreAlarms;
+            CurrentAlarm = value.NoMoreAlarms;
+            CurrentAlarmTitle = value.NoMoreAlarms;
         }
 
         private void LoadDevices()
@@ -253,15 +246,14 @@ namespace Aljaras.MVVM.ViewModel
                 SelectedSpeakerDevice = SpeakerDevicesList.FirstOrDefault();
                 IndexOfSpeakerDevice = SpeakerDevicesList.IndexOf(SelectedSpeakerDevice);
             }
-
         }
 
         private GlobalViewModel()
         {
             LoadMonitoringAlarmCollectionData();
-            NextAlarm();
             LoadDevices();
             SetAppLang();
+            NextAlarm();
             NotificationList = new();
             Task.Run(async () =>
             {
@@ -288,7 +280,7 @@ namespace Aljaras.MVVM.ViewModel
             try { 
                 using (App.db)
                 {
-                    var col = App.db.GetCollection<UserSettings>("UserSettings");
+                    var col = App.db.GetCollection<UserSettings>(DbTables.UserSettings.ToString());
                     UserSettings? results = col.Find(x => x.Id == 1).FirstOrDefault();
                     if (results != null)
                         GetUserSettings = results;
@@ -303,47 +295,44 @@ namespace Aljaras.MVVM.ViewModel
                         catch
                         {
                             col.Insert(GetUserSettings);
-                            Instance.NotificationMessage = new()
-                            {
-                                BackgroundColor = MessageBackground.IndianRed.ToString(),
-                                MessageText = "Setting up registry key Failed"
-                            };
+                            NewNotificationMessage(MessageBackground.IndianRed , AppLang.RegistryFailed);
                         }
                     } 
                 }
-                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "Languages\\" + GetUserSettings.CurrentLang + ".xml"))
+                if (File.Exists(App.AppLocation + "Languages\\" + GetUserSettings.CurrentLang + ".xml"))
                 {
                     XmlSerializer reader = new(typeof(UserSettings));
                     reader = new XmlSerializer(typeof(AppLanguage));
-                    StreamReader file = new(AppDomain.CurrentDomain.BaseDirectory + "Languages\\" + GetUserSettings.CurrentLang + ".xml");
+                    StreamReader file = new(App.AppLocation + "Languages\\" + GetUserSettings.CurrentLang + ".xml");
                     AppLang = (AppLanguage)reader.Deserialize(file)!;
                     file.Close();
                 }
             }
-            catch { return; }
+            catch { }
         }
 
-        public static DateTime TrimMilliseconds(DateTime dt) { return new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, 0, dt.Kind);}
+        public static DateTime TrimMilliseconds(DateTime dt) => new(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, 0, dt.Kind);
 
         void StartAudio(string _afl)
         {
-            var fileLocation = new string[] { _afl, AppDomain.CurrentDomain.BaseDirectory + "Audio\\School.mp3"}.FirstOrDefault(s => !string.IsNullOrEmpty(s) && File.Exists(s)) ?? "";
+            var fileLocation = new string[] { _afl, App.AppLocation + "Audio\\School.mp3"}.FirstOrDefault(s => !string.IsNullOrEmpty(s) && File.Exists(s)) ?? string.Empty;
             if (string.IsNullOrEmpty(fileLocation)) 
             {
-                Instance.NotificationMessage = new()
+                NotificationMessage = new()
                 {
                     BackgroundColor = MessageBackground.IndianRed.ToString(),
-                    MessageText = Instance.AppLang.NotCorrectAudio
+                    MessageText = AppLang.NotCorrectAudio
                 };
                 return;
             }
-            _afl = Instance.AudioOperations.MoveAudioFileToLibrary(_afl);
+            _afl = AudioOperations.MoveAudioFileToLibrary(_afl);
             AudioOperations.Output = null;
             _ = AudioOperations.PlayPauseAudioFile(fileLocation, false);
         }
 
         public void NextAlarm()
         {
+            ActivationMessage = LicenseKeyGenerator.IsProductActivated() ? AppLang.Activated : AppLang.NotActivated;
             TimeLeft = TimeSpan.Zero;
             if (AlarmList != null && AlarmList.Count > 0)
             {
@@ -374,7 +363,7 @@ namespace Aljaras.MVVM.ViewModel
             Start = DateTime.Now;
         }
 
-        public static DateTime ChangeDateOnly(DateTime oldDateTime) { return DateTime.Now.Date + oldDateTime.TimeOfDay; }
+        public static DateTime ChangeDateOnly(DateTime oldDateTime) => DateTime.Now.Date + oldDateTime.TimeOfDay;
 
         public static object GetPropValue(object src, string propName) => src.GetType().GetProperty(propName)!.GetValue(src, null)!;
 
@@ -385,7 +374,7 @@ namespace Aljaras.MVVM.ViewModel
             HolidayList = new();
             using (App.db)
             {
-                var holidayCollection = App.db.GetCollection<Holiday>("Holidays");
+                var holidayCollection = App.db.GetCollection<Holiday>(DbTables.Holidays.ToString());
                 HolidayList = holidayCollection.Find(h => h.HolidayDate > DateTime.Now && h.IsHolidayActive).OrderBy(x => x.HolidayDate).ToList();
                 if(HolidayList!= null && HolidayList.Count>0)
                 {
@@ -405,14 +394,13 @@ namespace Aljaras.MVVM.ViewModel
                 if (HolidayList != null && HolidayList.Count > 0)
                     IsNOHolidayMessageVisible = GetVisibility.Hidden.ToString();
                 else IsNOHolidayMessageVisible = GetVisibility.Visible.ToString();
-
-                var scheduleCollection = App.db.GetCollection<Schedule>("Schedules");
+                var scheduleCollection = App.db.GetCollection<Schedule>(DbTables.Schedules.ToString());
                 ScheduleList = scheduleCollection.Find(x => x.IsScheduleActive == true).ToList();
                 if (ScheduleList != null && ScheduleList.Count > 0)
                 {
                     foreach (Schedule item in ScheduleList)
                     {
-                        var alarmCollection = App.db.GetCollection<Alarm>("Alarms");
+                        var alarmCollection = App.db.GetCollection<Alarm>(DbTables.Alarms.ToString());
                         List<Alarm> result = alarmCollection.Find(x => x.ScheduleId.ToString().Contains(item.ScheduleId.ToString()) && x.IsAlarmActive == true).ToList();
                         if (result != null && result.Count > 0)
                         { 
@@ -422,7 +410,7 @@ namespace Aljaras.MVVM.ViewModel
                                 _item.FullTime = ChangeDateOnly(_item.FullTime);
                                 AlarmList.Add(_item);
                             }
-                            if(LicenseKeyGenerator.isProductActivated())
+                            if(LicenseKeyGenerator.IsProductActivated())
                             AlarmList = AlarmList.OrderBy(x => x.FullTime).ToList();
                             else AlarmList = AlarmList.OrderBy(x => x.FullTime).Take(5).ToList();
                             
@@ -469,6 +457,16 @@ namespace Aljaras.MVVM.ViewModel
                         NotificationList.RemoveAt(0);
                 }));
             });
+        }
+
+        public void NewNotificationMessage(MessageBackground background, string messageText)
+        {
+            NotificationMessage = new()
+            {
+                BackgroundColor = background.ToString(),
+                MessageText = messageText
+            };
+            NotificationList.Add(NotificationMessage);
         }
         #endregion
 

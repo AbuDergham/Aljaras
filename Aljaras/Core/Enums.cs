@@ -1,5 +1,19 @@
 ﻿namespace Aljaras.Core
 {
+    public enum DbTables
+    {
+        Schedules,
+        Alarms,
+        UserSettings,
+        Holidays
+    }
+
+    public enum GetDayTime
+    {
+        AM,
+        PM
+    }
+
     public enum GetVisibility
     {
         Collapsed,

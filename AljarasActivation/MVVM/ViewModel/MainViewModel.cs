@@ -10,22 +10,28 @@ namespace AljarasActivation.MVVM.ViewModel
     internal partial class MainViewModel : ObservableRecipient
     {
         [ObservableProperty]
-        private string generatedKey = "";
+        private string generatedKey = string.Empty;
+
+        [RelayCommand]
+        private void CopyKey() => Clipboard.SetText(ActivationKey);
+
+        [RelayCommand]
+        private void PasteKey() => GeneratedKey = Clipboard.GetText();
 
         partial void OnGeneratedKeyChanged(string value)
         {
             if (string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value))
-            { ActivationKey = ""; GeneratedKey = ""; }
+            { ActivationKey = string.Empty; GeneratedKey = string.Empty; }
             else ActivationKey = LicenseKeyGenerator.GenerateLicenseKey(GeneratedKey);
         }
 
         [ObservableProperty]
-        private string activationKey = "";
+        private string activationKey = string.Empty;
 
         #region Functions
         public MainViewModel()
         {
-            ActivationKey = "";
+            ActivationKey = string.Empty;
         }
         #endregion
 

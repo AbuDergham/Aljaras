@@ -13,7 +13,7 @@ namespace Aljaras.MVVM.Model
         private string currentLang = "en";
 
         [ObservableProperty]
-        private string emergencyAudioFileLocation = "";
+        private string emergencyAudioFileLocation = string.Empty;
 
         [ObservableProperty]
         private bool repeatEmergency = true;

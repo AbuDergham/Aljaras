@@ -135,7 +135,7 @@
                             BaselineAlignment="Baseline"
                             FontSize="10"
                             Foreground="{StaticResource IndianRedBrush}"
-                            Text="*Beta*" />
+                            Text="*run as administrator*" />
                     </TextBlock>
                 </CheckBox>
                 <CheckBox

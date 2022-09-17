@@ -5,6 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Aljaras.ico</ApplicationIcon>
   </PropertyGroup>
 	<Target Name="RemoveDuplicateAnalyzers" BeforeTargets="CoreCompile">
 		<!-- Work around https://github.com/dotnet/wpf/issues/6792 -->
@@ -14,6 +15,9 @@
 			<Analyzer Include="@(FilteredAnalyzer)" />
 		</ItemGroup>
 	</Target>
+	<ItemGroup>
+	  <Content Include="Aljaras.ico" />
+	</ItemGroup>
   <ItemGroup>
     <Folder Include="MVVM\Model\" />
   </ItemGroup>
@@ -24,6 +28,18 @@
 
   <ItemGroup>
     <Page Update="MVVM\View\MainWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\Buttons.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\Colors.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\Path.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

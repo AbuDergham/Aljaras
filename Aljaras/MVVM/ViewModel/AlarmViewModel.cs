@@ -14,7 +14,7 @@ namespace Aljaras.MVVM.ViewModel
 {
     internal partial class AlarmViewModel : ObservableRecipient
     {
-        public GlobalViewModel Global { get; } = GlobalViewModel.Instance;
+        public GlobalViewModel Global { get; set; } = GlobalViewModel.Instance;
 
         #region Observable Properties
         [ObservableProperty]
@@ -51,29 +51,23 @@ namespace Aljaras.MVVM.ViewModel
         {
             using (App.db)
             {
-                var scheduleCol = App.db.GetCollection<Schedule>("Schedules");
-                var aLarmCol = App.db.GetCollection<Alarm>("Alarms");
+                var scheduleCol = App.db.GetCollection<Schedule>(DbTables.Schedules.ToString());
+                var aLarmCol = App.db.GetCollection<Alarm>(DbTables.Alarms.ToString());
                 List<Alarm> _aResult = aLarmCol.Find(x => x.ScheduleId.ToString().Contains(obj.ScheduleId.ToString())).ToList();
                 obj.ScheduleId = DateTime.Now.Ticks;
-                obj.ScheduleTitle = obj.ScheduleTitle + "Clone";
+                obj.ScheduleTitle += Global.AppLang.Clone;
                 if (_aResult != null && _aResult.Count > 0)
                     foreach (var _item in _aResult)
                     {
                         _item.AlarmId = DateTime.Now.Ticks;
                         _item.ScheduleId = obj.ScheduleId;
                     }
-
                 scheduleCol.Insert(obj);
                 aLarmCol.Insert(_aResult);
             }
             LoadScheduleCollectionData();
             CallGlobal();
-            Global.NotificationMessage = new()
-            {
-                BackgroundColor = MessageBackground.MediumSeaGreen.ToString(),
-                MessageText = Global.AppLang.Done
-            };
-            GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+            Global.NewNotificationMessage(MessageBackground.MediumSeaGreen , Global.AppLang.Done);
         }
 
         [RelayCommand]
@@ -88,20 +82,14 @@ namespace Aljaras.MVVM.ViewModel
         {
             using (App.db)
             {
-                var aLarmCol = App.db.GetCollection<Alarm>("Alarms");
-                Alarm tmp = obj;
-                tmp.AlarmId = DateTime.Now.Ticks;
-                tmp.AlarmTitle = obj.AlarmTitle + "Clone";
-                aLarmCol.Insert(tmp);
+                var aLarmCol = App.db.GetCollection<Alarm>(DbTables.Alarms.ToString());
+                obj.AlarmId = DateTime.Now.Ticks;
+                obj.AlarmTitle += Global.AppLang.Clone;
+                aLarmCol.Insert(obj);
             }
             LoadAlarmCollectionData(CurrentSchedule.ScheduleId);
             CallGlobal();
-            Global.NotificationMessage = new()
-            {
-                BackgroundColor = MessageBackground.SeaGreen.ToString(),
-                MessageText = Global.AppLang.Done
-            };
-            GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+            Global.NewNotificationMessage(MessageBackground.SeaGreen, Global.AppLang.Done);
         }
 
         [RelayCommand]
@@ -112,7 +100,7 @@ namespace Aljaras.MVVM.ViewModel
         }
 
         [RelayCommand]
-        private void NewAlarm(){CurrentAlarm = new();}
+        private void NewAlarm() => CurrentAlarm = new();
         
         [RelayCommand]
         private void TimeNow()
@@ -120,7 +108,7 @@ namespace Aljaras.MVVM.ViewModel
             DateTime _dt = DateTime.Now;
             CurrentAlarm.Hour = _dt.ToString("hh"); 
             CurrentAlarm.Minute = _dt.ToString("mm");
-            CurrentAlarm.DayTime = _dt.ToString("tt");
+            CurrentAlarm.DayTime = (GetDayTime)Enum.Parse(typeof(GetDayTime), _dt.ToString("tt"));
         }
 
         [RelayCommand]
@@ -130,24 +118,17 @@ namespace Aljaras.MVVM.ViewModel
             {
                 if (CurrentAlarm != null && !string.IsNullOrEmpty(CurrentAlarm.AlarmTitle) && !string.IsNullOrWhiteSpace(CurrentAlarm.AlarmTitle))
                 {
-                    var fileLocation = new string[] { CurrentAlarm.AudioFileLocation, AppDomain.CurrentDomain.BaseDirectory + "Audio\\School.mp3" }.FirstOrDefault(s => !string.IsNullOrEmpty(s) && File.Exists(s)) ?? "";
+                    var fileLocation = new string[] { CurrentAlarm.AudioFileLocation, App.AppLocation + "Audio\\School.mp3" }.FirstOrDefault(s => !string.IsNullOrEmpty(s) && File.Exists(s)) ?? string.Empty;
                     if (string.IsNullOrEmpty(fileLocation))
                     {
-                        Global.NotificationMessage = new()
-                        {
-                            BackgroundColor = MessageBackground.IndianRed.ToString(),
-                            MessageText = Global.AppLang.NotCorrectAudio
-                        };
-                        GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+                        Global.NewNotificationMessage(MessageBackground.IndianRed, Global.AppLang.NotCorrectAudio);
                         return;
                     }
                     fileLocation = Global.AudioOperations.MoveAudioFileToLibrary(fileLocation);
                     using (App.db)
                     {
-                        CurrentAlarm.FullTime = DateTime.Parse(CurrentAlarm.Hour + ":" + CurrentAlarm.Minute + " " + CurrentAlarm.DayTime);
                         CurrentAlarm.AudioFileLocation = fileLocation;
-
-                        var col = App.db.GetCollection<Alarm>("Alarms");
+                        var col = App.db.GetCollection<Alarm>(DbTables.Alarms.ToString());
                         if (CurrentAlarm.AlarmId > 0)
                             col.Update(CurrentAlarm);
                         else
@@ -156,33 +137,15 @@ namespace Aljaras.MVVM.ViewModel
                             CurrentAlarm.ScheduleId = CurrentSchedule.ScheduleId;
                             col.Insert(CurrentAlarm);
                         }
-                        Global.NotificationMessage = new()
-                        {
-                            BackgroundColor = MessageBackground.SeaGreen.ToString(),
-                            MessageText = Global.AppLang.Done
-                        };
-                        GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+                        Global.NewNotificationMessage(MessageBackground.SeaGreen, Global.AppLang.Done);
                     }
                     LoadAlarmCollectionData(CurrentSchedule.ScheduleId);
                 }
-                else 
-                {
-                Global.NotificationMessage = new()
-                    {
-                        BackgroundColor = MessageBackground.IndianRed.ToString(),
-                        MessageText = Global.AppLang.InvalidTitle
-                    };
-                    GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
-                }
+                else Global.NewNotificationMessage(MessageBackground.IndianRed, Global.AppLang.InvalidTitle);
             }
             else
             {
-                Global.NotificationMessage = new()
-                {
-                    BackgroundColor = MessageBackground.IndianRed.ToString(),
-                    MessageText = Global.AppLang.SelectSchedule
-                };
-                GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+                Global.NewNotificationMessage(MessageBackground.IndianRed, Global.AppLang.SelectSchedule);
                 return;
             }
             CurrentAlarm = new();
@@ -193,7 +156,7 @@ namespace Aljaras.MVVM.ViewModel
         private void SelectAudioFile()
         {
             OpenFileDialog openFileDialog = new();
-            string path = AppDomain.CurrentDomain.BaseDirectory + "Audio";
+            string path = App.AppLocation + "Audio";
             if (Directory.Exists(path))
                 openFileDialog.InitialDirectory = path;
             openFileDialog.Filter = "Audio File (*.mp3;*.wav)|*.mp3;*.wav;";
@@ -219,31 +182,17 @@ namespace Aljaras.MVVM.ViewModel
                 using (App.db)
                 {
                     Schedule _sch = CurrentSchedule;
-                    // Get a collection (or create, if doesn't exist)
-                    var col = App.db.GetCollection<Schedule>("Schedules");
-                    if (CurrentSchedule.ScheduleId.ToString() == "0")
+                    var col = App.db.GetCollection<Schedule>(DbTables.Schedules.ToString());
+                    if (CurrentSchedule.ScheduleId == 0)
                     {
                         _sch.ScheduleId = DateTime.Now.Ticks;
                         col.Insert(_sch);
                     }
                     else col.Update(_sch);
                 }
-                Global.NotificationMessage = new()
-                {
-                    BackgroundColor = MessageBackground.MediumSeaGreen.ToString(),
-                    MessageText = Global.AppLang.Done
-                };
-                GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+                Global.NewNotificationMessage(MessageBackground.MediumSeaGreen, Global.AppLang.Done);
             }
-            else 
-            {
-                Global.NotificationMessage = new()
-                {
-                    BackgroundColor = MessageBackground.IndianRed.ToString(),
-                    MessageText = Global.AppLang.InvalidTitle
-                };
-                GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
-            }
+            else Global.NewNotificationMessage(MessageBackground.IndianRed, Global.AppLang.InvalidTitle);
             LoadScheduleCollectionData();
             CurrentSchedule = new();
             CallGlobal();
@@ -261,14 +210,9 @@ namespace Aljaras.MVVM.ViewModel
         {
             using (App.db)
             {
-                var col = App.db.GetCollection<Alarm>("Alarms");
+                var col = App.db.GetCollection<Alarm>(DbTables.Alarms.ToString());
                 col.Delete(obj.AlarmId);
-                Global.NotificationMessage = new()
-                {
-                    BackgroundColor = MessageBackground.IndianRed.ToString(),
-                    MessageText = Global.AppLang.Done
-                };
-                GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+                Global.NewNotificationMessage(MessageBackground.MediumSeaGreen, Global.AppLang.Done);
             }
             LoadAlarmCollectionData(CurrentSchedule.ScheduleId);
             CurrentAlarm = new();
@@ -283,23 +227,18 @@ namespace Aljaras.MVVM.ViewModel
                 return;
                 using (App.db)
                 {
-                    var aLarmCol = App.db.GetCollection<Alarm>("Alarms");
+                    var aLarmCol = App.db.GetCollection<Alarm>(DbTables.Alarms.ToString());
                     List<Alarm> _aResult = aLarmCol.Find(x => x.ScheduleId.ToString().Contains(obj.ScheduleId.ToString())).ToList();
                     if (_aResult != null && _aResult.Count > 0)
                     foreach (var _item in _aResult)
                             aLarmCol.Delete(_item.AlarmId);
-                    var scheduleCol = App.db.GetCollection<Schedule>("Schedules");
+                    var scheduleCol = App.db.GetCollection<Schedule>(DbTables.Schedules.ToString());
                         scheduleCol.Delete(obj.ScheduleId);
                 }
-            Global.NotificationMessage = new()
-            {
-                BackgroundColor = MessageBackground.IndianRed.ToString(),
-                MessageText = Global.AppLang.Done
-            };
-            GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+            Global.NewNotificationMessage(MessageBackground.MediumSeaGreen, Global.AppLang.Done);
             LoadScheduleCollectionData();
-                AlarmList = new();
-                IsNOAlarmMessageVisible = GetVisibility.Visible.ToString();
+            AlarmList = new();
+            IsNOAlarmMessageVisible = GetVisibility.Visible.ToString();
             CurrentSchedule = new();
             CallGlobal();
         }
@@ -309,15 +248,10 @@ namespace Aljaras.MVVM.ViewModel
         {
             using (App.db)
             {
-                var scheduleCol = App.db.GetCollection<Schedule>("Schedules");
+                var scheduleCol = App.db.GetCollection<Schedule>(DbTables.Schedules.ToString());
                     scheduleCol.Update(obj);
-            }
-            Global.NotificationMessage = new()
-            {
-                BackgroundColor = MessageBackground.IndianRed.ToString(),
-                MessageText = Global.AppLang.Done
-            };
-            GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+            }            
+            Global.NewNotificationMessage(MessageBackground.MediumSeaGreen, Global.AppLang.Done);
             CallGlobal();
         }
 
@@ -326,15 +260,10 @@ namespace Aljaras.MVVM.ViewModel
         {
             using (App.db)
             {
-                var alarmCol = App.db.GetCollection<Alarm>("Alarms");
+                var alarmCol = App.db.GetCollection<Alarm>(DbTables.Alarms.ToString());
                     alarmCol.Update(obj);
             }
-            Global.NotificationMessage = new()
-            {
-                BackgroundColor = MessageBackground.IndianRed.ToString(),
-                MessageText = Global.AppLang.Done
-            };
-            GlobalViewModel.Instance.NotificationList.Add(Global.NotificationMessage);
+            Global.NewNotificationMessage(MessageBackground.MediumSeaGreen, Global.AppLang.Done);
             CallGlobal();
         }
         #endregion
@@ -348,26 +277,26 @@ namespace Aljaras.MVVM.ViewModel
 
         partial void OnCurrentScheduleChanged(Schedule value)
         {
-            if (CurrentSchedule != null && CurrentSchedule.ScheduleId > 0)
+            if (value != null && value.ScheduleId > 0)
             {
-                LoadAlarmCollectionData(CurrentSchedule.ScheduleId);
+                LoadAlarmCollectionData(value.ScheduleId);
                 EnableScheduleTitleTB = false;
             }else EnableScheduleTitleTB = true;
             if (CurrentAlarm == null)
                 CurrentAlarm = new();
         }
 
-        private static void CallGlobal()
+        private void CallGlobal()
         {
-            GlobalViewModel.Instance.LoadMonitoringAlarmCollectionData();
-            GlobalViewModel.Instance.NextAlarm();
+            Global.LoadMonitoringAlarmCollectionData();
+            Global.NextAlarm();
         }
 
         private void LoadScheduleCollectionData()
         {
             using (App.db)
             {
-                var col = App.db.GetCollection<Schedule>("Schedules");
+                var col = App.db.GetCollection<Schedule>(DbTables.Schedules.ToString());
                 ScheduleList = col.Query().ToList();
             }
             if (ScheduleList != null && ScheduleList.Count > 0)
@@ -380,8 +309,8 @@ namespace Aljaras.MVVM.ViewModel
             AlarmList = new();
             using (App.db)
             {
-                var col = App.db.GetCollection<Alarm>("Alarms");
-                AlarmList = col.Find(x => x.ScheduleId.ToString().Contains(CurrentSchedule.ScheduleId.ToString())).ToList().OrderBy(x => x.FullTime.TimeOfDay).ToList();;
+                var col = App.db.GetCollection<Alarm>(DbTables.Alarms.ToString());
+                AlarmList = col.Find(x => x.ScheduleId.ToString().Contains(_SId.ToString())).ToList().OrderBy(x => x.FullTime.TimeOfDay).ToList();
             }
             if (AlarmList != null && AlarmList.Count > 0)
                 IsNOAlarmMessageVisible = GetVisibility.Hidden.ToString();

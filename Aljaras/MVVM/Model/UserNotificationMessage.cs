@@ -9,6 +9,6 @@ namespace Aljaras.MVVM.Model
         private string _backgroundColor = GetVisibility.Hidden.ToString();
 
         [ObservableProperty]
-        private string _messageText = "";
+        private string _messageText = string.Empty;
     }
 }

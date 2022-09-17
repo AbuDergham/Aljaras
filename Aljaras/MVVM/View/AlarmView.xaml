@@ -19,10 +19,10 @@
             <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
         <GroupBox
-            extensions:Extensions.Carrier="{Binding Global.AppLang.ItemsCount}"
+            extensions:Extensions.Carrier="{Binding Global.AppLang.ItemsCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             extensions:Extensions.Carrier2="{Binding ElementName=ScheduleListView, Path=Items.Count, Mode=OneWay}"
             FontSize="15"
-            Header="{Binding Global.AppLang.ScheduleList}"
+            Header="{Binding Global.AppLang.ScheduleList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             Style="{StaticResource GroupBoxListView}">
             <Grid>
                 <Grid.RowDefinitions>
@@ -37,7 +37,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Margin="10,0,0,0" VerticalAlignment="Center">
-                        <Run Text="{Binding Global.AppLang.Title}" />
+                        <Run Text="{Binding Global.AppLang.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <Run Text=":" />
                     </TextBlock>
                     <TextBox
@@ -57,7 +57,7 @@
                             extensions:Extensions.Carrier="{StaticResource NewPathData}"
                             Background="{StaticResource PurpleBrush}"
                             Command="{Binding EnableAddNewScheduleCommand}"
-                            Content="{Binding Global.AppLang.New}"
+                            Content="{Binding Global.AppLang.New, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             Foreground="{StaticResource PurpleBrush}"
                             Style="{DynamicResource ListRoundButtons}" />
                         <Border
@@ -68,7 +68,7 @@
                             extensions:Extensions.Carrier="{StaticResource SavePathData}"
                             Background="{StaticResource SteelBlueBrush}"
                             Command="{Binding SaveScheduleCommand}"
-                            Content="{Binding Global.AppLang.Save}"
+                            Content="{Binding Global.AppLang.Save, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             Foreground="{StaticResource SteelBlueBrush}"
                             Style="{DynamicResource ListRoundButtons}" />
                     </StackPanel>
@@ -92,7 +92,7 @@
                             Data="{StaticResource ListPathData}"
                             Fill="{DynamicResource DarkBackgroundBrush}"
                             Stretch="Uniform" />
-                        <Run Text="{Binding Global.AppLang.List}" />
+                        <Run Text="{Binding Global.AppLang.List, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </TextBlock>
                     <StackPanel
                         Grid.Column="2"
@@ -107,7 +107,7 @@
                                 Data="{StaticResource EditPathData}"
                                 Fill="{StaticResource SeaGreenBrush}"
                                 Stretch="Uniform" />
-                            <Run Text="{Binding Global.AppLang.Edit}" />
+                            <Run Text="{Binding Global.AppLang.Edit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </TextBlock>
                         <Border
                             Margin="5"
@@ -122,7 +122,7 @@
                                 Data="{StaticResource ClonePathData}"
                                 Fill="{StaticResource PurpleBrush}"
                                 Stretch="Uniform" />
-                            <Run Text="{Binding Global.AppLang.Clone}" />
+                            <Run Text="{Binding Global.AppLang.Clone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </TextBlock>
                         <Border
                             Margin="5"
@@ -138,7 +138,7 @@
                                 Data="{StaticResource DeletePathData}"
                                 Fill="{StaticResource MediumRedBrush}"
                                 Stretch="Uniform" />
-                            <Run Text="{Binding Global.AppLang.Delete}" />
+                            <Run Text="{Binding Global.AppLang.Delete, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </TextBlock>
                     </StackPanel>
                 </Grid>
@@ -216,7 +216,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     FontSize="16"
-                    Text="{Binding Global.AppLang.NOScheduleMessage}"
+                    Text="{Binding Global.AppLang.NOScheduleMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     TextAlignment="Center"
                     TextWrapping="Wrap"
                     Visibility="{Binding IsNOScheduleMessageVisible}" />
@@ -227,7 +227,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <GroupBox Padding="5,5,5,0" Header="{Binding Global.AppLang.AlertInformation}">
+            <GroupBox Padding="5,5,5,0" Header="{Binding Global.AppLang.AlertInformation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
@@ -238,40 +238,40 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <GroupBox Grid.RowSpan="3" Header="{Binding Global.AppLang.Days}">
+                    <GroupBox Grid.RowSpan="3" Header="{Binding Global.AppLang.Days, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <StackPanel Orientation="Vertical">
                             <CheckBox
                                 Margin="0,3"
-                                Content="{Binding Global.AppLang.Fri}"
+                                Content="{Binding Global.AppLang.Fri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsChecked="{Binding CurrentAlarm.Fri}"
                                 Style="{DynamicResource SliderCheckBox}" />
                             <CheckBox
                                 Margin="0,3"
-                                Content="{Binding Global.AppLang.Sat}"
+                                Content="{Binding Global.AppLang.Sat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsChecked="{Binding CurrentAlarm.Sat}"
                                 Style="{DynamicResource SliderCheckBox}" />
                             <CheckBox
                                 Margin="0,3"
-                                Content="{Binding Global.AppLang.Sun}"
+                                Content="{Binding Global.AppLang.Sun, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsChecked="{Binding CurrentAlarm.Sun}"
                                 Style="{DynamicResource SliderCheckBox}" />
                             <CheckBox
                                 Margin="0,3"
-                                Content="{Binding Global.AppLang.Mon}"
+                                Content="{Binding Global.AppLang.Mon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsChecked="{Binding CurrentAlarm.Mon}"
                                 Style="{DynamicResource SliderCheckBox}" />
                             <CheckBox
                                 Margin="0,3"
-                                Content="{Binding Global.AppLang.Tue}"
+                                Content="{Binding Global.AppLang.Tue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsChecked="{Binding CurrentAlarm.Tue}"
                                 Style="{DynamicResource SliderCheckBox}" />
                             <CheckBox
                                 Margin="0,3"
-                                Content="{Binding Global.AppLang.Wed}"
+                                Content="{Binding Global.AppLang.Wed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsChecked="{Binding CurrentAlarm.Wed}"
                                 Style="{DynamicResource SliderCheckBox}" />
                             <CheckBox
-                                Content="{Binding Global.AppLang.Thu}"
+                                Content="{Binding Global.AppLang.Thu, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsChecked="{Binding CurrentAlarm.Thu}"
                                 Style="{DynamicResource SliderCheckBox}" />
                         </StackPanel>
@@ -286,7 +286,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBlock VerticalAlignment="Center">
-                            <Run Text="{Binding Global.AppLang.Title}" />
+                            <Run Text="{Binding Global.AppLang.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <Run Text=":" />
                         </TextBlock>
                         <TextBox

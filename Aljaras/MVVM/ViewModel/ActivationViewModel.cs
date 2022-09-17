@@ -1,13 +1,10 @@
 ﻿using Aljaras.Core;
-using Aljaras.MVVM.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 
 namespace Aljaras.MVVM.ViewModel
 {
@@ -19,61 +16,54 @@ namespace Aljaras.MVVM.ViewModel
         private string generatedKey = LicenseKeyGenerator.GenerateLicenseKey(Environment.MachineName);
 
         [ObservableProperty]
-        private string activationKey = "";
+        private string activationKey = string.Empty;
 
         [ObservableProperty]
-        private bool isActivationEnabled = !LicenseKeyGenerator.isProductActivated();
+        private bool isActivationEnabled = !LicenseKeyGenerator.IsProductActivated();
+
+        [RelayCommand]
+        private void CopyKey() => Clipboard.SetText(GeneratedKey);
+
+        [RelayCommand]
+        private void PasteKey() => ActivationKey = Clipboard.GetText();
 
         [RelayCommand]
         private void SaveKey()
         {
-            if(ActivationKey == LicenseKeyGenerator.GenerateLicenseKey(GeneratedKey))
+            if (ActivationKey == LicenseKeyGenerator.GenerateLicenseKey(GeneratedKey))
             {
-                using (StreamWriter writetext = new("Aljaras.key"))
+                using (StreamWriter writetext = new(App.AppName + ".key"))
                 {
                     writetext.WriteLine(GeneratedKey);
                     writetext.WriteLine(ActivationKey);
                 }
-                Global.NotificationMessage = new()
-                {
-                    BackgroundColor = MessageBackground.MediumSeaGreen.ToString(),
-                    MessageText = Global.AppLang.Done
-                };
-                Global.NotificationList.Add(Global.NotificationMessage);
+                Global.ActivationMessage = Global.AppLang.Activated;
+                Global.ProductActivated = GetVisibility.Hidden.ToString();
+                IsActivationEnabled = false;
+                Global.NewNotificationMessage(MessageBackground.MediumSeaGreen, Global.AppLang.Done);
+                return;
             }
-            else
-            {
-                Global.NotificationMessage = new()
-                {
-                    BackgroundColor = MessageBackground.IndianRed.ToString(),
-                    MessageText = "Activation Failed"
-                };
-                Global.NotificationList.Add(Global.NotificationMessage);
-            }
+            Global.NewNotificationMessage(MessageBackground.IndianRed, Global.AppLang.ActivationFailed);
         }
 
         public ActivationViewModel()
         {
-            string? keyFile = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.key").FirstOrDefault();
-            if (keyFile != null)
+            string? keyFile = Directory.GetFiles(App.AppLocation, "*.key").FirstOrDefault();
+            if (!string.IsNullOrEmpty(keyFile))
             {
-                ActivationKey = File.ReadLines(keyFile).ElementAtOrDefault(1);
+                string? line = File.ReadLines(keyFile).ElementAtOrDefault(1);
+                if (!string.IsNullOrEmpty(line))
+                    ActivationKey = line;
                 if (ActivationKey == LicenseKeyGenerator.GenerateLicenseKey(GeneratedKey))
-                { 
-                    IsActivationEnabled = false;
-                    Global.ProductActivated = GetVisibility.Hidden.ToString(); 
-                }
-                else
                 {
-                    Global.NotificationMessage = new()
-                    {
-                        BackgroundColor = MessageBackground.IndianRed.ToString(),
-                        MessageText = "Activation File Corrupted"
-                    };
-                    Global.NotificationList.Add(Global.NotificationMessage);
+                    IsActivationEnabled = false;
+                    Global.ProductActivated = GetVisibility.Hidden.ToString();
+                    return;
                 }
+                Global.NewNotificationMessage(MessageBackground.IndianRed, Global.AppLang.ActivationFileCorrupted);
+                return;
             }
-                
+            Global.NewNotificationMessage(MessageBackground.IndianRed, Global.AppLang.NotActivated);
         }
     }
 }

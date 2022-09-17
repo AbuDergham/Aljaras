@@ -8,7 +8,7 @@ namespace Aljaras.MVVM.Model
         private long scheduleId = 0;
 
         [ObservableProperty]
-        private string scheduleTitle = "";
+        private string scheduleTitle = string.Empty;
 
         [ObservableProperty]
         private bool isScheduleActive = true;

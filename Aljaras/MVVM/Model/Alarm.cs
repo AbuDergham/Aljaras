@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Aljaras.Core;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 
 namespace Aljaras.MVVM.Model
@@ -9,7 +10,7 @@ namespace Aljaras.MVVM.Model
         private long alarmId = 0;
 
         [ObservableProperty]
-        private string alarmTitle = "";
+        private string alarmTitle = string.Empty;
 
         [ObservableProperty]
         private long scheduleId = 0;
@@ -38,17 +39,23 @@ namespace Aljaras.MVVM.Model
         [ObservableProperty]
         private string hour = "01";
 
+        partial void OnHourChanged(string value) => FullTime = DateTime.Parse(value + ":" + Minute + " " + DayTime);
+
         [ObservableProperty]
         private string minute = "00";
 
+        partial void OnMinuteChanged(string value) => FullTime = DateTime.Parse(Hour + ":" + value + " " + DayTime);
+
         [ObservableProperty]
-        private string dayTime = "AM";
+        private GetDayTime dayTime = GetDayTime.AM;
+
+        partial void OnDayTimeChanged(GetDayTime value) => FullTime = DateTime.Parse(Hour + ":" + Minute + " " + value);
 
         [ObservableProperty]
         private DateTime fullTime;
 
         [ObservableProperty]
-        private string audioFileLocation = "";
+        private string audioFileLocation = string.Empty;
 
         [ObservableProperty]
         private bool isAlarmActive = true;

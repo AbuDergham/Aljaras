@@ -25,7 +25,7 @@ namespace Aljaras.Core
         private bool repeat = false;
 
         [ObservableProperty]
-        private string tmpAudio = "";
+        private string tmpAudio = string.Empty;
         #endregion
 
         #region Functions
@@ -33,38 +33,35 @@ namespace Aljaras.Core
 
         public async Task PlayPauseAudioFile(string fileLocation, bool emergency)
         {
-            fileLocation = string.Concat(AppDomain.CurrentDomain.BaseDirectory, fileLocation);
+            fileLocation = string.Concat(App.AppLocation, fileLocation);
             if (!File.Exists(fileLocation))
             {
-                GlobalViewModel.Instance.NotificationMessage = new()
-                {
-                    BackgroundColor = MessageBackground.IndianRed.ToString(),
-                    MessageText = GlobalViewModel.Instance.AppLang.NotCorrectAudio
-                };
+                Global.NewNotificationMessage(MessageBackground.IndianRed , Global.AppLang.NotCorrectAudio);
                 return;
             }
-            if (TmpAudio != fileLocation || emergency) 
+            if (TmpAudio != fileLocation || emergency)
                 DisposeWave();
-                    TmpAudio = fileLocation;
+            TmpAudio = fileLocation;
             if (Output != null)
             {
                 if (Output.PlaybackState == PlaybackState.Playing) Output.Pause();
                 else if (Output.PlaybackState == PlaybackState.Paused) Output.Play();
                 else if (Output.PlaybackState == PlaybackState.Stopped)
                     StartAudio(fileLocation);
-            } else if (fileLocation != null)
+            }
+            else if (fileLocation != null)
+            {
+                if (Output != null && Output.PlaybackState == PlaybackState.Playing) Output.Stop();
+                StartAudio(fileLocation);
+                while (IsEmergency && Repeat)
                 {
-                    if (Output != null && Output.PlaybackState == PlaybackState.Playing) Output.Stop();
-                    StartAudio(fileLocation);
-                    while (IsEmergency && Repeat)
-                    {
-                        if (Output != null && Output.PlaybackState == PlaybackState.Stopped)
+                    if (Output != null && Output.PlaybackState == PlaybackState.Stopped)
                         StartAudio(fileLocation);
-                        await Task.Delay(500);
-                    }
-                    if(!Repeat)
-                    GlobalViewModel.Instance.AudioOperations.isEmergency = false;
+                    await Task.Delay(500);
                 }
+                if (!Repeat)
+                    GlobalViewModel.Instance.AudioOperations.isEmergency = false;
+            }
         }
 
         private void StartAudio(string fileLocation)
@@ -98,17 +95,16 @@ namespace Aljaras.Core
 
         public string MoveAudioFileToLibrary(string OriginalAudioFileLocation)
         {
-            string UserAudioLibraryPath = string.Concat(AppDomain.CurrentDomain.BaseDirectory, "Audio\\", App.PCCurrentUserName, "\\");
+            string UserAudioLibraryPath = string.Concat(App.AppLocation, "Audio\\", App.PCCurrentUserName, "\\");
             if (!Directory.Exists(UserAudioLibraryPath))
                 Directory.CreateDirectory(UserAudioLibraryPath);
             string DestinationAudioFilePath = string.Concat(UserAudioLibraryPath, Path.GetFileName(OriginalAudioFileLocation));
             if (!File.Exists(OriginalAudioFileLocation))
                 return "Audio File Not Found...";
             if (!File.Exists(DestinationAudioFilePath))
-            File.Copy(OriginalAudioFileLocation, DestinationAudioFilePath, true);
+                File.Copy(OriginalAudioFileLocation, DestinationAudioFilePath, true);
             return string.Concat("Audio\\", App.PCCurrentUserName, "\\", Path.GetFileName(OriginalAudioFileLocation));
         }
         #endregion
-
     }
 }

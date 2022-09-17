@@ -10,26 +10,28 @@ namespace Aljaras.MVVM.ViewModel
 {
     internal partial class GuideViewModel : ObservableRecipient
     {
-        public GlobalViewModel Global { get; } = GlobalViewModel.Instance;
+        public GlobalViewModel Global { get; set; } = GlobalViewModel.Instance;
 
+        #region Observable 
         [ObservableProperty]
         private List<string> guideList = new();
 
         [ObservableProperty]
-        private string currentImage = "";
+        private string currentImage = string.Empty;
 
         [ObservableProperty]
         private int imageIndex = 0;
 
         [ObservableProperty]
         private string nOGuideImagesVisible = GetVisibility.Visible.ToString();
+        #endregion
 
         #region RelayCommands
         [RelayCommand]
         private void GoNext() 
         {
             ImageIndex++;
-            if (ImageIndex > GuideList.Count()-1)
+            if (ImageIndex > GuideList.Count - 1)
                 ImageIndex = 0;
             CurrentImage = GuideList[ImageIndex];
         }
@@ -39,7 +41,7 @@ namespace Aljaras.MVVM.ViewModel
         {
             ImageIndex--;
             if (ImageIndex < 0)
-                ImageIndex = GuideList.Count()-1;
+                ImageIndex = GuideList.Count - 1;
             CurrentImage = GuideList[ImageIndex];
         }
         #endregion
@@ -47,12 +49,11 @@ namespace Aljaras.MVVM.ViewModel
         #region Functions
         public GuideViewModel()
         {
-            if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "Guide")) return;
-            DirectoryInfo GuideImagesDirectory = new(AppDomain.CurrentDomain.BaseDirectory + "Guide");
+            string dir = App.AppLocation + "Guide";
+            if (!Directory.Exists(dir)) return;
+            DirectoryInfo GuideImagesDirectory = new(dir);
             foreach (FileInfo aFile in GuideImagesDirectory.GetFiles("*.png"))
             {
-                /*Uri uri = new Uri(aFile.FullName);
-                GuideList.Add(new BitmapImage(uri));*/
                 GuideList.Add(aFile.FullName);
             }
             if (GuideList.Any())

@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="clr-namespace:Aljaras.Core"
-    xmlns:local="clr-namespace:Aljaras.MVVM.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodel="clr-namespace:Aljaras.MVVM.ViewModel"
     d:DesignHeight="450"
@@ -26,7 +25,7 @@
         <Grid
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            IsEnabled="{Binding IsActivationEnabled}">
+            IsEnabled="{Binding IsActivationEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40" />
                 <RowDefinition Height="40" />
@@ -35,6 +34,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100" />
                 <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBlock VerticalAlignment="Center">
                 <Run Text="Product Key:" />
@@ -47,7 +47,18 @@
                 BorderBrush="{StaticResource GrayBrush}"
                 BorderThickness="0,0,0,1"
                 IsReadOnly="True"
-                Text="{Binding GeneratedKey}" />
+                Text="{Binding GeneratedKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Button
+                Grid.Column="3"
+                Margin="5"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                extensions:Extensions.Carrier="{StaticResource ClonePathData}"
+                Background="{StaticResource CornflowerBlueBrush}"
+                Command="{Binding CopyKeyCommand}"
+                Content="{Binding Global.AppLang.Copy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                Foreground="{StaticResource CornflowerBlueBrush}"
+                Style="{StaticResource HorizontalRoundButtons}" />
             <TextBlock Grid.Row="1" VerticalAlignment="Center">
                 <Run Text="Activation Key:" />
             </TextBlock>
@@ -59,10 +70,22 @@
                 VerticalContentAlignment="Center"
                 BorderBrush="{StaticResource GrayBrush}"
                 BorderThickness="0,0,0,1"
-                Text="{Binding ActivationKey}" />
+                Text="{Binding ActivationKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Button
+                Grid.Row="1"
+                Grid.Column="3"
+                Margin="5"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                extensions:Extensions.Carrier="{StaticResource PastePathData}"
+                Background="{StaticResource IndianRedBrush}"
+                Command="{Binding PasteKeyCommand}"
+                Content="{Binding Global.AppLang.Paste, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                Foreground="{StaticResource IndianRedBrush}"
+                Style="{StaticResource HorizontalRoundButtons}" />
             <Button
                 Grid.Row="2"
-                Grid.ColumnSpan="2"
+                Grid.ColumnSpan="3"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 extensions:Extensions.Carrier="{StaticResource SavePathData}"
@@ -70,6 +93,5 @@
                 Command="{Binding SaveKeyCommand}"
                 Style="{DynamicResource RoundButtons}" />
         </Grid>
-
     </Grid>
 </UserControl>

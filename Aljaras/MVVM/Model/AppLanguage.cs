@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Win32;
+using System;
 
 namespace Aljaras.MVVM.Model
 {
@@ -228,5 +230,35 @@ namespace Aljaras.MVVM.Model
 
         [ObservableProperty]
         private string _alarmTitle = "Alarm Title";
+        
+        [ObservableProperty]
+        private string _activationFailed = "Activation Failed";
+        
+        [ObservableProperty]
+        private string _activationFileCorrupted = "Activation File Corrupted";
+        
+        [ObservableProperty]
+        private string _notActivated = "Not Activated";
+
+        [ObservableProperty]
+        private string _open = "Open";
+
+        [ObservableProperty]
+        private string _exit = "Exit";
+        
+        [ObservableProperty]
+        private string _activated = "Activated";
+        
+        [ObservableProperty]
+        private string _registryFailed = "Setting up registry key Failed";
+
+        [ObservableProperty]
+        private string _deleteRegistryFailed = "Delete registry key Failed";
+
+        [ObservableProperty]
+        private string _copy = "Copy";
+
+        [ObservableProperty]
+        private string _paste = "Paste";
     }
 }

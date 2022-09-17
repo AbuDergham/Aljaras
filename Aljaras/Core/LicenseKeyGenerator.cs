@@ -1,22 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Aljaras.Core
 {
     public class LicenseKeyGenerator 
     {
-        public static bool isProductActivated()
+        public static bool IsProductActivated()
         {
-            string? keyFile = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.key").FirstOrDefault();
+            string? keyFile = Directory.GetFiles(App.AppLocation, "*.key").FirstOrDefault();
             if (keyFile != null)
             {
                 string GeneratedKey = GenerateLicenseKey(Environment.MachineName);
-                string ActivationKey = File.ReadLines(keyFile).ElementAtOrDefault(1);
+                string? ActivationKey = File.ReadLines(keyFile).ElementAtOrDefault(1);
                 if (ActivationKey == GenerateLicenseKey(GeneratedKey))
                     return true;                
             }
@@ -33,9 +31,8 @@ namespace Aljaras.Core
             Encoder enc = Encoding.Unicode.GetEncoder();
             byte[] unicodeText = new byte[productIdentifier.Length * 2];
             enc.GetBytes(productIdentifier.ToCharArray(), 0, productIdentifier.Length, unicodeText, 0, true);
-            MD5 md5 = new MD5CryptoServiceProvider();
-            byte[] result = md5.ComputeHash(unicodeText);
-            StringBuilder sb = new StringBuilder();
+            byte[] result = MD5.Create().ComputeHash(unicodeText);
+            StringBuilder sb = new();
             for (int i = 0; i < result.Length; i++)
             {
                 sb.Append(result[i].ToString("X2"));
@@ -47,7 +44,7 @@ namespace Aljaras.Core
         {
             productIdentifier = productIdentifier.Substring(0, 28).ToUpper();
             char[] serialArray = productIdentifier.ToCharArray();
-            StringBuilder licenseKey = new StringBuilder();
+            StringBuilder licenseKey = new();
             int j = 0;
             for (int i = 0; i < 28; i++)
             {
@@ -62,7 +59,7 @@ namespace Aljaras.Core
                 else
                 {
                     i = (j) - 1;
-                    licenseKey.Append("-");
+                    licenseKey.Append('-');
                 }
             }
             return licenseKey.ToString();

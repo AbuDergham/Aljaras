@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>SchoolBell.ico</ApplicationIcon>
+    <ApplicationIcon>Aljaras.ico</ApplicationIcon>
     <StartupObject>Aljaras.App</StartupObject>
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
@@ -13,7 +13,7 @@
     <Copyright>Mustafa Al-Klieb </Copyright>
     <PackageIcon></PackageIcon>
     <IncrementVersionOnBuild>1.yyyy.Mdd.Hmm</IncrementVersionOnBuild>
-    <Version>1.2022.903.1900</Version>
+    <Version>1.2022.917.2358</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
@@ -27,14 +27,16 @@
 	</Target>
 
 	<ItemGroup>
+	  <None Remove="app.manifest" />
 	  <None Remove="mustafa.jpg" />
 	</ItemGroup>
 	
   <ItemGroup>
+    <Content Include="app.manifest" />
     <Content Include="mustafa.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="SchoolBell.ico">
+    <Content Include="Aljaras.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -49,6 +51,14 @@
     <Reference Include="CommunityToolkit.Mvvm">
       <HintPath>bin\Debug\net6.0-windows\CommunityToolkit.Mvvm.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -72,6 +82,10 @@
     </None>
     <None Update="Guide\Slide7.PNG">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Update="Sample.jrsbck">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

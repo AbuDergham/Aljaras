@@ -1,6 +1,7 @@
 ﻿using Aljaras.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
+using System.Windows.Media.Animation;
 
 namespace Aljaras.MVVM.Model
 {
@@ -10,7 +11,7 @@ namespace Aljaras.MVVM.Model
         private long holidayId = 0;
 
         [ObservableProperty]
-        private string holidayTitle = "";
+        private string holidayTitle = string.Empty;
 
         [ObservableProperty]
         private DateTime holidayDate = DateTime.Now;
@@ -21,27 +22,33 @@ namespace Aljaras.MVVM.Model
         [ObservableProperty]
         private bool isReminderActive = false;
 
+        partial void OnIsReminderActiveChanged(bool value) => ReminderVisibility = value ? GetVisibility.Visible.ToString() : GetVisibility.Hidden.ToString();
+
         [ObservableProperty]
         private DateTime reminderDate = DateTime.Now;
 
         [ObservableProperty]
         private string reminderHour = "01";
 
+        partial void OnReminderHourChanged(string value) => FullTime = DateTime.Parse(value + ":" + ReminderMinute + " " + ReminderDayTime);
+
         [ObservableProperty]
         private string reminderMinute = "00";
 
+        partial void OnReminderMinuteChanged(string value) => FullTime = DateTime.Parse(ReminderHour + ":" + value + " " + ReminderDayTime);
+
         [ObservableProperty]
-        private string reminderDayTime = "AM";
+        private GetDayTime reminderDayTime = GetDayTime.AM;
+
+        partial void OnReminderDayTimeChanged(GetDayTime value) => FullTime = DateTime.Parse(ReminderHour + ":" + ReminderMinute + " " + value);
 
         [ObservableProperty]
         private DateTime fullTime;
 
         [ObservableProperty]
-        private string reminderAudioFileLocation = "";
+        private string reminderAudioFileLocation = string.Empty;
 
         [ObservableProperty]
         private string reminderVisibility = GetVisibility.Hidden.ToString();
-
-        partial void OnIsReminderActiveChanged(bool value) { ReminderVisibility = IsReminderActive ? GetVisibility.Visible.ToString() : GetVisibility.Hidden.ToString();}
     }
 }
