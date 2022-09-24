@@ -1,8 +1,6 @@
 ﻿using Aljaras.MVVM.Model;
-using Aljaras.MVVM.View;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using LiteDB;
 using System;
 using System.IO;
 using System.Windows;
@@ -18,39 +16,30 @@ namespace Aljaras.MVVM.ViewModel
         private object currentView = new();
 
         [ObservableProperty]
-        public MonitoringViewModel monitoringVM = new();
-
-        [ObservableProperty]
-        public AboutMeViewModel aboutMeVM = new();
-
-        [ObservableProperty]
-        public AlarmViewModel alarmVM = new();
-
-        [ObservableProperty]
-        public HolidaysViewModel holidaysVM = new();
-
-        [ObservableProperty]
-        public SettingsViewModel settingsVM = new();
-
-        [ObservableProperty]
-        public GuideViewModel guideVM = new();
-
-        [ObservableProperty]
-        public ActivationViewModel activationVM = new();
-
-        [ObservableProperty]
         public string getVersion = string.Empty;
         #endregion
 
         #region RelayCommands
         [RelayCommand]
-        void ShowActivationView() => CurrentView = ActivationVM;
+        void ShowActivationView()
+        {
+            ActivationViewModel ActivationVM = new();
+            CurrentView = ActivationVM;
+        }
 
         [RelayCommand]
-        void ShowHolidaysView() => CurrentView = HolidaysVM;
+        void ShowHolidaysView() 
+        {
+            HolidaysViewModel HolidaysVM = new();
+            CurrentView = HolidaysVM; 
+        }
 
         [RelayCommand]
-        void ShowAboutMeView() => CurrentView = AboutMeVM;
+        void ShowAboutMeView()
+        {
+            AboutMeViewModel AboutMeVM = new(); 
+            CurrentView = AboutMeVM;
+        }
 
         [RelayCommand]
         static void MoveWindow() => Application.Current.MainWindow.DragMove();
@@ -77,24 +66,38 @@ namespace Aljaras.MVVM.ViewModel
 
         [RelayCommand]
         public void ShowMonitoringView()
-        { 
+        {
+            MonitoringViewModel MonitoringVM = new();
             Global.LoadMonitoringAlarmCollectionData();
             CurrentView = MonitoringVM;
         }
 
         [RelayCommand]
-        void ShowAlarmView() => CurrentView = AlarmVM;
+        void ShowAlarmView() 
+        {
+            AlarmViewModel AlarmVM = new();
+            CurrentView = AlarmVM; 
+        }
 
         [RelayCommand]
-        void ShowSettingsView() => CurrentView = SettingsVM;
+        void ShowSettingsView() 
+        {
+            SettingsViewModel SettingsVM = new();
+            CurrentView = SettingsVM; 
+        }
 
         [RelayCommand]
-        void ShowAboutView() => CurrentView = GuideVM;
+        void ShowAboutView()
+        {
+            GuideViewModel GuideVM = new();
+            CurrentView = GuideVM;
+        }
         #endregion
 
         #region Functions
         public MainViewModel()
         {
+            MonitoringViewModel MonitoringVM = new();
             CurrentView = MonitoringVM;
             Application.Current.MainWindow.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
             try
@@ -119,6 +122,5 @@ namespace Aljaras.MVVM.ViewModel
             }
         }
         #endregion
-
     }
 }
