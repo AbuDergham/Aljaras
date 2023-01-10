@@ -2,7 +2,9 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Security.Policy;
 using System.Windows;
 
 namespace Aljaras.MVVM.ViewModel
@@ -39,6 +41,20 @@ namespace Aljaras.MVVM.ViewModel
         {
             AboutMeViewModel AboutMeVM = new(); 
             CurrentView = AboutMeVM;
+        }
+
+        [RelayCommand]
+        void Raya()
+        {
+            string url = "https://www.youtube.com/watch?v=hCQDlxgwRw4";
+            Process.Start(new ProcessStartInfo() { FileName = url, UseShellExecute = true });
+        }
+
+        [RelayCommand]
+        void CEDAW()
+        {
+            string url = "https://www.youtube.com/watch?v=NvG1EdlSiww";
+            Process.Start(new ProcessStartInfo() { FileName = url, UseShellExecute = true });
         }
 
         [RelayCommand]

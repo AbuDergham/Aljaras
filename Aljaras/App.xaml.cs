@@ -1,5 +1,4 @@
-﻿using Aljaras.Core;
-using Aljaras.MVVM.ViewModel;
+﻿using Aljaras.MVVM.ViewModel;
 using LiteDB;
 using System;
 using System.Diagnostics;

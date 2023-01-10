@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Aljaras.ico</ApplicationIcon>
@@ -27,6 +27,12 @@
 	</Target>
 
 	<ItemGroup>
+	  <None Remove="1.jpg" />
+	  <None Remove="2.jpg" />
+	  <None Remove="Avatar.png" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <COMReference Include="IWshRuntimeLibrary">
 	    <WrapperTool>tlbimp</WrapperTool>
 	    <VersionMinor>0</VersionMinor>
@@ -39,10 +45,19 @@
 	</ItemGroup>
 	
   <ItemGroup>
-    <Content Include="mustafa.jpg">
+    <Content Include="1.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Avatar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Aljaras.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+	
+  <ItemGroup>
+    <Content Include="2.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -56,7 +71,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
-    <PackageReference Include="LiteDB" Version="5.0.12" />
+    <PackageReference Include="LiteDB" Version="5.0.15" />
     <PackageReference Include="NAudio" Version="2.1.0" />
   </ItemGroup>
 
@@ -107,10 +122,6 @@
     </None>
     <None Update="Guide\Slide7.PNG">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="mustafa.jpg">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
     </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

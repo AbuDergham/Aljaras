@@ -424,9 +424,9 @@ namespace Aljaras.MVVM.ViewModel
                                         _item.FullTime = ChangeDateOnly(_item.FullTime);
                                         AlarmList.Add(_item);
                                     }
-                                if (LicenseKeyGenerator.IsProductActivated())
+                                //if (LicenseKeyGenerator.IsProductActivated())
                                     AlarmList = AlarmList.OrderBy(x => x.FullTime).ToList();
-                                else AlarmList = AlarmList.OrderBy(x => x.FullTime).Take(5).ToList();
+                                //else AlarmList = AlarmList.OrderBy(x => x.FullTime).Take(5).ToList();
 
                             }
                         }
