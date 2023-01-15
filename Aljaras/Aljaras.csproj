@@ -45,10 +45,10 @@
 	</ItemGroup>
 	
   <ItemGroup>
-    <Content Include="1.jpg">
+    <Content Include="Images\1.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Avatar.png">
+    <Content Include="Images\Avatar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Aljaras.ico">
@@ -57,13 +57,13 @@
   </ItemGroup>
 	
   <ItemGroup>
-    <Content Include="2.jpg">
+    <Content Include="Images\2.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 	
   <ItemGroup>
-    <None Include="..\Assets\school-bell-and-alarm-vector.jpg">
+    <None Include="..\Assets\school-bell-and-alarm-vector.jpg" Link="Images\school-bell-and-alarm-vector.jpg">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

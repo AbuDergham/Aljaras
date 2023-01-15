@@ -234,7 +234,7 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Cursor=""
-                            Source="/1.jpg" />
+                            Source="/Images/1.jpg" />
                     </Button>
                     <Button Command="{Binding CEDAWCommand}">
                         <Image
@@ -242,7 +242,7 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Cursor=""
-                            Source="/2.jpg" />
+                            Source="/Images/2.jpg" />
                     </Button>
                 </StackPanel>
             </Border>

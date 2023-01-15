@@ -55,7 +55,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Cursor=""
-                Source="/Avatar.png" />
+                Source="/Images/Avatar.png" />
             <RichTextBox
                 Grid.Column="1"
                 Margin="10"
