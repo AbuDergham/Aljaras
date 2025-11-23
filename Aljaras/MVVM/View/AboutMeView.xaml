@@ -55,7 +55,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Cursor=""
-                Source="/Images/Avatar.png" />
+                Source="/Images/crpton.jpg" />
             <RichTextBox
                 Grid.Column="1"
                 Margin="10"
@@ -140,7 +140,7 @@
                         </ListItem>
                     </List>-->
                     <Paragraph FlowDirection="RightToLeft" TextAlignment="Justify">
-                        أقدم إليكم برنامج الجرس المدرسي لتنظيم الحصص المدرسية وفقاً لبرنامج الفصل الدراسي الخاص بالمدرسة ويركز البرنامج على السهولة والمرونة في الاستخدام ومُقدم بدون أي رسوم مالية فقط أطلب منكم الدعاء لي ولوالدي بالمغفرة والرحمة وجزاكم الله خيراً.
+                        أقدم إليكم برنامج الجرس المدرسي لتنظيم الحصص المدرسية وفقاً لبرنامج الفصل الدراسي الخاص بالمدرسة ويركز البرنامج على السهولة والمرونة في الاستخدام.
                     </Paragraph>
                     <Paragraph FlowDirection="RightToLeft" TextAlignment="Justify">
                         ملاحظة: تم الحصول على اصوات التنبيهات العربية من مطور البرمجيات سيد درويش - موقع المطور (aljaras2010.blogspot.com) - كإضافة للبرنامج فاذا امتلكت مكتبة اصوات اخرى تستطيع استخدامها بسهولة.
@@ -152,32 +152,7 @@
                         </Hyperlink>
                     </Paragraph>
                     <Paragraph FlowDirection="RightToLeft" TextAlignment="Justify">
-                        بيئة العمل:  Windows 7+, .net 7
-                    </Paragraph>
-                    <Paragraph FontWeight="Bold" TextAlignment="Center">
-                        راية الْعُقَابَ - راية المسلمين
-                    </Paragraph>
-                    <Paragraph FlowDirection="RightToLeft" TextAlignment="Justify">
-                        عن عبد الله بن عباس انه قال "كانت راية النبي صلى الله عليه وسلم سوداء" رواه البخاري.
-                    </Paragraph>
-                    <Paragraph FlowDirection="RightToLeft" TextAlignment="Justify">
-                        عن عبد الله بن عباس انه قال "كان راية النبي صلى الله عليه وسلم سوداء، ولواؤه أبيض " رواه الترمذي.
-                    </Paragraph>
-                    <Paragraph FlowDirection="LeftToRight" TextAlignment="Justify">
-                        <Hyperlink>
-                            <Run Text="https://www.youtube.com/watch?v=hCQDlxgwRw4" />
-                        </Hyperlink>
-                    </Paragraph>
-                    <Paragraph FontWeight="Bold" TextAlignment="Center">
-                        اتفاقية سيداو – اتفاقية القضاء على جميع اشكال التمييز ضد المرأة
-                    </Paragraph>
-                    <Paragraph FlowDirection="RightToLeft" TextAlignment="Justify">
-                        تعتبر هذه الاتفاقية مناقضة تماماً للإسلام بجميع بنودها ومحاولة التمييع لتمريرها على المسلمين لن تنجح بإذن الله
-                    </Paragraph>
-                    <Paragraph FlowDirection="LeftToRight" TextAlignment="Justify">
-                        <Hyperlink>
-                            <Run Text="https://www.youtube.com/watch?v=NvG1EdlSiww" />
-                        </Hyperlink>
+                        بيئة العمل:  Windows 10+, .net 10
                     </Paragraph>
                     <Paragraph />
                 </FlowDocument>

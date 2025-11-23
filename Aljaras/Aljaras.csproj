@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Aljaras.ico</ApplicationIcon>
@@ -13,7 +13,7 @@
     <Copyright>Mustafa Al-Klieb </Copyright>
     <PackageIcon>school-bell-and-alarm-vector.jpg</PackageIcon>
     <IncrementVersionOnBuild>1.yyyy.Mdd.Hmm</IncrementVersionOnBuild>
-    <Version>1.2022.925.1518</Version>
+    <Version>1.2025.1123.0242</Version>
     <ApplicationManifest></ApplicationManifest>
   </PropertyGroup>
 
@@ -30,6 +30,7 @@
 	  <None Remove="1.jpg" />
 	  <None Remove="2.jpg" />
 	  <None Remove="Avatar.png" />
+	  <None Remove="Images\crpton.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -45,19 +46,13 @@
 	</ItemGroup>
 	
   <ItemGroup>
-    <Content Include="Images\1.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Images\Avatar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Aljaras.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-	
-  <ItemGroup>
-    <Content Include="Images\2.jpg">
+    <Content Include="Images\crpton.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -70,9 +65,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
-    <PackageReference Include="LiteDB" Version="5.0.15" />
-    <PackageReference Include="NAudio" Version="2.1.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="LiteDB" Version="5.0.21" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
   </ItemGroup>
 
   <ItemGroup>

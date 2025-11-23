@@ -3,9 +3,7 @@ using Aljaras.MVVM.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Security.Policy;
 using System.Windows;
 
 namespace Aljaras.MVVM.ViewModel
@@ -44,19 +42,6 @@ namespace Aljaras.MVVM.ViewModel
             CurrentView = AboutMeVM;
         }
 
-        [RelayCommand]
-        void Raya()
-        {
-            string url = "https://www.youtube.com/watch?v=hCQDlxgwRw4";
-            Process.Start(new ProcessStartInfo() { FileName = url, UseShellExecute = true });
-        }
-
-        [RelayCommand]
-        void CEDAW()
-        {
-            string url = "https://www.youtube.com/watch?v=NvG1EdlSiww";
-            Process.Start(new ProcessStartInfo() { FileName = url, UseShellExecute = true });
-        }
 
         [RelayCommand]
         static void MoveWindow() => Application.Current.MainWindow.DragMove();
