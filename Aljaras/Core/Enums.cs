@@ -13,7 +13,7 @@ namespace Aljaras.Core
         public static readonly string dbBackupName = AppName + ".jrsbck";//"Aljaras.jrsbck"
         public static readonly string PCCurrentUserName = Environment.UserName;//"Rellax"
         //public static readonly string fullDBPath = Path.GetFullPath(PCCurrentUserName + dbName); //AppLocation + PCCurrentUserName + dbName;
-        public static readonly string dbConnectionString = string.Concat("Filename=", PCCurrentUserName + dbName /*fullDBPath*/, ";Connection=shared");//"Filename=RellaxAljaras.jrsdb;Connection=shared"
+        public static readonly string dbConnectionString = string.Concat("Filename=", AppLocation + PCCurrentUserName + dbName /*fullDBPath*/, ";Connection=shared");//"Filename=RellaxAljaras.jrsdb;Connection=shared"
         public static readonly LiteDatabase db = new(dbConnectionString);
     }
 
