@@ -1,0 +1,182 @@
+# CLAUDE.md
+
+Guidance for AI assistants (and humans) working in this repository.
+
+## What this project is
+
+**Aljaras** (الجرس, "the bell") is a Windows desktop **school bell / alarm
+system**. It plays scheduled audio announcements (class start/end, breaks,
+exam periods, morning assembly, emergencies) through the PC's speakers, runs
+in the background from the system tray, and supports both **Arabic** and
+**English** UIs. It is authored by Mustafa Al-Klieb.
+
+The solution contains two apps:
+
+| Project | Output | Purpose |
+|---|---|---|
+| `Aljaras` | `WinExe` | The main bell application (scheduler, audio, settings, tray icon). |
+| `AljarasActivation` | `WinExe` | A small standalone tool that turns a machine fingerprint into a license key. Used to activate copies of `Aljaras`. |
+
+## Tech stack
+
+- **.NET 10** targeting `net10.0-windows` (`<Nullable>enable</Nullable>`).
+- **WPF** (`<UseWPF>true</UseWPF>`) — XAML views + code-behind.
+- **MVVM** via [`CommunityToolkit.Mvvm`](https://learn.microsoft.com/dotnet/communitytoolkit/mvvm/) `8.4.0` — source-generated `[ObservableProperty]` / `[RelayCommand]`.
+- **LiteDB** `5.0.21` — embedded NoSQL document database (`*.jrsdb` files).
+- **NAudio** `2.2.1` — audio playback, recording, and device enumeration.
+- **`IWshRuntimeLibrary`** COM reference — desktop shortcut creation.
+- **System.Windows.Forms** — used only for the tray `NotifyIcon`.
+
+This is a Windows-only application. It **cannot be built or run on Linux**;
+remote/CI sessions can read, edit, and reason about the code but cannot
+execute `dotnet build`/`run` against the WPF target.
+
+## Repository layout
+
+```
+Aljaras.sln                  Solution (two projects)
+Aljaras/                     Main application
+  App.xaml(.cs)              Application entry point, tray icon, single-instance mutex, global error handlers
+  AssemblyInfo.cs
+  Aljaras.csproj             Note: contains a huge list of <None Update> audio assets copied to output
+  Core/                      Non-UI helpers (see below)
+  MVVM/
+    Model/                   Data/persistence models (Alarm, Schedule, Holiday, UserSettings, AppLanguage, ...)
+    View/                    XAML views + code-behind (one per feature screen)
+    ViewModel/               ViewModels (one per view + the GlobalViewModel singleton)
+  Themes/                    Shared XAML resource dictionaries (Buttons, Colors, Path, GroupBox, SliderCheckBox)
+  Languages/                 Localization XML: en.xml, عربي.xml (Arabic)
+  Audio/                     Bundled .mp3 announcements (Arabic filenames) for classes/exams/breaks
+  Guide/                     Onboarding slide images (Slide1..7.PNG) + source .pptx
+  Images/                    App images (Avatar, icon assets)
+  Properties/                Settings.settings / Settings.Designer.cs
+AljarasActivation/           License-key generator tool (mirrors the MVVM layout, much smaller)
+Assets/                      Shared package assets (app icon image)
+*.jrsdb                      Checked-in LiteDB databases (see "Data & persistence" caveat)
+```
+
+## Architecture
+
+### MVVM with CommunityToolkit source generators
+
+Every ViewModel and most Models are `partial` classes deriving from
+`ObservableRecipient` (or `ObservableObject` for `UserSettings`). Follow the
+existing conventions exactly:
+
+- Declare observable state as a **private/lowercase field** annotated with
+  `[ObservableProperty]`. The generator creates the public PascalCase
+  property. Example: `private string currentView` → bind to `CurrentView`.
+- Declare commands as methods annotated with `[RelayCommand]`. The generator
+  creates `XxxCommand`. e.g. `void ShowAlarmView()` → `ShowAlarmViewCommand`.
+- React to property changes with the generated `partial void OnXxxChanged(T value)` hooks (see `Alarm.cs`, `GlobalViewModel.cs`).
+- ViewModels are `internal` (except `ActivationViewModel`); keep new ones `internal partial` to match.
+
+### View ↔ ViewModel wiring
+
+Navigation is **ViewModel-first**. `MainViewModel.CurrentView` holds an
+`object` that is the active ViewModel, and `App.xaml` maps each ViewModel type
+to its View via `DataTemplate DataType="{x:Type viewModel:XxxViewModel}"`.
+`MainWindow` renders `CurrentView` in a `ContentControl`. To add a screen:
+
+1. Create `XxxView.xaml(.cs)` in `MVVM/View/`.
+2. Create `internal partial class XxxViewModel : ObservableRecipient` in `MVVM/ViewModel/`.
+3. Register the `DataTemplate` in `App.xaml`.
+4. Add a `[RelayCommand] void ShowXxxView()` on `MainViewModel` that sets `CurrentView = new XxxViewModel();` and bind a button to it.
+
+Existing screens: **Monitoring** (default/home — shows next alarm + countdown),
+**Alarm** (schedules & alarms), **Holidays**, **Settings**, **Guide**,
+**AboutMe**, **Activation**, plus a `SplashScreen`.
+
+### GlobalViewModel — the shared singleton
+
+`GlobalViewModel.Instance` (`MVVM/ViewModel/GlobalViewModel.cs`) is the heart of
+the app and is referenced by most other ViewModels via a `Global` property. It:
+
+- Owns the **1-second background loop** (a `Task.Run` while-loop) that updates
+  the clock and fires the matching alarm's audio when `DateTime.Now` reaches an
+  alarm time (`TrimMilliseconds` comparison).
+- Runs a `DispatcherTimer` (~40ms) to drive the countdown display (`ShowTimeLeft`).
+- Loads schedules/alarms/holidays from LiteDB (`LoadMonitoringAlarmCollectionData`),
+  computes the next alarm (`NextAlarm`), and applies the per-weekday flags
+  (`Sun`..`Sat`) on each `Alarm`.
+- Handles microphone recording → speaker passthrough (live announcements) and
+  the **Emergency** broadcast toggle, both via NAudio.
+- Loads user settings and the active language XML (`SetAppSettings`).
+- Surfaces transient toast-style messages (`NewNotificationMessage` → auto-removed after 3s).
+
+When changing scheduling, audio, or persistence behavior, this is almost
+always the file to edit.
+
+### Core/ helpers (main app)
+
+- `GlobalVariables` (in `Core/Enums.cs`) — static app-wide constants: `AppName`,
+  `AppLocation` (the exe directory), DB path/connection string, and the single
+  shared `LiteDatabase db` instance. **All DB access goes through `GlobalVariables.db`.**
+- `Enums.cs` — also defines `DbTables`, `GetDayTime`, `GetVisibility`, `MessageBackground`.
+  Note the convention of stringifying enums for XAML bindings (e.g. `GetVisibility.Visible.ToString()`).
+- `AudioFileOperations` — NAudio playback (play/pause/stop), emergency repeat
+  loop, and copying selected audio files into the app's library folder.
+- `LicenseKeyGenerator` — MD5-based machine-bound license keys. `IsProductActivated()`
+  looks for a `*.key` file next to the exe and validates it against `Environment.MachineName`.
+- `StartUpManager` — admin elevation check + add app to all-users startup (registry).
+- `ShortcutManager` — desktop shortcut via `IWshRuntimeLibrary`.
+- `Extensions.cs` — assorted extension methods.
+
+### Data & persistence (LiteDB)
+
+- Models persisted: `Schedule` (a named group), `Alarm` (a timed announcement
+  belonging to a schedule, with per-weekday flags + audio path), `Holiday`
+  (date + optional reminder), `UserSettings` (single row, `Id == 1`).
+- Collections are named by the `DbTables` enum (`.ToString()`).
+- Database file is **per-Windows-user**: `{AppLocation}{UserName}Aljaras.jrsdb`.
+- There are committed `*.jrsdb` files (`Aljaras.jrsdb`, `PCAljaras.jrsdb`,
+  `RellaxAljaras.jrsdb`) — these are sample/dev databases. Avoid treating them
+  as schema sources of truth and don't commit machine-specific DBs.
+
+### Localization
+
+UI strings live in `Languages/en.xml` and `Languages/عربي.xml`, deserialized
+into the `AppLanguage` model. `UserSettings.CurrentLang` ("en"/"عربي") selects
+which file loads. When adding a user-facing string, add a property to
+`AppLanguage` **and** entries in both XML files, then reference it as
+`Global.AppLang.YourString` (never hard-code UI text). `MainViewModel`
+regenerates `en.xml` from the `AppLanguage` defaults if it's missing.
+
+## Conventions to follow
+
+- **Match the existing MVVM style**: `[ObservableProperty]` fields and
+  `[RelayCommand]` methods, not hand-written `INotifyPropertyChanged`.
+- **No hard-coded UI text** — route through `AppLang`.
+- **No hard-coded paths** — build paths from `GlobalVariables.AppLocation`.
+- **All persistence via `GlobalVariables.db`** and the `DbTables` collection names.
+- Visibility/enum values bound in XAML are passed as **strings** (`.ToString()`),
+  matching the rest of the code.
+- Regions (`#region Observable Properties`, `#region RelayCommands`,
+  `#region Functions`) are used throughout — keep them for consistency.
+- Code comments and UI are bilingual; Arabic filenames/strings are intentional —
+  preserve their encoding (files are UTF-8; `.gitattributes` governs handling).
+
+## Building & running
+
+Requires **Windows** + .NET 10 SDK with the WPF workload (Visual Studio 2022 17.2+ or `dotnet`):
+
+```powershell
+dotnet build Aljaras.sln -c Debug
+dotnet run --project Aljaras/Aljaras.csproj
+```
+
+- The assembly version auto-increments on build (`<IncrementVersionOnBuild>1.yyyy.Mdd.Hmm</IncrementVersionOnBuild>`).
+- The csproj copies a large set of `Audio/*.mp3`, `Guide/*.PNG`, and
+  `Languages/*.xml` assets to the output directory (`CopyToOutputDirectory=Always`).
+  When adding a new bundled audio file, add a matching `<None Update>` entry.
+- `App.OnStartup` enforces a **single running instance** via a named `Mutex`
+  and installs unhandled-exception dialogs for both UI and non-UI threads.
+- There is **no test project, linter config, or CI workflow** in this repo.
+  "Verifying" a change means building/running on Windows and exercising the UI.
+
+## Git workflow
+
+- Active development branch for this work: **`claude/claude-md-docs-2561qf`**.
+  Develop, commit, and push there; do **not** push to `master` without explicit permission.
+- Only open a pull request when explicitly asked.
+- Push with `git push -u origin <branch>`, retrying with backoff on network errors.
