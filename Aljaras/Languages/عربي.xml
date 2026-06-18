@@ -86,4 +86,5 @@
 	<RunasAdministratorMessage>تحتاج بعض الإعدادات إلى إذن المسؤول، هل تريد إعادة التشغيل كمسؤول؟</RunasAdministratorMessage>
 	<Reload>تحديث</Reload>
 	<TestSound>تجربة الصوت</TestSound>
+	<Volume>مستوى الصوت</Volume>
 </AppLanguage>

@@ -69,6 +69,9 @@ namespace Aljaras.MVVM.ViewModel
         private string nextAlarmAudio = string.Empty;
 
         [ObservableProperty]
+        private float nextAlarmVolume = 1f;
+
+        [ObservableProperty]
         int defaultHour = 0;
 
         [ObservableProperty]
@@ -152,6 +155,7 @@ namespace Aljaras.MVVM.ViewModel
         {
             if (AudioOperations.IsEmergency || MicDevicesList == null || SpeakerDevicesList == null || !MicDevicesList.Any() || !SpeakerDevicesList.Any()) return;
             RecordingActionVisibility = GetVisibility.Visible.ToString();
+            AudioOperations.PlaybackVolume = 1f;
             if (File.Exists(GlobalVariables.AppLocation + "Audio\\Attention.mp3"))
                 _ = AudioOperations.PlayPauseAudioFile(AudioOperations.MoveAudioFileToLibrary(GlobalVariables.AppLocation + "Audio\\Attention.mp3"), false);
             RecordButtonEnabled = false;
@@ -187,6 +191,7 @@ namespace Aljaras.MVVM.ViewModel
             else EmergencyActionVisibility = GetVisibility.Hidden.ToString();
             if (!File.Exists(string.Concat(GlobalVariables.AppLocation, GetUserSettings.EmergencyAudioFileLocation)))
                 GetUserSettings.EmergencyAudioFileLocation = AudioOperations.MoveAudioFileToLibrary(GlobalVariables.AppLocation + "Audio\\Emerg.mp3");
+            AudioOperations.PlaybackVolume = 1f;
             _ = AudioOperations.PlayPauseAudioFile(GetUserSettings.EmergencyAudioFileLocation, AudioOperations.IsEmergency);
         }
 
@@ -197,6 +202,7 @@ namespace Aljaras.MVVM.ViewModel
         private void PreviewNextAlarm()
         {
             if (AudioOperations.IsEmergency || string.IsNullOrEmpty(NextAlarmAudio)) return;
+            AudioOperations.PlaybackVolume = NextAlarmVolume;
             _ = AudioOperations.PlayPauseAudioFile(NextAlarmAudio, false);
         }
         #endregion
@@ -278,6 +284,7 @@ namespace Aljaras.MVVM.ViewModel
                                 foreach (Alarm due in dueAlarms)
                                 {
                                     Logger.Info($"Alarm fired: \"{due.AlarmTitle}\" scheduled {due.FullTime:HH:mm:ss}.");
+                                    AudioOperations.PlaybackVolume = due.VolumeFraction;
                                     StartAudio(due.AudioFileLocation);
                                 }
                             LoadMonitoringAlarmCollectionData();
@@ -369,6 +376,7 @@ namespace Aljaras.MVVM.ViewModel
                     CurrentAlarm = _Nextalarm.FullTime.ToString("hh:mm tt");
                     CurrentAlarmTitle = _Nextalarm.AlarmTitle;
                     NextAlarmAudio = _Nextalarm.AudioFileLocation;
+                    NextAlarmVolume = _Nextalarm.VolumeFraction;
                     TimeLeft = _Nextalarm.FullTime.Subtract(DateTime.Now);
                 }
                 else

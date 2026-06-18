@@ -73,7 +73,10 @@ namespace Aljaras.MVVM.ViewModel
         private void PlayAlarmAudio(Alarm obj)
         {
             if (!Global.AudioOperations.IsEmergency)
+            {
+                Global.AudioOperations.PlaybackVolume = obj.VolumeFraction;
                 _ = Global.AudioOperations.PlayPauseAudioFile(obj.AudioFileLocation, false);
+            }
         }
 
         [RelayCommand]
@@ -168,7 +171,10 @@ namespace Aljaras.MVVM.ViewModel
         private void PlayPauseAudioFile()
         {
             if (!Global.AudioOperations.IsEmergency)
+            {
+                Global.AudioOperations.PlaybackVolume = CurrentAlarm.VolumeFraction;
                 _ = Global.AudioOperations.PlayPauseAudioFile(CurrentAlarm.AudioFileLocation, false);
+            }
         }
 
         [RelayCommand]

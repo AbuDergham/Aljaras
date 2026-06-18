@@ -260,5 +260,8 @@ namespace Aljaras.MVVM.Model
 
         [ObservableProperty]
         private string _testSound = "Test Sound";
+
+        [ObservableProperty]
+        private string _volume = "Volume";
     }
 }

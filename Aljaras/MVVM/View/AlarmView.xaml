@@ -405,6 +405,10 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
                             <TextBox
                                 Grid.ColumnSpan="3"
                                 Height="30"
@@ -433,6 +437,23 @@
                                 FontWeight="Bold"
                                 Foreground="{StaticResource MediumVioletRedBrush}"
                                 Style="{DynamicResource RoundButtons}" />
+                            <StackPanel
+                                Grid.Row="1"
+                                Grid.ColumnSpan="3"
+                                Margin="15,8,0,0"
+                                Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" Text="{Binding Global.AppLang.Volume}" />
+                                <Slider
+                                    Width="200"
+                                    Margin="10,0"
+                                    VerticalAlignment="Center"
+                                    Maximum="100"
+                                    Minimum="0"
+                                    TickFrequency="1"
+                                    Value="{Binding CurrentAlarm.Volume}" />
+                                <TextBlock VerticalAlignment="Center" Text="{Binding CurrentAlarm.Volume}" />
+                                <TextBlock VerticalAlignment="Center" Text="%" />
+                            </StackPanel>
                         </Grid>
                     </GroupBox>
                 </Grid>
