@@ -253,21 +253,30 @@ namespace Aljaras.MVVM.ViewModel
         {
             LoadUIInfo();
             NotificationList = new();
+            DateTime lastBeat = DateTime.Now;
             Task.Run(async () =>
             {
                 while (true)
                 {
-                    Application.Current.Dispatcher.Invoke(() => SystemTime = DateTime.Now.ToLongTimeString());
+                    DateTime now = DateTime.Now;
+                    Application.Current.Dispatcher.Invoke(() => SystemTime = now.ToLongTimeString());
                     if (AlarmList != null && AlarmList.Count > 0)
                     {
-                        Alarm? _alr = AlarmList.FirstOrDefault(x => TrimMilliseconds(x.FullTime) == TrimMilliseconds(DateTime.Now));
-                        if (_alr != null)
+                        // Fire every alarm whose time elapsed since the last beat, not only an
+                        // exact-second match, so a delayed tick can no longer skip a bell.
+                        List<Alarm> dueAlarms = AlarmList
+                            .Where(x => x.FullTime > lastBeat && x.FullTime <= now)
+                            .OrderBy(x => x.FullTime)
+                            .ToList();
+                        if (dueAlarms.Count > 0)
                         {
                             if (!AudioOperations.IsEmergency)
-                                StartAudio(_alr.AudioFileLocation);
+                                foreach (Alarm due in dueAlarms)
+                                    StartAudio(due.AudioFileLocation);
                             LoadMonitoringAlarmCollectionData();
                         }
                     }
+                    lastBeat = now;
                     await Task.Delay(1000);
                 }
             });
@@ -285,7 +294,6 @@ namespace Aljaras.MVVM.ViewModel
             try
             {
                 GetUserSettings = new();
-                using (GlobalVariables.db)
                 {
                     var col = GlobalVariables.db.GetCollection<UserSettings>(DbTables.UserSettings.ToString());
                     UserSettings? results = col.Find(x => x.Id == 1).FirstOrDefault();
@@ -380,13 +388,9 @@ namespace Aljaras.MVVM.ViewModel
 
         public void LoadMonitoringAlarmCollectionData()
         {
-            bool isLoading = true;
-            while (isLoading)
-            {
-                ScheduleList = new();
-                AlarmList = new();
-                HolidayList = new();
-                using (GlobalVariables.db)
+            ScheduleList = new();
+            AlarmList = new();
+            HolidayList = new();
                 {
                     var holidayCollection = GlobalVariables.db.GetCollection<Holiday>(DbTables.Holidays.ToString());
                     HolidayList = holidayCollection.Find(h => h.HolidayDate >= DateTime.Now && h.IsHolidayActive).OrderBy(x => x.HolidayDate).ToList();
@@ -415,7 +419,7 @@ namespace Aljaras.MVVM.ViewModel
                         foreach (Schedule item in ScheduleList)
                         {
                             var alarmCollection = GlobalVariables.db.GetCollection<Alarm>(DbTables.Alarms.ToString());
-                            List<Alarm> result = alarmCollection.Find(x => x.ScheduleId.ToString().Contains(item.ScheduleId.ToString()) && x.IsAlarmActive == true).ToList();
+                            List<Alarm> result = alarmCollection.Find(x => x.ScheduleId == item.ScheduleId && x.IsAlarmActive == true).ToList();
                             if (result != null && result.Count > 0)
                             {
                                 foreach (Alarm _item in result)
@@ -434,14 +438,11 @@ namespace Aljaras.MVVM.ViewModel
                         {
                             IsNOAlarmMessageVisible = GetVisibility.Hidden.ToString();
                             NextAlarm();
-                            isLoading = false;
                             return;
                         }
                     }
                     NextAlarm();
-                    isLoading = false;
                 }
-            }
             IsNOAlarmMessageVisible = GetVisibility.Visible.ToString();
         }
 
