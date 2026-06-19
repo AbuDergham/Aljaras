@@ -25,5 +25,17 @@ namespace Aljaras.MVVM.Model
         public bool IsSuspended => SuspendedUntil > DateTime.Now;
 
         public string SuspendedVisibility => IsSuspended ? GetVisibility.Visible.ToString() : GetVisibility.Collapsed.ToString();
+
+        /// <summary>When true the schedule only runs between StartDate and EndDate (e.g. a term).</summary>
+        [ObservableProperty]
+        private bool useDateRange = false;
+
+        [ObservableProperty]
+        private DateTime startDate = DateTime.Now.Date;
+
+        [ObservableProperty]
+        private DateTime endDate = DateTime.Now.Date.AddMonths(4);
+
+        public bool IsWithinDateRange => !UseDateRange || (DateTime.Now.Date >= StartDate.Date && DateTime.Now.Date <= EndDate.Date);
     }
 }

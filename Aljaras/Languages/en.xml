@@ -88,4 +88,7 @@
 	<TestSound>Test Sound</TestSound>
 	<Volume>Volume</Volume>
 	<AutoBackup>Auto Backup</AutoBackup>
+	<DateRange>Date Range</DateRange>
+	<From>From</From>
+	<To>To</To>
 </AppLanguage>

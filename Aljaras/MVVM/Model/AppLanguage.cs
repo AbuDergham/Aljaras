@@ -266,5 +266,14 @@ namespace Aljaras.MVVM.Model
 
         [ObservableProperty]
         private string _autoBackup = "Auto Backup";
+
+        [ObservableProperty]
+        private string _dateRange = "Date Range";
+
+        [ObservableProperty]
+        private string _from = "From";
+
+        [ObservableProperty]
+        private string _to = "To";
     }
 }

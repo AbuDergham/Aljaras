@@ -36,6 +36,10 @@
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                     <TextBlock Margin="10,0,0,0" VerticalAlignment="Center">
                         <Run Text="{Binding Global.AppLang.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <Run Text=":" />
@@ -71,6 +75,33 @@
                             Content="{Binding Global.AppLang.Save, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             Foreground="{StaticResource SteelBlueBrush}"
                             Style="{DynamicResource ListRoundButtons}" />
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.ColumnSpan="3"
+                        Margin="10,8,0,0"
+                        Orientation="Horizontal">
+                        <CheckBox
+                            VerticalAlignment="Center"
+                            Content="{Binding Global.AppLang.DateRange}"
+                            IsChecked="{Binding CurrentSchedule.UseDateRange}"
+                            Style="{DynamicResource SliderCheckBox}" />
+                        <TextBlock
+                            Margin="10,0,4,0"
+                            VerticalAlignment="Center"
+                            Text="{Binding Global.AppLang.From}" />
+                        <DatePicker
+                            VerticalAlignment="Center"
+                            IsEnabled="{Binding CurrentSchedule.UseDateRange}"
+                            SelectedDate="{Binding CurrentSchedule.StartDate}" />
+                        <TextBlock
+                            Margin="10,0,4,0"
+                            VerticalAlignment="Center"
+                            Text="{Binding Global.AppLang.To}" />
+                        <DatePicker
+                            VerticalAlignment="Center"
+                            IsEnabled="{Binding CurrentSchedule.UseDateRange}"
+                            SelectedDate="{Binding CurrentSchedule.EndDate}" />
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Row="1">

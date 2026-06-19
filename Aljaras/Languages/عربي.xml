@@ -88,4 +88,7 @@
 	<TestSound>تجربة الصوت</TestSound>
 	<Volume>مستوى الصوت</Volume>
 	<AutoBackup>نسخ احتياطي تلقائي</AutoBackup>
+	<DateRange>نطاق التاريخ</DateRange>
+	<From>من</From>
+	<To>إلى</To>
 </AppLanguage>
