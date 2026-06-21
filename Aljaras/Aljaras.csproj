@@ -71,12 +71,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="CommunityToolkit.Mvvm">
-      <HintPath>bin\Debug\net6.0-windows\CommunityToolkit.Mvvm.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
