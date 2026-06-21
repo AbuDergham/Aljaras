@@ -1,5 +1,4 @@
-﻿using IWshRuntimeLibrary;
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using File = System.IO.File;
@@ -41,9 +40,14 @@ namespace Aljaras.Core
         {
             if (create)
             {
-                WshShell myShell = new WshShell();
-                IWshShortcut? myShortcut = myShell.CreateShortcut(shortcutPathName) as IWshShortcut;
-                myShortcut!.TargetPath = shortcutTarget;
+                // Late-bound Windows Script Host (WScript.Shell) so the project
+                // needs no build-time COM reference — that one can't be resolved
+                // by the .NET Core MSBuild used by `dotnet build`/`publish`.
+                Type? shellType = Type.GetTypeFromProgID("WScript.Shell");
+                if (shellType == null) return;
+                dynamic shell = Activator.CreateInstance(shellType)!;
+                dynamic myShortcut = shell.CreateShortcut(shortcutPathName);
+                myShortcut.TargetPath = shortcutTarget;
 
                 if (shortcutTarget.StartsWith("http"))
                 {
